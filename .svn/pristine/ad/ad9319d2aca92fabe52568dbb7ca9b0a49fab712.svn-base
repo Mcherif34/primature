@@ -1,0 +1,110 @@
+package ma.brainit.aman.client.model;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "EXPEDITEUR")
+public class Expediteur {
+    private static final long serialVersionUID = 1L;
+
+    @Column(name = "Code", columnDefinition = "NVARCHAR")
+    private String code;
+    
+    @Id
+    @Column(name = "[Raison Sociale commerciale]", columnDefinition = "NVARCHAR")
+    private String raisonSociale;
+    
+    @Column(name = "[Adresse]", columnDefinition = "NVARCHAR")
+    private String adresse;
+    
+    @Column(name = "[nom et prenom]", columnDefinition = "NVARCHAR")
+    private String nomPrenom;
+    
+    @Column(name = "[Email]", columnDefinition = "NVARCHAR")
+    private String email;
+    
+    @Column(name = "[Telephone]", columnDefinition = "NVARCHAR")
+    private String telephone;
+    
+    @Column(name = "[Ville]", columnDefinition = "NVARCHAR")
+    private String ville;
+    
+    @Column(name = "[Devise]", columnDefinition = "NVARCHAR")
+    private String devise;
+    
+    @Column(name = "[Type expediteur]", columnDefinition = "NVARCHAR")
+    private String type;
+    		
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+	
+	public String getRaisonSociale() {
+		return raisonSociale;
+	}
+
+	public void setRaisonSociale(String raisonSociale) {
+		this.raisonSociale = raisonSociale;
+	}
+
+	public String getAdresse() {
+		return adresse;
+	}
+
+	public void setAdresse(String adresse) {
+		this.adresse = adresse;
+	}
+
+	public String getNomPrenom() {
+		return nomPrenom;
+	}
+
+	public void setNomPrenom(String nomPrenom) {
+		this.nomPrenom = nomPrenom;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+
+	public String getVille() {
+		return ville;
+	}
+
+	public void setVille(String ville) {
+		this.ville = ville;
+	}
+
+	public String getDevise() {
+		return devise;
+	}
+
+	public void setDevise(String devise) {
+		this.devise = devise;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+}

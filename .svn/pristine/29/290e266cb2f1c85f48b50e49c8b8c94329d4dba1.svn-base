@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+	<title></title>
+</head>
+<body ng-controller="helpController" th:attr="ng-init='init();'">
+	<div layout:fragment="search">
+		<form class="form-inline" role="search">
+			<input type="text"
+				class="form-control b-a rounded px-3 form-control-sm"
+				style="min-width: 350px;" ng-model="dtoq.search.key"
+				placeholder="Rechercher client par code ou raison sociale" /> <a
+				href="#" ng-click="searchClient()" class="btn success p-x-md"
+				style="border-radius: 20px; padding-top: 3px; padding-bottom: 5px; margin-left: 10px; margin-right: 20px;"><i
+				class="fa fa-search"></i></a>
+		</form>
+	</div>
+	<div layout:fragment="content">
+		<div class="main-content">	
+			<div class="page-content">
+				<div class="container-fluid">
+					<div class="row">
+		            	<div class="col-12">
+		                	<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+		                    	<h4 class="mb-sm-0">Base de connaissances</h4>
+		                    	<div class="page-title-right">
+		                        	<ol class="breadcrumb m-0">
+		                            	<li class="breadcrumb-item font-weight-bold"><a th:href="@{/}">Tableau de bord</a></li>
+		                                <li class="breadcrumb-item active">Base de connaissances</li>
+		                            </ol>
+		                        </div>
+							</div>
+		                </div>
+		        	</div>
+		        	<div class="col-xxl-12">
+		                            <div class="card">
+		                                <div class="card-body">
+		                                	<div style="text-align: right; margin-bottom: 10px;">
+		                                    	<a href="#" ng-click="addQuestion()" th:if="${profile} == 'Administrateur'" class="btn btn-primary btn-label waves-effect waves-light"><i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Nouveau</a>
+			                                </div>
+		                                    <div class="accordion custom-accordionwithicon accordion-flush accordion-fill-secondary" style="border: 1px solid #eaeaea" id="accordionFill2">
+                                                    <div class="accordion-item" ng-repeat="question in questions">
+                                                        <h2 class="accordion-header">
+                                                            <button class="accordion-button collapsed" style="text-transform: uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#q{{question.id}}" aria-expanded="false" aria-controls="q{{question.id}}">
+                                                                {{question.name}}
+                                                            </button>
+                                                        </h2>
+                                                        <div id="q{{question.id}}" class="accordion-collapse collapse" aria-labelledby="accordionFill2Example1" data-bs-parent="#accordionFill2">
+                                                            <div class="accordion-body">
+                                                                {{question.answer}}
+                                                                <div ng-class="'col-md-12'" style="margin-top: 10px !important">
+													            	<span ng-repeat="attachment in question.attachmentsDTO">
+													              		<a class="badge text-bg-warning" href="{{attachment.url}}" target="_blank" download="true"><span ng-show="question.name == 'Guides utilisateur'">Afficher le guide d'utilisation</span><span ng-show="question.name != 'Guides utilisateur'">Afficher la procédure de résolution</span></a>
+													                </span>
+													            </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                            </div>
+		                                </div><!-- end card-body -->
+		                            </div><!-- end card -->
+		                        </div>
+		        </div>
+		    </div>
+		</div>
+		<div id="contactModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Besoin d'assistance ?</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body p-lg">
+							<div class="row">
+								<div ng-class="'col-md-12'">
+									Vous rencontrez des difficultés et besoin d'assistance, merci de nous écrire sur <a href="mailto:techRNEC@interieur.gov.ma">techRNEC@interieur.gov.ma</a> ou sur <a href="mailto:hotline@medasys.ma">hotline@medasys.ma</a>.
+								</div>
+							</div>	
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+		</div>
+		<div id="questionModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" ng-if="addQuestionForm">Enregistrement
+								d'une astuce</h5>
+							<h5 class="modal-title" ng-if="editQuestionForm">Modification
+								d'une astuce</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<form id="questionForm" name="questionForm" method="post" action="#"
+							class="form-horizontal" ui-jp="parsley">
+							<div class="modal-body p-lg">
+								<div class="row">
+									<input type="hidden" ng-model="dtoq.id" />
+									<div ng-class="'col-md-12'">
+										<p class="text-muted">Renseignez les champs obligatoires</p>
+										<div ng-if="questionRequiredError" class="alert alert-danger"
+											role="alert">Veuillez remplir tous les champs
+											obligatoires !</div>
+										<div ng-if="questionTechnicalError" class="alert alert-danger"
+											role="alert">Un problème est survenu ! Merci de
+											contacter votre administrateur.</div>
+										<div ng-if="questionSuccess" class="alert alert-success"
+											role="alert">L'opération s'est effectuée avec succès !
+										</div>
+									</div>
+									<div ng-class="'col-md-12'">
+										<div class="form-group">
+											<label><span class="asterik"> * </span> Problème</label> <input
+												type="text" class="form-control" name="name"
+												ng-model="dtoq.name" required="required" />
+										</div>
+									</div>
+									<div ng-class="'col-md-12'">
+										<div class="form-group">
+											<label><span class="asterik"> * </span> Solution</label>
+											<textarea class="form-control" name="answer" ng-model="dtoq.answer" required="required"></textarea>
+										</div>
+									</div>
+									<div ng-class="'col-md-12'">
+						            	<a id="btnNew" href="#" ng-click="addAttachmentQ();" class="btn btn-dark btn-label waves-effect waves-light" style="width: 100%">
+				                        	<i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Ajouter une pièce jointe
+				                        </a>
+					                </div>
+					                <div ng-class="'col-md-12'">
+						            	<div class="form-group" style="margin-bottom: 10px" ng-repeat="attachment in dtoq.attachmentsDTO">
+						              		<label>Joindre un fichier</label>
+						              		<input type="file" class="form-control attachment" />
+						                </div>
+					              </div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="saveQuestion()">
+	                            	<i class="mdi mdi-content-save label-icon align-middle fs-16 me-2"></i> Enregistrer
+	                            </a>
+							</div>
+						</form>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+			</div>
+			<div id="sheetModal" class="modal fade" data-backdrop="true">
+			<div class="modal-dialog modal-lg modal-customized">
+		      <div class="modal-content">
+		        <div class="modal-header">
+		      	  <h5 class="modal-title" ng-if="addSheetForm">Enregistrement d'un nouveau ticket</h5>
+		      	  <h5 class="modal-title" ng-if="editSheetForm">Modification du ticket</h5>
+		      	  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		        </div>
+		        <form id="sheetForm" name="sheetForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+		          <div class="modal-body p-lg">
+		            <div class="row">
+					  <input type="hidden" ng-model="dto.id" />
+					  <div ng-class="'col-md-12'">
+					  	<p class="text-muted">Renseignez les champs obligatoires</p>
+					  	<div ng-if="sheetRequiredError" class="alert alert-danger" role="alert">
+					  	  Veuillez remplir tous les champs obligatoires !
+					  	</div>
+					  	<div ng-if="sheetTechnicalError" class="alert alert-danger" role="alert">
+					  	  Un problème est survenu ! Merci de contacter votre administrateur.
+					  	</div>
+					  	<div ng-if="sheetSuccess" class="alert alert-success" role="alert">
+					  	  L'opération s'est effectuée avec succès !
+					  	</div>
+					  </div>
+					  </div>
+					  <div class="row">
+					  	<div ng-class="'col-md-8'">
+						  	<div class="row" style="background: #edede1 !important; border: 1px solid #F7F7F2 !important; border-radius: 3px !important; padding: 10px !important; margin-bottom: 10px !important">
+							  <p class="text-muted" style="color: #000000 !important; font-weight: 600 !important">INFORMATIONS DU CONTACT</p>
+							  <div ng-class="'col-md-6'">
+				            	<div class="form-group">
+				              	  <label><span class="asterik"> * </span> Ville</label>
+				              	  <select class="form-select" name="cityId" ng-model="dto.cityId" ng-options="c.id as c.name for c in cities" required="required" ng-disabled="disabled">
+									  <option value="">Choisir une option</option>
+								  </select>
+				                </div>
+				              </div>
+							  <div ng-class="'col-md-6'">
+				            	<div class="form-group">
+				              	  <label><span class="asterik"> * </span> Nom du contact</label>
+				                  <input type="text" class="form-control" name="contactName" ng-model="dto.ctName" required="required" ng-readonly="disabled" />
+				                </div>
+				              </div>
+				              <div ng-class="'col-md-6'">
+				            	<div class="form-group">
+				              	  <label><span class="asterik"> * </span> Téléphone</label>
+				                  <input type="text" class="form-control" name="contactGsm" ng-model="dto.ctGsm" required="required" ng-readonly="disabled" />                        
+				                </div>
+				              </div>
+				              <div ng-class="'col-md-6'">
+				            	<div class="form-group">
+				              	  <label><span class="asterik"> * </span> Email</label>
+				                  <input type="text" class="form-control" name="contactEmail" ng-model="dto.ctEmail" required="required" ng-readonly="disabled" />                        
+				                </div>
+				              </div>
+						</div>
+						<div class="row" style="background: #edede1 !important; border: 1px solid #F7F7F2 !important; border-radius: 3px !important; padding: 10px !important;">
+							  <p class="text-muted" style="color: #000000 !important; font-weight: 600 !important">INFORMATIONS DU MATERIEL</p>
+							  <div ng-class="'col-md-4'">
+				            	<div class="form-group">
+				              	  <label><span class="asterik"> * </span> Type du matériel</label>
+				              	  <select class="form-select" name="categoryId" ng-model="dto.categoryId" ng-options="c.id as c.name for c in categories" ng-change="loadMaterials()" required="required">
+									  <option value="">Choisir une option</option>
+								  </select>
+				                </div>
+				              </div>
+							  <div ng-class="'col-md-4'">
+				            	<div class="form-group">
+				              	  <label><span class="asterik"> * </span> P/N du matériel</label>
+				                  <select class="form-select" name="materialId" ng-model="dto.materialId" ng-options="m.id as (m.pn + ' (' + m.descriptive + ')') for m in materials" required="required">
+									  <option value="">Choisir une option</option>
+								  </select>
+				                </div>
+				              </div>
+				              <div ng-class="'col-md-4'">
+				            	<div class="form-group">
+				              	  <label><span class="asterik"> * </span> S/N du matériel</label>
+				                  <input type="text" class="form-control" name="snMachine" ng-model="dto.snMachine" required="required" />                        
+				                </div>
+				              </div>
+				              <div ng-class="'col-md-12'">
+				                <div class="form-group">
+				                  <label><span class="asterik"> * </span> Problème déclaré</label>
+				                  <input type="text" class="form-control" name="materialProblemClient" ng-model="dto.materialProblemClient" required="required" />
+				                </div>
+							  </div>
+							  <div ng-class="'col-md-12'">
+				                <div class="form-group">
+				                  <label>Commentaires</label>
+				                  <textarea class="form-control" name="comments" ng-model="dto.comments"></textarea>
+				                </div>
+							  </div>
+						</div>
+					  	</div>
+					  	<div ng-class="'col-md-4'" style="padding-left: 20px;">
+					  		<div style="height: 100%; background: #edede1 !important; border: 1px solid #F7F7F2 !important; border-radius: 3px !important; padding: 10px !important;">
+								<div class="row">  
+								  <div ng-class="'col-md-6'">
+					            	<p class="text-muted" style="color: #000000 !important; font-weight: 600 !important; margin-top: 10px">PIECES JOINTES</p>
+					              </div>
+					              <div ng-class="'col-md-6'">
+					            	<a id="btnNew" href="#" ng-click="addAttachment();" class="btn btn-dark btn-label waves-effect waves-light" style="width: 100%">
+			                        	<i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Ajouter
+			                        </a>
+					              </div>
+								  <div ng-class="'col-md-12'">
+					            	<div class="form-group" style="margin-bottom: 10px" ng-repeat="attachment in dto.attachmentsDTO">
+					              		<label>Joindre un fichier</label>
+					              		<input type="file" id="attachment" class="form-control attachment" />
+					                </div>
+					              </div>
+					            </div>
+							</div>
+					  	</div>
+					  </div>
+		          </div>
+		          <div class="modal-footer">
+		          	<a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="saveSheet()">
+			        	<i class="mdi mdi-content-save label-icon align-middle fs-16 me-2"></i> Enregistrer
+			        </a>
+		          </div>
+		        </form>
+		      </div><!-- /.modal-content -->
+		    </div>
+			</div>
+	</div>
+<div layout:fragment="plugins" class="page-content">
+	<script th:src='@{/resources/js/help/help.js}'></script>
+</div>
+</body>
+</html>

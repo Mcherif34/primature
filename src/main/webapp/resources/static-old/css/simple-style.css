@@ -1,0 +1,46 @@
+.col-center-block {
+	float: none;
+	display: block;
+	margin: auto;
+}
+
+.loginbox {
+	margin-top: 50px;
+}
+
+
+.success-container {
+	padding: 10px;
+	background-color: #fff;
+	border: 3px solid #2d353c;
+	border-radius: 4px;
+	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+}
+
+.custom-panel {
+	margin-bottom: 20px;
+	background-color: #fff;
+	border: 3px solid #2d353c;
+	border-radius: 4px;
+	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+}
+
+.custom-panel-title {
+	background-color: #2d353c;
+	padding: 10px 15px;
+	color: #a8acb1;
+	text-align: center;
+	font-size: 24px;
+	text-shadow: none;
+}
+
+.custom-panel-body {
+	padding-top: 30px;
+	padding: 15px;
+}
+
+.fakeInputPassword {
+	display: none;
+}

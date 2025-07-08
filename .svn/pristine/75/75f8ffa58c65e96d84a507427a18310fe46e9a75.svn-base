@@ -1,0 +1,58 @@
+package ma.brainit.aman.commun.actions;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+//import ma.brainit.aman.client.service.ClientService;
+//import ma.brainit.aman.client.service.ContactService;
+import ma.brainit.aman.administration.dto.SecUtilisateurDTO;
+import ma.brainit.aman.administration.service.SecUtilisateurService;
+
+@Controller
+@RequestMapping(value = "/")
+public class HomeController{
+	
+//	@Autowired
+//	private ClientService clientService;
+//
+//	@Autowired
+//	private ContactService contactService;
+	
+	@Autowired
+	private SecUtilisateurService secUtilisateurService;
+	
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public ModelAndView home(HttpServletRequest request, HttpServletResponse response) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		ModelAndView modelAndView = new ModelAndView();
+		if (!(auth instanceof AnonymousAuthenticationToken)) {
+			SecUtilisateurDTO user = secUtilisateurService.getCurrentUser();
+			modelAndView.addObject("name", user.getNom());
+			modelAndView.addObject("profile", user.getSecProfileCode());
+			
+			modelAndView.setViewName("index");
+		} else {
+			response.addHeader("REQUIRES_AUTH", "1");
+			modelAndView.setViewName("home/login");
+		}
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/login/error", method = RequestMethod.GET)
+	public ModelAndView loginError(HttpServletRequest request) {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("error", true);
+		modelAndView.setViewName("home/login");
+		return modelAndView;
+	}
+	
+}

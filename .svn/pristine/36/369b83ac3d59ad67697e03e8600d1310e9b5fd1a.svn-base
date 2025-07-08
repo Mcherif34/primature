@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+</head>
+<body>
+	<div layout:fragment="content" class="page-content">
+		<div class="row">
+			<div class="col-xs-12">
+				<!-- PAGE CONTENT BEGINS -->
+
+				<div class="error-container">
+					<div class="well">
+						<h1 class="grey lighter smaller">
+							<span class="blue bigger-125"> <i
+								class="ace-icon fa fa-random"></i> 500
+							</span> <th:block th:text="#{page.500.error.header}" />
+						</h1>
+
+						<hr />
+						<h3 class="lighter smaller">
+							<i
+								class="ace-icon fa fa-wrench icon-animated-wrench bigger-125"></i>
+							<th:block th:text="#{page.500.error.content}" />
+						</h3>
+
+						<div class="space"></div>
+						<hr />
+						<div class="space"></div>
+
+						<div class="center">
+							<a href="javascript:history.back()" class="btn btn-grey"> <i
+								class="ace-icon fa fa-arrow-left"></i> <th:block
+									th:text="#{page.404.error.button.back}" />
+							</a> 
+<!-- 							<a  th:href="@{/}" class="btn btn-primary"> <i -->
+<!-- 								class="ace-icon fa fa-tachometer"></i> <th:block -->
+<!-- 									th:text="#{page.404.error.button}" /> -->
+<!-- 							</a> -->
+						</div>
+					</div>
+				</div>
+
+				<!-- PAGE CONTENT ENDS -->
+			</div>
+			<!-- /.col -->
+		</div>
+		<!-- /.row -->
+	</div>
+</body>
+</html>

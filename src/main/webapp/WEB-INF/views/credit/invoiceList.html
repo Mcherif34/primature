@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+<title></title>
+</head>
+<body ng-controller="invoiceController" th:attr="ng-init='init();'">
+	<div layout:fragment="search">
+		<form class="form-inline" role="search">
+			<input type="text" class="form-control b-a rounded px-3 form-control-sm" style="min-width: 200px;" ng-model="search.key" placeholder="Rechercher..." />
+			<a href="#" ng-click="searchInvoice()" class="btn success p-x-md" style="border-radius: 20px; padding-top: 3px; padding-bottom: 5px; margin-left: 10px; margin-right: 20px;"><i class="fa fa-search"></i></a>
+		</form>
+	</div>
+	<div layout:fragment="content">
+		<div class="main-content">	
+			<div class="page-content">
+				<div class="container-fluid">
+					<div class="row">
+		            	<div class="col-12">
+		                	<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+		                    	<h4 class="mb-sm-0">Factures et règlements</h4>
+		                    	
+		                    	<div class="page-title-right">
+		                        	<ol class="breadcrumb m-0">
+		                            	<li class="breadcrumb-item font-weight-bold"><a th:href="@{/}">Tableau de bord</a></li>
+		                                <li class="breadcrumb-item active">Factures et règlements</li>
+		                            </ol>
+		                        </div>
+							</div>
+		                </div>
+		        	</div>
+		        	<div class="col-xxl-12">
+		                            <div class="card">
+		                                <div class="card-body">
+		                                    <ul class="nav nav-tabs nav-justified mb-3" role="tablist">
+		                                        <li class="nav-item">
+		                                            <a class="nav-link active" data-bs-toggle="tab" href="#invoiceTab" role="tab" aria-selected="false" style="font-weight: 600;">
+		                                                <i class="mdi mdi-file-check-outline"></i> Factures
+		                                            </a>
+		                                        </li>
+		                                        <li class="nav-item">
+		                                            <a class="nav-link" data-bs-toggle="tab" href="#paymentTab" role="tab" aria-selected="false" style="font-weight: 600;">
+		                                                <i class="mdi mdi-credit-card-outline"></i> Règlements
+		                                            </a>
+		                                        </li>
+		                                    </ul>
+		                                    <!-- Tab panes -->
+		                                    <div class="tab-content text-muted">
+		                                        <div class="tab-pane active" id="invoiceTab" role="tabpanel">
+		                                        	<div style="text-align: right; margin-bottom: 10px;">
+		                                        		<div style="float: left;" class="btn-group btn-group-sm mt-2 shadow" role="group" aria-label="Basic example">
+		                                                    <button type="button" ng-click="checkAll('invoiceId');" class="btn btn-primary waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-marked-circle label-icon align-middle fs-12"></i> Tout cocher</button>
+		                                                    <button type="button" ng-click="uncheckAll('invoiceId');" class="btn btn-primary waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-blank-circle-outline label-icon align-middle fs-12"></i> Tout décocher</button>
+		                                                </div>
+			                                        	<a href="#" ng-show="checked" ng-click="deleteInvoices()" class="btn btn-danger btn-label waves-effect waves-light"><i class="mdi mdi-trash-can label-icon align-middle fs-16 me-2"></i> Supprimer</a>
+			                                        	<a href="#" ng-show="checked" ng-click="disableInvoices()" class="btn btn-warning btn-label waves-effect waves-light"><i class="mdi mdi-cash-remove label-icon align-middle fs-16 me-2"></i> Désactiver</a>
+			                                        	<a href="#" ng-show="checked" ng-click="enableInvoices()" class="btn btn-success btn-label waves-effect waves-light"><i class="mdi mdi-cash-check label-icon align-middle fs-16 me-2"></i> Activer</a>
+			                                        	<a id="btnNew" href="#" class="btn btn-primary btn-label waves-effect waves-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+			                                            	<i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Nouveau
+			                                            </a>
+			                                            <ul class="dropdown-menu" aria-labelledby="btnNew">
+			                                            	<li><a class="dropdown-item" href="#" ng-click="addInvoice()">Ajouter une ligne</a></li>
+			                                            	<li><a class="dropdown-item" href="#" ng-click="importInvoices()">Importer depuis Excel</a></li>
+			                                                <li><a class="dropdown-item" href="#" ng-click="importInvoices()">Synchroniser de Sage</a></li>
+			                                                <li><a class="dropdown-item" href="#" ng-click="importInvoices()">Synchroniser de Odoo</a></li>
+			                                            </ul>
+			                                        	<a href="#" ng-click="" class="btn btn-primary" style="padding-top: 6px; padding-bottom: 6px;"><i class="mdi mdi-tune label-icon align-middle fs-16"></i></a>
+			                                        </div>
+		                                        	<div class="live-preview">
+			                                            <div class="table-responsive">
+															<table width="100%" id="invoiceTable"
+																ng-controller="invoiceTableController"
+																th:attr="ng-init='init();'"
+																class="table dt-responsive nowrap table-striped align-middle">
+																<thead>
+																	<tr>
+																		<th></th>
+														            	<th style="width: 5px"></th>
+																		<th>Code client</th>
+																		<th>Raison sociale</th>
+																		<th>Date de facture</th>
+																		<th>Date d'échéance</th>
+																		<th>Retard</th>
+																		<th>N° Facture</th>
+																		<th>Montant initial</th>
+																		<th>Montant restant</th>
+																		<th>Règlement</th>
+																		<th>Actions</th>
+																	</tr>
+																</thead>
+															</table>
+														</div>
+													</div>
+		                                        </div>
+		                                        <div class="tab-pane" id="paymentTab" role="tabpanel">
+		                                        	<div style="text-align: right; margin-bottom: 10px;">
+		                                        		<div style="float: left;" class="btn-group btn-group-sm mt-2 shadow" role="group" aria-label="Basic example">
+		                                                    <button type="button" ng-click="checkAll('paymentId');" class="btn btn-primary waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-marked-circle label-icon align-middle fs-12"></i> Tout cocher</button>
+		                                                    <button type="button" ng-click="uncheckAll('paymentId');" class="btn btn-primary waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-blank-circle-outline label-icon align-middle fs-12"></i> Tout décocher</button>
+		                                                </div>
+			                                        	<a href="#" ng-show="checked" ng-click="deletePayments()" class="btn btn-danger btn-label waves-effect waves-light"><i class="mdi mdi-trash-can label-icon align-middle fs-16 me-2"></i> Supprimer</a>
+			                                        	<a id="btnPaymentNew" href="#" class="btn btn-primary btn-label waves-effect waves-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+			                                            	<i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Nouveau
+			                                            </a>
+			                                            <ul class="dropdown-menu" aria-labelledby="btnPaymentNew">
+			                                            	<li><a class="dropdown-item" href="#" ng-click="addPayment()">Ajouter une ligne</a></li>
+			                                            	<li><a class="dropdown-item" href="#" ng-click="importPayments()">Importer depuis Excel</a></li>
+			                                                <li><a class="dropdown-item" href="#" ng-click="importPayments()">Synchroniser de Sage</a></li>
+			                                                <li><a class="dropdown-item" href="#" ng-click="importPayments()">Synchroniser de Odoo</a></li>
+			                                            </ul>
+			                                        	<a href="#" ng-click="" class="btn btn-primary" style="padding-top: 6px; padding-bottom: 6px;"><i class="mdi mdi-tune label-icon align-middle fs-16"></i></a>
+			                                        </div>
+			                                        <div class="live-preview">
+			                                            <div class="table-responsive">
+			                                            	<table width="100%" id="paymentTable"
+																ng-controller="paymentTableController"
+																th:attr="ng-init='init();'"
+																class="table dt-responsive nowrap table-striped align-middle">
+																<thead>
+																	<tr>
+																		<th></th>
+														           	    <th style="width: 5px"></th>
+																		<th>Code client</th>
+																		<th>Raison sociale</th>
+																		<th>Date de règlement</th>
+																		<th>N° Règlement</th>
+																		<th>Libellé</th>
+																		<th>Montant</th>
+																		<th>Règlement</th>
+																		<th>Actions</th>
+																	</tr>
+																</thead>
+															</table>
+														</div>
+													</div>  
+		                                        </div>
+		                                    </div>
+		                                </div><!-- end card-body -->
+		                            </div><!-- end card -->
+		                        </div>
+		        </div>
+		    </div>
+		    </div>
+		    <div id="advancedSearchInvoiceModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Recherche avancée</h5>
+						</div>
+						<form method="post" ng-submit="advancedSearchInvoice()" class="form-horizontal" ui-jp="parsley">
+							<div class="modal-body p-lg">
+								<div class="row">
+									<div ng-class="'col-md-12'">
+										<div style="font-weight: normal; background: #c8eac5; padding: 6px; margin-bottom: 6px;">Factures</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+									    	<label>Nº Facture</label>
+									        <select id="code" class="form-control select2 code" style="width: 100%;" name="code" ng-model="search.code">
+									        	<option value="">Choisir une option</option>
+									        </select>
+									    </div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+									    	<label>Statut</label>
+									        <select class="form-control" name="invoiceStatusId" ng-model="search.invoiceStatusId" ng-options="s.id as s.name for s in invoiceStatus">
+									        	<option value="">Choisir une option</option>
+									        </select>
+									    </div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+									    	<label>Etat d'échéance</label>
+									        <select class="form-control" name="invoiceStateId" ng-model="search.invoiceStateId" ng-options="s.id as s.name for s in invoiceStates">
+									        	<option value="">Choisir une option</option>
+									        </select>
+									    </div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+									    	<label>Méthode de paiement</label>
+									        <select class="form-control" name="paymentMethodId" ng-model="search.paymentMethodId" ng-options="p.id as p.description for p in paymentMethods">
+									        	<option value="">Choisir une option</option>
+									        </select>
+									    </div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label>Date début d'échéance</label> <input
+												type="text" class="form-control" name="dueDateStart"
+												ng-model="search.dueDateStart" datepicker="datepicker" ng-change="calculateDueDateEnd()" />
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label>Date fin de d'échéance</label> <input
+												type="text" class="form-control" name="dueDateEnd"
+												ng-model="search.dueDateEnd" datepicker="datepicker" ng-change="calculateDueDateEndFormat()" />
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label>Date début de facture</label> <input
+												type="text" class="form-control" name="invoiceDateStart"
+												ng-model="search.invoiceDateStart" datepicker="datepicker" />
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label>Date fin de facture</label> <input
+												type="text" class="form-control" name="invoiceDateEnd"
+												ng-model="search.invoiceDateEnd" datepicker="datepicker" />
+										</div>
+									</div>
+									<!-- <div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label>Montant initial TTC entre</label> <input
+												type="text" class="form-control" name="amountTtcStart"
+												ng-model="search.amountTtcStart" ng-change="calculateAmountTtcEnd()" />
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label>ET</label> <input
+												type="text" class="form-control" name="amountTtcEnd"
+												ng-model="search.amountTtcEnd" />
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label>Montant restant TTC entre</label> <input
+												type="text" class="form-control" name="remainingAmountTtcStart"
+												ng-model="search.remainingAmountTtcStart" ng-change="calculateRemainingAmountTtcEnd()" />
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label>ET</label> <input
+												type="text" class="form-control" name="remainingAmountTtcEnd"
+												ng-model="search.remainingAmountTtcEnd" />
+										</div>
+									</div> -->
+								</div>
+								<div class="row">
+									<div ng-class="'col-md-12'">
+										<div style="font-weight: normal; background: #c8eac5; padding: 6px; margin-bottom: 6px;">Clients</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+									    	<label>Code client</label>
+									        <select id="clientCode" class="form-control select2" style="width: 100%;" name="clientCode" ng-model="search.clientCode">
+									        	<option value="">Choisir une option</option>
+									        </select>
+									    </div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+									    	<label>Raison sociale</label>
+									        <select id="clientCompanyName" class="form-control select2" style="width: 100%;" name="clientCompanyName" ng-model="search.clientCompanyName">
+									        	<option value="">Choisir une option</option>
+									        </select>
+									    </div>
+									</div>
+								</div>
+								<div class="row">
+									<div ng-class="'col-md-12'">
+										<div style="font-weight: normal; background: #c8eac5; padding: 6px; margin-bottom: 6px;">Entreprises</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+									    	<label>Société</label>
+									        <select id="companyId" class="form-control select2" style="width: 100%;" name="companyId" ng-model="search.companyId" ng-options="c.id as c.name for c in companies">
+									        	<option value="">Choisir une option</option>
+									        </select>
+									    </div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+									    	<label>Agence</label>
+									        <select id="agencyId" class="form-control select2" style="width: 100%;" name="agencyId" ng-model="search.agencyId" ng-options="a.id as a.name for a in agencies">
+									        	<option value="">Choisir une option</option>
+									        </select>
+									    </div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<a href="#" ng-click="advancedSearchInvoice()" class="btn success p-x-md">Rechercher</a>
+								<input type="reset" class="btn warn p-x-md" value="Annuler" />
+							</div>
+						</form>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+			</div>
+			<div id="advancedSearchPaymentModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Recherche avancée</h5>
+						</div>
+						<form method="post" ng-submit="advancedSearchPayment()" class="form-horizontal" ui-jp="parsley">
+							<div class="modal-body p-lg">
+								<div class="row">
+									<div ng-class="'col-md-12'">
+										<div style="font-weight: normal; background: #c8eac5; padding: 6px; margin-bottom: 6px;">Règlements</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+									    	<label>Nº Règlement</label>
+									        <select id="paymentCode" class="form-control select2" style="width: 100%;" name="paymentCode" ng-model="search.paymentCode">
+									        	<option value="">Choisir une option</option>
+									        </select>
+									    </div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+									    	<label>Libellé</label>
+									        <select id="paymentName" class="form-control select2" style="width: 100%;" name="paymentName" ng-model="search.paymentName">
+									        	<option value="">Choisir une option</option>
+									        </select>
+									    </div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+									    	<label>Mouvement</label>
+									        <select id="paymentMvt" class="form-control select2" style="width: 100%;" name="paymentMvt" ng-model="search.paymentMvt">
+									        	<option value="">Choisir une option</option>
+									        </select>
+									    </div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+									    	<label>Journal</label>
+									        <input type="text" class="form-control" name="paymentJournal" ng-model="search.paymentJournal" />
+									    </div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label>Date de règlement entre</label> <input
+												type="text" class="form-control" name="paymentDateStart"
+												ng-model="search.paymentDateStart" datepicker="datepicker" />
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label>ET</label> <input
+												type="text" class="form-control" name="paymentDateEnd"
+												ng-model="search.paymentDateEnd" datepicker="datepicker" />
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div ng-class="'col-md-12'">
+										<div style="font-weight: normal; background: #c8eac5; padding: 6px; margin-bottom: 6px;">Clients</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+									    	<label>Code client</label>
+									        <select id="paymentClientCode" class="form-control select2" style="width: 100%;" name="paymentClientCode" ng-model="search.paymentClientCode">
+									        	<option value="">Choisir une option</option>
+									        </select>
+									    </div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+									    	<label>Raison sociale</label>
+									        <select id="paymentClientCompanyName" class="form-control select2" style="width: 100%;" name="paymentClientCompanyName" ng-model="search.paymentClientCompanyName">
+									        	<option value="">Choisir une option</option>
+									        </select>
+									    </div>
+									</div>
+								</div>
+								<div class="row">
+									<div ng-class="'col-md-12'">
+										<div style="font-weight: normal; background: #c8eac5; padding: 6px; margin-bottom: 6px;">Entreprises</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+									    	<label>Société</label>
+									        <select id="paymentCompanyId" class="form-control select2" style="width: 100%;" name="paymentCompanyId" ng-model="search.paymentCompanyId" ng-options="c.id as c.name for c in companies">
+									        	<option value="">Choisir une option</option>
+									        </select>
+									    </div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+									    	<label>Agence</label>
+									        <select id="paymentAgencyId" class="form-control select2" style="width: 100%;" name="paymentAgencyId" ng-model="search.paymentAgencyId" ng-options="a.id as a.name for a in agencies">
+									        	<option value="">Choisir une option</option>
+									        </select>
+									    </div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<a href="#" ng-click="advancedSearchPayment()" class="btn success p-x-md">Rechercher</a>
+								<input type="reset" class="btn warn p-x-md" value="Annuler" />
+							</div>
+						</form>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+			</div>
+			<div id="invoiceModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" ng-if="addInvoiceForm">Enregistrement
+								d'une facture</h5>
+							<h5 class="modal-title" ng-if="editInvoiceForm">Modification
+								d'une facture</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<form id="invoiceForm" name="invoiceForm" method="post"
+							action="#" class="form-horizontal" ui-jp="parsley">
+							<div class="modal-body p-lg">
+								<div class="row">
+									<div ng-class="'col-md-12'">
+										<p class="text-muted">Renseignez les champs obligatoires</p>
+										<div ng-if="invoiceRequiredError"
+											class="alert alert-danger" role="alert">Veuillez
+											remplir tous les champs obligatoires !</div>
+										<div ng-if="invoiceTechnicalError"
+											class="alert alert-danger" role="alert">Un problème est
+											survenu ! Merci de contacter votre administrateur.</div>
+										<div ng-if="invoiceSuccess" class="alert alert-success"
+											role="alert">L'opération s'est effectuée avec succès !
+										</div>
+									</div>
+									<div ng-class="'col-md-12'">
+										<div class="form-group">
+											<label><span class="asterik"> * </span> Client</label>
+											<select class="form-select" name="client" ng-model="dto.clientId" ng-options="c.id as c.companyName for c in clients" ng-change="changeInvoiceFields()"></select>
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label><span class="asterik"> * </span> N° Facture</label> <input
+												type="text" class="form-control" name="code"
+												ng-model="dto.code" required="required" />
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label><span class="asterik"> * </span> Type de facturation</label>
+											<select id="invoiceType" class="form-select" name="invoiceType" ng-model="dto.invoiceTypeId" ng-options="i.id as i.name for i in invoiceTypes">
+												<option value="">Choisir une option</option>
+											</select>
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label><span class="asterik"> * </span> Date de facture</label> <input
+												type="text" class="form-control" name="invoiceDate"
+												ng-model="dto.invoiceDate" required="required" datepicker="datepicker" ng-change="calculateDueDate(dto.invoiceDate)" />
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label><span class="asterik"> * </span> Echéance</label> <input
+												type="text" class="form-control" name="dueDate"
+												ng-model="dto.dueDate" required="required" datepicker="datepicker" />
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label><span class="asterik"> * </span> Statut</label>
+											<select id="invoiceStatus" class="form-select" name="invoiceStatus" ng-model="dto.invoiceStatusId" ng-options="i.id as i.name for i in invoiceStatus">
+												<option value="">Choisir une option</option>
+											</select>
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label><span class="asterik"> * </span> Montant initial HT</label> <input
+												type="text" id="amountHt" class="form-control" name="amountHt" ng-blur="calculateAmountTtc()"
+												ng-model="dto.amountHt" required="required" />
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label><span class="asterik"> * </span> Montant initial TTC</label> <input
+												type="text" id="amountTtc" class="form-control" name="amountTtc"
+												ng-model="dto.amountTtc" required="required" />
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label>Montant restant TTC</label> <input
+												type="text" class="form-control" name="remainingAmount"
+												ng-model="dto.remainingAmount" />
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label><span class="asterik"> * </span> Méthode de paiement</label>
+											<select id="paymentMethod" class="form-select" name="paymentMethod" ng-model="dto.paymentMethodId" ng-options="p.id as (p.name + ' (' + p.code + ')') for p in paymentMethods">
+												<option value="">Choisir une option</option>
+											</select>
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label><span class="asterik"> * </span> Devise</label>
+											<select id="currency" class="form-select" name="currency" ng-model="dto.currencyId" ng-options="c.id as (c.name + ' (' + c.code + ')') for c in currencies">
+												<option value="">Choisir une option</option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="saveInvoice()">
+						        	<i class="mdi mdi-content-save label-icon align-middle fs-16 me-2"></i> Enregistrer
+						        </a>
+							</div>
+						</form>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+			</div>
+			<div id="importInvoicesModal" class="modal" data-backdrop="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Importation des factures</h5>
+							<img ng-show="importing" style="float: left; max-height: 20px;" th:src="@{/resources/images/loading.gif}" />
+						</div>
+						<form id="importInvoicesForm" name="importInvoicesForm" method="post" action="#"
+							class="form-horizontal" ui-jp="parsley">
+							<div class="modal-body p-lg">
+					            <div class="row">
+								  <input type="hidden" ng-model="dto.id" />
+								  <div ng-class="'col-md-12'">
+								  	<p class="text-muted">Renseignez les champs obligatoires</p>
+								  	<div ng-if="invoiceRequiredError" class="alert alert-danger" role="alert">
+								  	  Veuillez remplir tous les champs obligatoires !
+								  	</div>
+								  	<div ng-if="invoiceTechnicalError" class="alert alert-danger" role="alert">
+								  	  Un problème est survenu ! Merci de contacter votre administrateur.
+								  	</div>
+								  	<div ng-if="invoiceFileTypeError" class="alert alert-danger" role="alert">
+								  	  Le format du fichier est invalide ! Merci de vérifier.
+								  	</div>
+								  	<div ng-if="invoiceSuccess" class="alert alert-success" role="alert">
+								  	  L'opération s'est effectuée avec succès !
+								  	</div>
+								  </div>
+								  <div ng-class="'col-md-12'">
+								  	<div class="form-group">
+					                  <label><span class="asterik"> * </span> Importer</label>
+					                  <input type="file" class="form-control" id="invoiceFileInput" onchange="loadImportInvoices()" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />                        
+					                </div>
+								  </div>
+								  <div ng-class="'col-md-12'" style="padding-bottom: 0">
+										<div class="alert alert-info alert-dismissible alert-label-icon rounded-label fade show" role="alert">
+                                        	<i class="ri-file-download-line label-icon"></i>Télécharger le <a href="#" class="underline_link"><strong>format d'importation factures</strong></a>
+                                        </div>
+								  </div>
+								</div>
+					          </div>
+					        <div class="modal-footer">
+								<a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="saveImportInvoices()" ng-disabled="buttonDisabled">
+	                            	<i class="mdi mdi-upload label-icon align-middle fs-16 me-2"></i> Importer
+	                            </a>
+							</div>
+						</form>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+			</div>
+			<div id="importPaymentsModal" class="modal" data-backdrop="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Importation des règlements</h5>
+						</div>
+						<form id="importPaymentsForm" name="importPaymentsForm" method="post" action="#"
+							class="form-horizontal" ui-jp="parsley">
+							<div class="modal-body p-lg">
+					            <div class="row">
+								  <input type="hidden" ng-model="dto.id" />
+								  <div ng-class="'col-md-12'">
+								  	<p class="text-muted">Renseignez les champs obligatoires</p>
+								  	<div ng-if="paymentRequiredError" class="alert alert-danger" role="alert">
+								  	  Veuillez remplir tous les champs obligatoires !
+								  	</div>
+								  	<div ng-if="paymentTechnicalError" class="alert alert-danger" role="alert">
+								  	  Un problème est survenu ! Merci de contacter votre administrateur.
+								  	</div>
+								  	<div ng-if="paymentSuccess" class="alert alert-success" role="alert">
+								  	  L'opération s'est effectuée avec succès !
+								  	</div>
+								  </div>
+								  <div ng-class="'col-md-12'">
+								  	<div class="form-group">
+					                  <label><span class="asterik"> * </span> Importer</label>
+					                  <input type="file" class="form-control" id="paymentFileInput" onchange="loadImportPayments()" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />                        
+					                </div>
+								  </div>
+								  <div ng-class="'col-md-12'" style="padding-bottom: 0">
+										<div class="alert alert-info alert-dismissible alert-label-icon rounded-label fade show" role="alert">
+                                        	<i class="ri-file-download-line label-icon"></i>Télécharger le <a href="#" class="underline_link"><strong>format d'importation règlements</strong></a>
+                                        </div>
+								  </div>
+								</div>
+					          </div>
+					          <div class="modal-footer">
+								<a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="saveImportPayments()" ng-disabled="buttonDisabled">
+	                            	<i class="mdi mdi-upload label-icon align-middle fs-16 me-2"></i> Importer
+	                            </a>
+							  </div>
+						</form>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+			</div>
+			<div id="paymentModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" ng-if="addPaymentForm">Enregistrement
+								d'un règlement</h5>
+							<h5 class="modal-title" ng-if="editPaymentForm">Modification
+								d'un règlement</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<form id="paymentForm" name="paymentForm" method="post"
+							action="#" class="form-horizontal" ui-jp="parsley">
+							<div class="modal-body p-lg">
+								<div class="row">
+									<div ng-class="'col-md-12'">
+										<p class="text-muted">Renseignez les champs obligatoires</p>
+										<div ng-if="paymentRequiredError"
+											class="alert alert-danger" role="alert">Veuillez
+											remplir tous les champs obligatoires !</div>
+										<div ng-if="paymentTechnicalError"
+											class="alert alert-danger" role="alert">Un problème est
+											survenu ! Merci de contacter votre administrateur.</div>
+										<div ng-if="paymentSuccess" class="alert alert-success"
+											role="alert">L'opération s'est effectuée avec succès !
+										</div>
+									</div>
+									<div ng-class="'col-md-12'">
+										<div class="form-group">
+											<label><span class="asterik"> * </span> Client</label>
+											<select class="form-select" name="clientPayment" ng-model="dto.payment.clientId" ng-options="c.id as c.companyName for c in clients" ng-change="changePaymentFields()"></select>
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label><span class="asterik"> * </span> N° Règlement</label> <input
+												type="text" class="form-control" name="code"
+												ng-model="dto.payment.code" required="required" />
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label><span class="asterik"> * </span> Libellé</label> <input
+												type="text" class="form-control" name="name"
+												ng-model="dto.payment.name" required="required" />
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label><span class="asterik"> * </span> Date de règlement</label> <input
+												type="text" class="form-control" name="paymentDate"
+												ng-model="dto.payment.paymentDate" required="required" datepicker="datepicker" />
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label>Montant</label> <input
+												type="text" class="form-control" name="amount"
+												ng-model="dto.payment.amount" />
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label>Méthode de paiement</label>
+											<select id="paymentMethodPayment" class="form-select" name="paymentMethodPayment" ng-model="dto.payment.paymentMethodId" ng-options="p.id as (p.name + ' (' + p.code + ')') for p in paymentMethods"></select>
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label><span class="asterik"> * </span> Devise</label>
+											<select id="currencyPayment" class="form-select" name="currencyPayment" ng-model="dto.payment.currencyId" ng-options="c.id as (c.name + ' (' + c.code + ')') for c in currencies"></select>
+										</div>
+									</div>
+									<!-- <div ng-class="'col-md-12'">
+										<div style="font-weight: normal; background: #c8eac5; padding: 10px; margin-bottom: 10px;">
+										Factures correspondants
+										<a href="#" ng-click="addInvoicePay()"
+												class="btn btn-fw" style="float: right; min-width: 0.4rem; padding-left: 9px; padding-right: 9px; padding-top: 3px; padding-bottom: 3px; margin-top: -3px; background: #00b1ff; color: #ffffff"><i class="fa fa-plus"></i></a>
+										</div>
+									</div>
+									<div ng-class="'col-md-12'">
+									<div class="row" ng-repeat="ip in dto.payment.invoicePaymentsDTO">
+									<div ng-class="'col-md-5'">
+										<div class="form-group">
+											<label>Nº Facture</label>
+											<select id="invoiceId{{$index}}" class="form-control" name="code" ng-model="ip.invoiceId"
+													ng-options="i.id as i.code for i in invoices" ng-change="setInvoiceFields($index)">
+											</select>
+										</div>
+									</div>
+									<div ng-class="'col-md-5'">
+										<div class="form-group">
+											<label>Montant</label> <input
+												type="text" class="form-control" name="amount"
+												ng-model="ip.amount" ng-blur="setInvoiceAmount($index)" />
+										</div>
+									</div>
+									<div ng-class="'col-md-2'">
+										<div class="form-group"><label></label>
+											<a href="#" ng-click="removeInvoicePay($index)"
+												class="btn btn-fw danger" style="min-width: 0.4rem; padding-left: 9px; padding-right: 9px; padding-top: 2px; padding-bottom: 3px; margin-top: 33px; color: #ffffff"><i class="fa fa-trash"></i></a>
+										</div>
+									</div>
+									</div>
+									</div> -->
+								</div>
+							</div>
+							<div class="modal-footer">
+								<a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="savePayment()">
+						        	<i class="mdi mdi-content-save label-icon align-middle fs-16 me-2"></i> Enregistrer
+						        </a>
+							</div>
+						</form>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+			</div>
+			<div id="invoicePaymentModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Ajout
+								d'une facture</h5>
+						</div>
+						<form id="invoicePaymentForm" name="invoicePaymentForm" method="post"
+							action="#" class="form-horizontal" ui-jp="parsley">
+							<div class="modal-body p-lg">
+								<div class="row">
+									<div ng-class="'col-md-12'">
+										<p class="text-muted">Renseignez les champs obligatoires</p>
+										<div ng-if="invoicePaymentRequiredError"
+											class="alert alert-danger" role="alert">Veuillez
+											remplir tous les champs obligatoires !</div>
+										<div ng-if="invoicePaymentTechnicalError"
+											class="alert alert-danger" role="alert">Un problème est
+											survenu ! Merci de contacter votre administrateur.</div>
+										<div ng-if="invoicePaymentSuccess" class="alert alert-success"
+											role="alert">L'opération s'est effectuée avec succès !
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label><span class="asterik"> * </span> N° Facture</label>
+											<select id="invoice" class="form-control select2" style="width: 100%;" name="client" ng-model="dto.invoicePayment.invoiceId" ng-options="i.id as i.code for i in invoices" onchange="showRemainingAmount()"></select>
+										</div>
+									</div>
+									<div ng-class="'col-md-6'">
+										<div class="form-group">
+											<label><span class="asterik"> * </span> Montant</label> <input
+												type="text" class="form-control" name="amount"
+												ng-model="dto.invoicePayment.amount" required="required" />
+										</div>
+									</div>
+									<div ng-show="remainingIndication" ng-class="'col-md-12'">
+										<div class="alert alert-info"
+											role="alert">Veuillez ne pas dépasser le montant restant de la facture : <strong>{{ remainingAmount }}</strong>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<a href="#" class="btn warn p-x-md" data-dismiss="modal">Annuler</a>
+								<a href="#" ng-click="saveInvoicePayment()"
+									class="btn success p-x-md">Enregistrer</a>
+							</div>
+						</form>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+			</div>
+			
+			<div id="paymentInvoiceListModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Règlements correspondants à la facture N° {{ dto.code }}</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body p-lg">
+							<div class="table-responsive">
+									<table width="100%" id="paymentInvoiceTable"
+										ng-controller="paymentInvoiceTableController"
+										th:attr="ng-init='init();'"
+										class="table table-striped b-t b-b">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>N° Règlement</th>
+												<th>Date</th>
+												<th>Montant</th>
+											</tr>
+										</thead>
+									</table>
+								</div>	
+						</div>
+						<div class="modal-footer">
+							
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+			</div>
+			<div id="invoicePaymentListModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Factures correspondantes au règlement N° {{ dto.payment.code }}</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body p-lg">
+							<div class="table-responsive">
+									<table width="100%" id="invoicePaymentTable"
+										ng-controller="invoicePaymentTableController"
+										th:attr="ng-init='init();'"
+										class="table table-striped b-t b-b">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>N° Facture</th>
+												<th>Date</th>
+												<th>Montant</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+						</div>
+						<div class="modal-footer">
+							
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+			</div>
+			<div id="clientDetailModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg modal-client-customized">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Informations du client</h5>
+							<span class="nav-link-breadcrumb label primary" style="float: right; padding-top: 5px; padding-bottom: 5px">Client : {{clientDetail.companyName}}</span>
+						</div>
+						<div class="modal-body p-lg">
+							<div class="row">
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Code client :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										<span class="modal-item">{{clientDetail.codeClient}}</span>
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Raison sociale :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										<span class="modal-item">{{clientDetail.companyName}}</span>
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										N° ICE :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										<span class="modal-item">{{clientDetail.iceNum}}</span>
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										N° Registre de commerce :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										<span class="modal-item">{{clientDetail.rcNum}}</span>
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Identifiant fiscal :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										<span class="modal-item">{{clientDetail.taxNum}}</span>
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Code postal :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										<span class="modal-item">{{clientDetail.zipcode}}</span>
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Ville :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										<span class="modal-item">{{clientDetail.cityName}}</span>
+									</div>
+								</div>
+								<div ng-class="'col-md-12'">
+									<div class="b-b nav-active-bg">
+							          <ul class="nav nav-tabs-modal">
+							            <li class="nav-item" style="width: 31%; text-align: center; margin: auto;">
+							              <a class="nav-link active" href="#" data-toggle="tab" data-target="#clienttab1">Relances &amp; litiges</a>
+							            </li>
+							            <li class="nav-item" style="width: 23%; text-align: center; margin: auto;">
+							              <a class="nav-link" href="#" data-toggle="tab" data-target="#clienttab2">Crédit risque </a>
+							            </li>
+							            <li class="nav-item" style="width: 25%; text-align: center; margin: auto;">
+							              <a class="nav-link" href="#" data-toggle="tab" data-target="#clienttab3">Rapports et indicateurs</a>
+							            </li>
+							            <li class="nav-item" style="width: 21%; text-align: center; margin: auto;">
+							              <a class="nav-link" href="#" data-toggle="tab" data-target="#clienttab4">Contacts</a>
+							            </li>
+							          </ul>
+							        </div>
+							        <div class="tab-content p-a m-b-md" style="background: #FFFFFF;">
+							          <div class="tab-pane animated fadeIn active text-muted" id="clienttab1" style="padding: 10px;">
+							          	  <small class="text-muted"><span class="nav-link-breadcrumb label primary">Liste des relances</span></small>
+							              <div class="table-responsive" style="margin-top: 5px;">
+										      <table id="reminderClientTable" ng-controller="reminderClientTableController"
+													th:attr="ng-init='init();'" class="table table-striped b-t b-b">
+										        <thead>
+										          <tr>
+										            <th>ID</th>
+										            <th>Statut</th>
+										            <th>Date</th>
+										            <th>Action</th>
+										            <th>Type d'action</th>
+										            <th>Nom</th>
+										            <th>N° Facture</th>
+										            <th>Montant</th>
+										          </tr>
+										        </thead>
+										      </table>
+										  </div><br/>
+										  <small class="text-muted"><span class="nav-link-breadcrumb label primary">Liste des dossiers de litiges en cours</span></small>
+										  <div class="table-responsive" style="margin-top: 5px;">
+										      <table id="litigationCurrentClientTable" ng-controller="litigationCurrentClientTableController"
+													th:attr="ng-init='init();'" class="table table-striped b-t b-b">
+										        <thead>
+										          <tr>
+										            <th>ID</th>
+										            <th>Date litige</th>
+										            <th>Code litige</th>
+										            <th>N° Facture</th>
+										            <th>Montant</th>
+										          </tr>
+										        </thead>
+										      </table>
+										    </div>
+							          </div>
+							          <div class="tab-pane animated fadeIn text-muted" id="clienttab2" style="padding: 10px;">
+							          	<small class="text-muted"><span class="nav-link-breadcrumb label primary">Balance âgée</span></small>
+							          	<div class="table-responsive" style="margin-top: 5px;">
+											<table width="100%" id="outstandingStatusClientTable"
+												ng-controller="outstandingStatusClientTableController"
+												th:attr="ng-init='init();'"
+												class="table table-striped b-t b-b">
+												<thead>
+													<tr>
+														<th>ID</th>
+														<th>Statut</th>
+														<th>Encours accordé</th>
+														<th>Encours réel</th>
+														<th>Encours non échu</th>
+														<th>Total Retard</th>
+														<th>Retard &lt; à 30 jrs</th>
+														<th>Retard entre 30 et 90 jrs</th>
+														<th>Retard &gt; à 90 jrs</th>
+													</tr>
+												</thead>
+											</table>
+										</div><br/>
+										<small class="text-muted"><span class="nav-link-breadcrumb label primary">Encours client</span></small>
+										<div class="table-responsive" style="margin-top: 5px;">
+											<table width="100%" id="outstandingClientTable"
+												ng-controller="outstandingClientTableController"
+												th:attr="ng-init='init();'"
+												class="table table-striped b-t b-b">
+												<thead>
+													<tr>
+														<th>ID</th>
+														<th>Statut</th>
+														<th>Montant demandé</th>
+														<th>Montant accordé</th>
+														<th>Eligibilité</th>
+														<th>Assureur</th>
+														<th>Montant de l'agrément</th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+							          </div>
+							          <div class="tab-pane animated fadeIn text-muted" id="clienttab3" style="padding: 10px;">
+							            
+							          </div>
+							          <div class="tab-pane animated fadeIn text-muted" id="clienttab4" style="padding: 10px;">
+							             <div class="table-responsive">
+											<table width="100%" id="contactClientTable"
+												ng-controller="contactClientTableController"
+												th:attr="ng-init='init();'"
+												class="table table-striped b-t b-b">
+												<thead>
+													<tr>
+														<th>ID</th>
+														<th>Nom</th>
+														<th>Prénom</th>
+														<th>Fonction</th>
+														<th>N° Téléphone</th>
+														<th>Email</th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+							          </div>
+							        </div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<a href="#" class="btn danger p-x-md" data-dismiss="modal">Fermer</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="invoiceTotalModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg modal-customized">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Liste de factures en attente de règlement</h5>
+						</div>
+						<form name="" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+				          <div class="modal-body p-lg">
+				            <div class="row">
+							  <div ng-class="'col-md-12'">
+								<div class="table-responsive">
+									<table width="100%" id="invoiceTotalTable"
+										ng-controller="invoiceTotalTableController"
+										th:attr="ng-init='init();'"
+										class="table table-striped b-t b-b">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>Statut</th>
+												<th>Echéance</th>
+												<th>Date de facture</th>
+												<th>N° Facture</th>
+												<th>Montant initial</th>
+												<th>Montant restant</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							  </div>
+							</div>
+				          </div>
+				          <div class="modal-footer">
+				          	<a href="#" class="btn danger p-x-md" data-dismiss="modal">Fermer</a>
+				          </div>
+				        </form>
+					</div>
+				</div>
+			</div>
+			<div id="invoiceNotOverdueModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg modal-customized">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Liste de factures non échues en attente de règlement</h5>
+						</div>
+						<form name="" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+				          <div class="modal-body p-lg">
+				            <div class="row">
+							  <div ng-class="'col-md-12'">
+								<div class="table-responsive">
+									<table width="100%" id="invoiceNotOverdueTable"
+										ng-controller="invoiceNotOverdueTableController"
+										th:attr="ng-init='init();'"
+										class="table table-striped b-t b-b">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>Statut</th>
+												<th>Echéance</th>
+												<th>Date de facture</th>
+												<th>N° Facture</th>
+												<th>Montant initial</th>
+												<th>Montant restant</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							  </div>
+							</div>
+				          </div>
+				          <div class="modal-footer">
+				          	<a href="#" class="btn danger p-x-md" data-dismiss="modal">Fermer</a>
+				          </div>
+				        </form>
+					</div>
+				</div>
+			</div>
+			<div id="invoiceOverdueModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg modal-customized">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Liste de factures échues en attente de règlement</h5>
+						</div>
+						<form name="" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+				          <div class="modal-body p-lg">
+				            <div class="row">
+							  <div ng-class="'col-md-12'">
+								<div class="table-responsive">
+									<table width="100%" id="invoiceOverdueTable"
+										ng-controller="invoiceOverdueTableController"
+										th:attr="ng-init='init();'"
+										class="table table-striped b-t b-b">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>Statut</th>
+												<th>Echéance</th>
+												<th>Date de facture</th>
+												<th>N° Facture</th>
+												<th>Montant initial</th>
+												<th>Montant restant</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							  </div>
+							</div>
+				          </div>
+				          <div class="modal-footer">
+				          	<a href="#" class="btn danger p-x-md" data-dismiss="modal">Fermer</a>
+				          </div>
+				        </form>
+					</div>
+				</div>
+			</div>
+			<div id="invoiceOverdue30Modal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg modal-customized">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Liste de factures échues à moins de 30 jours en attente de règlement</h5>
+						</div>
+						<form name="" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+				          <div class="modal-body p-lg">
+				            <div class="row">
+							  <div ng-class="'col-md-12'">
+								<div class="table-responsive">
+									<table width="100%" id="invoiceOverdue30Table"
+										ng-controller="invoiceOverdue30TableController"
+										th:attr="ng-init='init();'"
+										class="table table-striped b-t b-b">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>Statut</th>
+												<th>Echéance</th>
+												<th>Date de facture</th>
+												<th>N° Facture</th>
+												<th>Montant initial</th>
+												<th>Montant restant</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							  </div>
+							</div>
+				          </div>
+				          <div class="modal-footer">
+				          	<a href="#" class="btn danger p-x-md" data-dismiss="modal">Fermer</a>
+				          </div>
+				        </form>
+					</div>
+				</div>
+			</div>
+			<div id="invoiceOverdue60Modal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg modal-customized">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Liste de factures échues entre 30 et 90 jours en attente de règlement</h5>
+						</div>
+						<form name="" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+				          <div class="modal-body p-lg">
+				            <div class="row">
+							  <div ng-class="'col-md-12'">
+								<div class="table-responsive">
+									<table width="100%" id="invoiceOverdue60Table"
+										ng-controller="invoiceOverdue60TableController"
+										th:attr="ng-init='init();'"
+										class="table table-striped b-t b-b">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>Statut</th>
+												<th>Echéance</th>
+												<th>Date de facture</th>
+												<th>N° Facture</th>
+												<th>Montant initial</th>
+												<th>Montant restant</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							  </div>
+							</div>
+				          </div>
+				          <div class="modal-footer">
+				          	<a href="#" class="btn danger p-x-md" data-dismiss="modal">Fermer</a>
+				          </div>
+				        </form>
+					</div>
+				</div>
+			</div>
+			<div id="invoiceOverdue90Modal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg modal-customized">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Liste de factures échues à plus de 90 jours en attente de règlement</h5>
+						</div>
+						<form name="" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+				          <div class="modal-body p-lg">
+				            <div class="row">
+							  <div ng-class="'col-md-12'">
+								<div class="table-responsive">
+									<table width="100%" id="invoiceOverdue90Table"
+										ng-controller="invoiceOverdue90TableController"
+										th:attr="ng-init='init();'"
+										class="table table-striped b-t b-b">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>Statut</th>
+												<th>Echéance</th>
+												<th>Date de facture</th>
+												<th>N° Facture</th>
+												<th>Montant initial</th>
+												<th>Montant restant</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							  </div>
+							</div>
+				          </div>
+				          <div class="modal-footer">
+				          	<a href="#" class="btn danger p-x-md" data-dismiss="modal">Fermer</a>
+				          </div>
+				        </form>
+					</div>
+				</div>
+			</div>
+			<div id="paymentDetailModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg modal-customized">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Règlement Nº {{paymentDetail.code}}</h5>
+							<span class="nav-link-breadcrumb label primary" style="float: right; padding-top: 5px; padding-bottom: 5px">Client : {{paymentDetail.clientCompanyName}}</span>
+						</div>
+						<div class="modal-body p-lg">
+							<div class="row">
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Date de règlement :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										{{paymentDetail.paymentDate}}
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										KY :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										{{paymentDetail.ky}}
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Libellé :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										{{paymentDetail.name}}
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Chrono :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										{{paymentDetail.chrono}}
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Mouvement :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										{{paymentDetail.mvt}}
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Journal :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										{{paymentDetail.journal}}
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Montant :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										{{paymentDetail.amount}} {{paymentDetail.currencySymbol}}
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Méthode de paiement :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										{{paymentDetail.paymentMethodDescription}}
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Société :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										{{paymentDetail.companyName}}
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Agence :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										{{paymentDetail.agencyName}}
+									</div>
+								</div>
+								<div ng-class="'col-md-12'" style="background: #FFFFFF; padding-top: 15px;">
+									<small class="text-muted"><span class="nav-link-breadcrumb label primary">Liste des factures correspondantes</span></small>
+									<div class="table-responsive">
+										<table width="100%" id="invoicePaymentDetailTable"
+											ng-controller="invoicePaymentDetailTableController"
+											th:attr="ng-init='init();'"
+											class="table table-striped b-t b-b">
+											<thead>
+												<tr>
+													<th>ID</th>
+													<th>N° Facture</th>
+													<th>Date de facture</th>
+													<th>Date d'échéance</th>
+													<th>Montant</th>
+													<th>Actions</th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<a href="#" class="btn danger p-x-md" data-dismiss="modal">Fermer</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="invoiceDetailModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg modal-customized">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Document Nº {{invoiceDetail.code}}</h5>
+							<span class="nav-link-breadcrumb label primary" style="float: right; padding-top: 5px; padding-bottom: 5px">Client : {{invoiceDetail.clientCompanyName}}</span>
+						</div>
+						<div class="modal-body p-lg">
+							<div class="row">
+								<div ng-class="'col-md-12'">
+									<div class="form-group {{invoiceDetail.invoiceStatusColor}} align-center">
+										{{invoiceDetail.invoiceStatusText}}
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Date de document :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										{{invoiceDetail.invoiceDate}}
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Date d'échéance :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										{{invoiceDetail.dueDate}}
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Montant initial :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										{{invoiceDetail.amountTtc}} {{invoiceDetail.currencySymbol}}
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Montant restant :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										<strong>{{invoiceDetail.remainingAmount}} {{invoiceDetail.currencySymbol}}</strong>
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Echéance :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										{{invoiceDetail.deadlineDesignation}}
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Méthode de paiement :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										{{invoiceDetail.paymentMethodDescription}}
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Type de document :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										{{invoiceDetail.invoiceTypeName}}
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										Agence :
+									</div>
+								</div>
+								<div ng-class="'col-md-3'">
+									<div class="form-group">
+										{{invoiceDetail.agencyName}}
+									</div>
+								</div>
+								<div ng-class="'col-md-12'">
+									<div class="b-b nav-active-bg">
+							          <ul class="nav nav-tabs-modal">
+							            <li class="nav-item" style="width: 31%; text-align: center; margin: auto;">
+							              <a class="nav-link active" href="#" data-toggle="tab" data-target="#invoicetab1">Historique des relances <span ng-if="invoiceReminderNum == 0" class="label rounded" style="font-size: 12px; margin-left: 3px;">{{invoiceReminderNum}}</span><span ng-if="invoiceReminderNum != 0" class="label rounded primary" style="font-size: 12px; margin-left: 3px;">{{invoiceReminderNum}}</span></a>
+							            </li>
+							            <li class="nav-item" style="width: 23%; text-align: center; margin: auto;">
+							              <a class="nav-link" href="#" data-toggle="tab" data-target="#invoicetab2">Promesses <span ng-if="invoicePromiseNum == 0" class="label rounded" style="font-size: 12px; margin-left: 3px;">{{invoicePromiseNum}}</span><span ng-if="invoicePromiseNum != 0" class="label rounded primary" style="font-size: 12px; margin-left: 3px;">{{invoicePromiseNum}}</span></a>
+							            </li>
+							            <li class="nav-item" style="width: 23%; text-align: center; margin: auto;">
+							              <a class="nav-link" href="#" data-toggle="tab" data-target="#invoicetab3">Litiges <span ng-if="invoiceLitigationNum == 0" class="label rounded" style="font-size: 12px; margin-left: 3px;">{{invoiceLitigationNum}}</span><span ng-if="invoiceLitigationNum != 0" class="label rounded primary" style="font-size: 12px; margin-left: 3px;">{{invoiceLitigationNum}}</span></a>
+							            </li>
+							            <li class="nav-item" style="width: 23%; text-align: center; margin: auto;">
+							              <a class="nav-link" href="#" data-toggle="tab" data-target="#invoicetab4">Contentieux <span ng-if="invoiceContenceNum == 0" class="label rounded" style="font-size: 12px; margin-left: 3px;">{{invoiceContenceNum}}</span><span ng-if="invoiceContenceNum != 0" class="label rounded primary" style="font-size: 12px; margin-left: 3px;">{{invoiceContenceNum}}</span></a>
+							            </li>
+							          </ul>
+							        </div>
+							        <div class="tab-content p-a m-b-md" style="background: #FFFFFF;">
+							          <div class="tab-pane animated fadeIn active text-muted" id="invoicetab1" style="padding: 10px;">
+							            <div class="table-responsive">
+											<table width="100%" id="reminderInvoiceTable" ng-controller="reminderInvoiceTableController"
+												th:attr="ng-init='init();'" class="table table-striped b-t b-b">
+									        <thead>
+									          <tr>
+									            <th>ID</th>
+									            <th>Statut</th>
+									            <th>Date</th>
+									            <th>Action</th>
+									            <th>Type d'action</th>
+									            <th>Nom</th>
+									          </tr>
+									        </thead>
+									      </table>
+										</div>
+							          </div>
+							          <div class="tab-pane animated fadeIn text-muted" id="invoicetab2" style="padding: 10px;">
+							            <div class="table-responsive">
+											<table width="100%" id="promiseInvoiceTable" ng-controller="promiseInvoiceTableController"
+												th:attr="ng-init='init();'" class="table table-striped b-t b-b">
+									        <thead>
+									          <tr>
+									            <th>ID</th>
+									            <th>Statut</th>
+									            <th>Date</th>
+									            <th>Date prévue</th>
+									            <th>Nom</th>
+									            <th>Commentaires</th>
+									          </tr>
+									        </thead>
+									      </table>
+										</div>
+							          </div>
+							          <div class="tab-pane animated fadeIn text-muted" id="invoicetab3" style="padding: 10px;">
+							            <div class="table-responsive">
+											<table width="100%" id="litigationInvoiceTable" ng-controller="litigationInvoiceTableController"
+												th:attr="ng-init='init();'" class="table table-striped b-t b-b">
+									        <thead>
+									          <tr>
+									            <th>ID</th>
+									            <th>Statut</th>
+									            <th>Date</th>
+									            <th>Nom</th>
+									            <th>Commentaires</th>
+									          </tr>
+									        </thead>
+									      </table>
+										</div>
+							          </div>
+							          <div class="tab-pane animated fadeIn text-muted" id="invoicetab4" style="padding: 10px;">
+							             <div class="table-responsive">
+										  <table width="100%" id="contenceInvoiceTable" ng-controller="contenceInvoiceTableController"
+												th:attr="ng-init='init();'" class="table table-striped b-t b-b">
+									        <thead>
+									          <tr>
+									            <th>ID</th>
+									            <th>Statut</th>
+									            <th>Date</th>
+									            <th>Nº Affaire</th>
+									            <th>Avocat</th>
+									            <th>Tribunal de compétences</th>
+									          </tr>
+									        </thead>
+									      </table>
+										</div>
+							          </div>
+							        </div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<a href="#" ng-if="invoiceDetail.invoiceStatusId == 1" class="btn warn p-x-md" ng-click="addLitigation(invoiceDetail.id)">Déclasser en litige</a>
+							<a href="#" ng-if="invoiceDetail.invoiceStatusId == 1" class="btn orange p-x-md" ng-click="addContence()">Déclasser en contentieux</a>
+							<a href="#" class="btn danger p-x-md" data-dismiss="modal">Fermer</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="litigationModal" class="modal fade" data-backdrop="true">
+			    <div class="modal-dialog">
+			      <div class="modal-content">
+			        <div class="modal-header">
+			      	  <h5 class="modal-title" ng-if="addLitigationForm">Enregistrement d'un litige</h5>
+			      	  <h5 class="modal-title" ng-if="editLitigationForm">Modification d'un litige</h5>
+			        </div>
+			        <form id="litigationForm" name="litigationForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+			          <div class="modal-body p-lg">
+			            <div class="row">
+						  <input type="hidden" ng-model="dto.id" />
+						  <div ng-class="'col-md-12'">
+						  	<p class="text-muted">Renseignez les champs obligatoires</p>
+						  	<div ng-if="litigationRequiredError" class="alert alert-danger" role="alert">
+						  	  Veuillez remplir tous les champs obligatoires !
+						  	</div>
+						  	<div ng-if="litigationTechnicalError" class="alert alert-danger" role="alert">
+						  	  Un problème est survenu ! Merci de contacter votre administrateur.
+						  	</div>
+						  	<div ng-if="litigationSuccess" class="alert alert-success" role="alert">
+						  	  L'opération s'est effectuée avec succès !
+						  	</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label><span class="asterik"> * </span> N° Document</label> <select
+									class="form-control" name="invoice" ng-model="dto.litigation.invoiceId" ng-change="loadByInvoice(dto.litigation.invoiceId)"
+									ng-options="i.id as i.code for i in invoices" required="required">
+										<option value="">Choisir une option</option>
+									</select>
+							</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label><span class="asterik"> * </span> Montant du document</label> <input
+									type="text" class="form-control" name="amount"
+									ng-model="dto.litigation.amount" required="required" ng-readonly="true" />
+							</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label><span class="asterik"> * </span> Date d'échéance</label> <input
+									type="text" class="form-control" name="dueDate" datepicker="datepicker"
+									ng-model="dto.litigation.dueDate" required="required" ng-readonly="true" />
+							</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label><span class="asterik"> * </span> Nom du client</label> <input
+									type="text" class="form-control" name="clientCompanyName"
+									ng-model="dto.litigation.clientCompanyName" required="required" ng-readonly="true" />
+							</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label><span class="asterik"> * </span> Date de litige</label> <input
+									type="text" class="form-control" name="date" datepicker="datepicker"
+									ng-model="dto.litigation.date" required="required" />
+							</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label><span class="asterik"> * </span> Status</label> <select
+									class="form-control" name="litigationStatus" ng-model="dto.litigation.litigationStatusId"
+									ng-options="l.id as l.name for l in litigationStatus" required="required">
+										<option value="">Choisir une option</option>
+									</select>
+							</div>
+						  </div>
+						  <div ng-class="'col-md-12'">
+							<div class="form-group">
+								<label>Commentaires</label> <textarea
+									type="text" class="form-control" name="comment"
+									ng-model="dto.litigation.comment"></textarea>
+							</div>
+						  </div>
+						</div>
+			          </div>
+			          <div class="modal-footer">
+			          	<a href="#" class="btn warn p-x-md" data-dismiss="modal">Annuler</a>
+			            <a href="#" ng-click="saveLitigation()" class="btn success p-x-md">Enregistrer</a>
+			          </div>
+			        </form>
+			      </div><!-- /.modal-content -->
+			    </div>
+			  </div>
+			  <div id="contenceModal" class="modal fade" data-backdrop="true">
+			    <div class="modal-dialog">
+			      <div class="modal-content">
+			        <div class="modal-header">
+			      	  <h5 class="modal-title" ng-if="addContenceForm">Enregistrement d'un dossier de contentieux</h5>
+			      	  <h5 class="modal-title" ng-if="editContenceForm">Modification d'un dossier de contentieux</h5>
+			        </div>
+			        <form id="contenceForm" name="contenceForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+			          <div class="modal-body p-lg">
+			            <div class="row">
+						  <input type="hidden" ng-model="dto.id" />
+						  <div ng-class="'col-md-12'">
+						  	<p class="text-muted">Renseignez les champs obligatoires</p>
+						  	<div ng-if="contenceRequiredError" class="alert alert-danger" role="alert">
+						  	  Veuillez remplir tous les champs obligatoires !
+						  	</div>
+						  	<div ng-if="contenceTechnicalError" class="alert alert-danger" role="alert">
+						  	  Un problème est survenu ! Merci de contacter votre administrateur.
+						  	</div>
+						  	<div ng-if="contenceSuccess" class="alert alert-success" role="alert">
+						  	  L'opération s'est effectuée avec succès !
+						  	</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label>N° Affaire</label> <input
+									type="text" class="form-control" name="code"
+									ng-model="dto.contence.code" ng-readonly="true" />
+							</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label><span class="asterik"> * </span> N° Document</label> <select
+									class="form-control" name="invoice" ng-model="dto.contence.invoiceId"
+									ng-options="i.id as i.code for i in invoices" required="required"></select>
+							</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label><span class="asterik"> * </span> Montant du document</label> <input
+									type="text" class="form-control" name="amount"
+									ng-model="dto.contence.amount" required="required" ng-readonly="true" />
+							</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label><span class="asterik"> * </span> Nom du client</label> <input
+									type="text" class="form-control" name="clientCompanyName"
+									ng-model="dto.contence.clientCompanyName" required="required" ng-readonly="true" />
+							</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label><span class="asterik"> * </span> Date</label> <input
+									type="text" class="form-control" name="date" datepicker="datepicker"
+									ng-model="dto.contence.date" required="required" />
+							</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label><span class="asterik"> * </span> Status</label> <select
+									class="form-control" name="contenceStep" ng-model="dto.contence.contenceStepId"
+									ng-options="l.id as l.name for l in contenceSteps" required="required"></select>
+							</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label><span class="asterik"> * </span> Avocat</label> <select
+									class="form-control" name="lawyer" ng-model="dto.contence.lawyerId"
+									ng-options="u.id as (u.prenom+' '+u.nom) for u in users" required="required"></select>
+							</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label>Chargé de suivi</label> <select
+									class="form-control" name="recoveryUser" ng-model="dto.contence.recoveryUserId"
+									ng-options="u.id as (u.prenom+' '+u.nom) for u in users"></select>
+							</div>
+						  </div>
+						  <div ng-class="'col-md-12'">
+							<div class="form-group">
+								<label><span class="asterik"> * </span> Tribunal de commerce</label> <select
+									class="form-control" name="commercialCourt" ng-model="dto.contence.commercialCourtId"
+									ng-options="l.id as l.name for l in commercialCourts" required="required"></select>
+							</div>
+						  </div>
+						  <div ng-class="'col-md-12'">
+							<div class="form-group">
+								<label>Commentaires</label> <textarea
+									type="text" class="form-control" name="comment"
+									ng-model="dto.contence.comment"></textarea>
+							</div>
+						  </div>
+						</div>
+			          </div>
+			          <div class="modal-footer">
+			          	<a href="#" class="btn warn p-x-md" data-dismiss="modal">Annuler</a>
+			            <a href="#" ng-click="saveContence()" class="btn success p-x-md">Enregistrer</a>
+			          </div>
+			        </form>
+			      </div><!-- /.modal-content -->
+			    </div>
+			  </div>
+			<div id="promiseModal" class="modal fade" data-backdrop="true">
+			    <div class="modal-dialog">
+			      <div class="modal-content">
+			        <div class="modal-header">
+			      	  <h5 class="modal-title" ng-if="addPromiseForm">Enregistrement d'une promesse de règlement</h5>
+			      	  <h5 class="modal-title" ng-if="editPromiseForm">Modification d'une promesse de règlement</h5>
+			        </div>
+			        <form id="promiseForm" name="promiseForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+			          <div class="modal-body p-lg">
+			            <div class="row">
+						  <input type="hidden" ng-model="dto.id" />
+						  <div ng-class="'col-md-12'">
+						  	<p class="text-muted">Renseignez les champs obligatoires</p>
+						  	<div ng-if="promiseRequiredError" class="alert alert-danger" role="alert">
+						  	  Veuillez remplir tous les champs obligatoires !
+						  	</div>
+						  	<div ng-if="promiseTechnicalError" class="alert alert-danger" role="alert">
+						  	  Un problème est survenu ! Merci de contacter votre administrateur.
+						  	</div>
+						  	<div ng-if="promiseSuccess" class="alert alert-success" role="alert">
+						  	  L'opération s'est effectuée avec succès !
+						  	</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label><span class="asterik"> * </span> N° Document</label> <select
+									class="form-control" name="invoice" ng-model="dto.promise.invoiceId"
+									ng-options="i.id as i.code for i in invoices" required="required" ng-disabled="true">
+										<option value="">Choisir une option</option>
+									</select>
+							</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label><span class="asterik"> * </span> Montant du document</label> <input
+									type="text" class="form-control" name="amount"
+									ng-model="dto.promise.amount" required="required" ng-readonly="true" />
+							</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label><span class="asterik"> * </span> Date d'échéance</label> <input
+									type="text" class="form-control" name="dueDate" datepicker="datepicker"
+									ng-model="dto.promise.dueDate" required="required" ng-readonly="true" />
+							</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label><span class="asterik"> * </span> Nom du client</label> <input
+									type="text" class="form-control" name="clientCompanyName"
+									ng-model="dto.promise.clientCompanyName" required="required" ng-readonly="true" />
+							</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label><span class="asterik"> * </span> Date</label> <input
+									type="text" class="form-control" name="date" datepicker="datepicker"
+									ng-model="dto.promise.date" required="required" />
+							</div>
+						  </div>
+						  <div ng-class="'col-md-6'">
+							<div class="form-group">
+								<label><span class="asterik"> * </span> Date prévue de règlement</label> <input
+									type="text" class="form-control" name="predictedDate" datepicker="datepicker"
+									ng-model="dto.promise.predictedDate" required="required" />
+							</div>
+						  </div>
+						  <div ng-class="'col-md-12'">
+							<div class="form-group">
+								<label>Commentaires</label> <textarea
+									type="text" class="form-control" name="comment"
+									ng-model="dto.promise.comment"></textarea>
+							</div>
+						  </div>
+						</div>
+			          </div>
+			          <div class="modal-footer">
+			          	<a href="#" class="btn warn p-x-md" data-dismiss="modal">Annuler</a>
+			            <a href="#" ng-click="savePromise()" class="btn success p-x-md">Enregistrer</a>
+			          </div>
+			        </form>
+			      </div><!-- /.modal-content -->
+			    </div>
+			  </div>
+	</div>
+	<div layout:fragment="plugins" class="page-content">
+		<script th:src='@{/resources/js/credit/invoice.js}'></script>
+	</div>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<title></title>
+</head>
+<body>
+	<th:block th:fragment="form">
+		<form id="form" name="form" method="post" action="#"
+			class="form-horizontal">
+			
+			<div class="sidemenu">
+				<ul>
+					<li><a class="blue" ng-click="add()"><span>Ajouter</span><i class="fa fa-plus"></i></a></li>
+					<li><a class="blue" ng-click="addAvisDemande()"><span>Avis</span><i class="fa fa-comment"></i></a></li>
+					<li><a class="blue" ng-click=""><span>Localiser</span><i class="fa fa-map-marker"></i></a></li>
+				</ul>
+			</div>
+			
+			<div class="panel panel-inverse" data-sortable-id="ui-widget-10">
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+					</div>
+					<h4 class="panel-title semi-bold">
+						<th:block th:text="#{investissement.demande.form}"></th:block>
+					</h4>
+				</div>
+				
+				<div class="panel-body">
+					<div style="float: right;">
+						<a class="btn cancel aman-green-color" style="font-size: 12px;" ng-click="save()" title="Enregistrer"><i class="fa fa-save"></i> Enregistrer</a>
+					</div>
+					<fieldset ng-disabled="mode =='read'" style="margin-top: 45px">
+						<!-- Block 1 -->
+						<div class="row">
+							<input type="hidden" ng-model="dto.id"  />
+							<div ng-class="'col-md-6'">
+								<div class="form-group">
+									<label class="col-md-5 control-label"> <th:block th:text="#{investissement.demande.dateDemande}"></th:block>
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<input type="text" class="form-control" name="dateDemande" datepicker="datepicker" 
+										ng-model="dto.dateDemande" required="required" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"> <th:block th:text="#{investissement.demande.superficie}"></th:block>
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<input type="text" class="form-control" name="superficie" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+										ng-model="dto.superficie" required="required" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"> Origine
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<select class="form-control" name="origine" ng-model="dto.origineId" required="required"
+										ng-options="o.id as o.libelle for o in origines"></select>
+									</div>
+								</div>
+							</div>
+							<div ng-class="'col-md-6'">
+								<div class="form-group">
+									<label class="col-md-5 control-label"> <th:block th:text="#{investissement.demande.refParcelle}"></th:block>
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<input type="text" class="form-control" name="refParcelle"
+										ng-model="dto.refParcelle" required="required" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"> <th:block th:text="#{investissement.demande.investisseurNom}"></th:block>
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<select class="form-control" name="investisseur" ng-model="dto.investisseurId" required="required"
+										ng-options="i.id as i.nom for i in investisseurs"></select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</fieldset>			
+					
+				</div>
+			</div>
+		</form>
+		<div class="row">
+				<div class="modal fade" id="avisDemandePopup" tabindex="-1"
+					role="dialog">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-header aman-blue-color">
+								<button type="button" class="bootbox-close-button close"
+									data-dismiss="modal" aria-hidden="true">×</button>
+								<h4 class="modal-title panel-title">
+									<b>Investissement &nbsp;<i class="fa fa-caret-right"></i>&nbsp; Demande &nbsp;<i class="fa fa-caret-right"></i>&nbsp; Avis</b>
+								</h4>
+							</div>
+							<div class="modal-body">
+								<div class="bootbox-body">
+									<div class="panel panel-inverse"
+										data-sortable-id="ui-widget-10">
+										<div class="panel-body">
+											<div class="row">
+												<form id="avisDemandeForm" name="avisDemandeForm" method="post" action="#" class="form-horizontal">
+													<div ng-class="'col-md-6'">
+														<div class="form-group">
+															<label class="col-md-3 control-label"> Avis
+															</label>
+															<div class="col-md-9">
+																<select class="form-control" name="avis" ng-model="dto.avisDemande.avisId"
+																ng-options="a.id as a.libelle for a in avis"></select>
+															</div>
+														</div>
+													</div>
+													<div ng-class="'col-md-6'">
+														<div class="form-group">
+															<label class="col-md-3 control-label"> Date Avis
+															</label>
+															<div class="col-md-9">
+																<input type="text" class="form-control" name="dateAvis" ng-model="dto.avisDemande.dateAvis" datepicker="datepicker" />
+															</div>
+														</div>
+													</div>
+													<div ng-class="'col-md-12'">
+														<div class="form-group">
+															<label class="col-md-2 control-label"> Motif
+															</label>
+															<div class="col-md-10">
+																<textarea class="form-control" name="motif" ng-model="dto.avisDemande.motif"></textarea>
+															</div>
+														</div>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer" style="text-align: center">
+								<button type="button" class="btn cancel aman-blue-color" style="font-size: 12px;" ng-click="closeAvisDemande()">
+									<i class="fa fa-times"></i> <th:block th:text="#{button.annuler}"></th:block>
+								</button>
+								<button type="button" class="btn cancel aman-green-color" style="font-size: 12px;" ng-click="saveAvisDemande()">
+									<i class="fa fa-save"></i> Enregistrer
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-inverse">
+			<div class="panel-heading">
+				<h4 class="panel-title semi-bold">Liste des avis</h4>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12" ng-controller="avisDemandeTableController" th:attr="ng-init='init();'">
+						<div style="float: right;">
+							<a class="btn cancel aman-blue-color" style="font-size: 12px;" ng-click="editAvisDemande()" title="Modifier"><i class="fa fa-pencil"></i> Modifier</a>
+							<a class="btn cancel aman-red-color" style="font-size: 12px;" ng-click="removeAvisDemande()" title="Supprimer"><i class="fa fa-trash-o"></i> Supprimer</a>
+						</div>
+						<table id="avisDemandeTable" class="table table-striped table-bordered">
+							<thead>
+								<tr>
+									<th>Id</th>
+									<th>Date Avis</th>
+									<th>Avis</th>
+									<th>Motif</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</th:block>
+</body>
+</html>

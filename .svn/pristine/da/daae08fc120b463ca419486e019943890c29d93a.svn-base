@@ -1,0 +1,44 @@
+package ma.brainit.aman.client.service;
+
+import ma.brainit.aman.client.dto.CourrierClassiqueDTO;
+import ma.brainit.aman.client.dto.DocumentDTO;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.ParserConfigurationException;
+
+public interface CourrierClassiqueService {
+	
+	String getPage(Integer page, Integer limit, String sort, String direction, String search);
+	
+	String getCurrentPage(Integer page, Integer limit, String sort, String direction, String search);
+	
+	String advancedSearch(Integer page, Integer limit, String sort, String direction, String search, String refArriveeBoc, String receptionDateStart, String receptionDateEnd, String refExpediteur, String enregistrementDateStart, String enregistrementDateEnd, String expediteur, String status, String echeanceDateStart, String echeanceDateEnd, String typeCourrier, String typeInstructionDg, String objet, String urgence);
+	
+	CourrierClassiqueDTO save(CourrierClassiqueDTO dto);
+
+	CourrierClassiqueDTO load(Long id);
+	
+	CourrierClassiqueDTO loadByReference(String reference);
+	
+	List<DocumentDTO> loadDocumentsByReference(String reference);
+	
+	void delete(Long id);
+	
+	List<CourrierClassiqueDTO> getAll();
+	
+	int getCurrentClassiqueCount();
+	
+	List<Object> getCurrentClassiqueCountByYear(int year);
+	
+	List<Object> getCompletedClassiqueCountByYear(int year);
+	
+	int getCurrentNotOverdueClassiqueCount();
+	
+	int getCurrentOverdueClassiqueCount();
+	
+	int getCompletedClassiqueCount();
+	
+	void downloadAttachment(long dataId, HttpServletResponse response) throws ParserConfigurationException;
+}

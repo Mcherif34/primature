@@ -1,0 +1,86 @@
+package ma.brainit.aman.client.service.impl;
+
+import java.util.Calendar;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import ma.brainit.aman.administration.actions.SearchParam;
+import ma.brainit.aman.client.dao.ExpediteurDao;
+import ma.brainit.aman.client.dto.ExpediteurDTO;
+import ma.brainit.aman.client.dto.converters.ExpediteurDTOConverter;
+import ma.brainit.aman.client.model.Expediteur;
+import ma.brainit.aman.client.service.ExpediteurService;
+import ma.brainit.aman.webservice.GedService;
+import ma.brainit.base.BasePaginatorDao;
+import ma.brainit.base.BaseTable;
+import ma.brainit.base.utils.Util;
+
+
+@Service
+@Transactional
+public class ExpediteurServiceImpl implements ExpediteurService {
+
+	@Autowired
+	private ExpediteurDTOConverter ExpediteurDTOConverter;
+
+	@Autowired
+	private BasePaginatorDao<Expediteur, Long> paginatorDao;
+
+	@Autowired
+	private ExpediteurDao ExpediteurDao;
+
+
+	@Override
+	public String getPage(Integer page, Integer limit, String sort, String direction, String search) {
+		StringBuilder condition = new StringBuilder("");
+		List<SearchParam> searchParams = Util.fromSearchParamsJSON(search);
+		searchParams  = ExpediteurDTOConverter.convertSearchParamToEntity(search);
+		this.paginatorDao.setEntityClass(Expediteur.class);
+		List<Expediteur> list = paginatorDao.getPaginator(page, limit,sort,direction,searchParams, condition.toString());
+		Long totalCount = paginatorDao.count(searchParams, condition.toString());
+		List<ExpediteurDTO> dtos = ExpediteurDTOConverter.convertFromDataBeanList(list);
+		return Util.toJson(new BaseTable<ExpediteurDTO>(dtos,totalCount));
+	}
+
+	@Override
+	@Transactional
+	public ExpediteurDTO save(ExpediteurDTO dto) {
+		Expediteur entity = ExpediteurDTOConverter.convertFromDTO(dto);
+		entity = ExpediteurDao.save(entity);
+
+		return ExpediteurDTOConverter.convertFromDataBean(entity);
+	}
+
+	@Override
+	@Transactional
+	public ExpediteurDTO load(Long id) {
+		Expediteur entity = ExpediteurDao.findOne(id);
+		return ExpediteurDTOConverter.convertFromDataBean(entity);
+	}
+	
+	@Override
+	@Transactional
+	public void delete(Long id) {
+		ExpediteurDao.delete(id);
+	}
+
+	@Override
+	@Transactional
+	public List<ExpediteurDTO> getAll() {
+		List<Expediteur> list = ExpediteurDao.getAll();
+		List<ExpediteurDTO> dtos = ExpediteurDTOConverter.convertFromDataBeanList(list);
+
+		return dtos;
+	}
+	
+	@Override
+	@Transactional
+	public List<String> getAllName() {
+		return ExpediteurDao.getAllName();
+	}
+
+}

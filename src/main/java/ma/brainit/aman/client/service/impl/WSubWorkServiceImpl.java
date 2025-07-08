@@ -1,0 +1,77 @@
+package ma.brainit.aman.client.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import ma.brainit.aman.administration.actions.SearchParam;
+import ma.brainit.aman.client.dao.WSubWorkDao;
+import ma.brainit.aman.client.dto.WSubWorkDTO;
+import ma.brainit.aman.client.dto.converters.WSubWorkDTOConverter;
+import ma.brainit.aman.client.model.WSubWork;
+import ma.brainit.aman.client.service.WSubWorkService;
+import ma.brainit.aman.webservice.GedService;
+import ma.brainit.base.BasePaginatorDao;
+import ma.brainit.base.BaseTable;
+import ma.brainit.base.utils.Util;
+
+@Service
+@Transactional
+public class WSubWorkServiceImpl implements WSubWorkService {
+
+	@Autowired
+	private WSubWorkDTOConverter WSubWorkDTOConverter;
+
+	@Autowired
+	private BasePaginatorDao<WSubWork, Long> paginatorDao;
+
+	@Autowired
+	private WSubWorkDao WSubWorkDao;
+
+	@Override
+	public String getPage(Integer page, Integer limit, String sort, String direction, String search) {
+		StringBuilder condition = new StringBuilder("");
+		List<SearchParam> searchParams = Util.fromSearchParamsJSON(search);
+		searchParams  = WSubWorkDTOConverter.convertSearchParamToEntity(search);
+		this.paginatorDao.setEntityClass(WSubWork.class);
+		List<WSubWork> list = paginatorDao.getPaginator(page, limit,sort,direction,searchParams, condition.toString());
+		Long totalCount = paginatorDao.count(searchParams, condition.toString());
+		List<WSubWorkDTO> dtos = WSubWorkDTOConverter.convertFromDataBeanList(list);
+		return Util.toJson(new BaseTable<WSubWorkDTO>(dtos,totalCount));
+	}
+
+	@Override
+	@Transactional
+	public WSubWorkDTO save(WSubWorkDTO dto) {
+		WSubWork entity = WSubWorkDTOConverter.convertFromDTO(dto);
+		entity = WSubWorkDao.save(entity);
+
+		return WSubWorkDTOConverter.convertFromDataBean(entity);
+	}
+
+	@Override
+	@Transactional
+	public WSubWorkDTO load(Long id) {
+		WSubWork entity = WSubWorkDao.findOne(id);
+		return WSubWorkDTOConverter.convertFromDataBean(entity);
+	}
+
+	@Override
+	@Transactional
+	public void delete(Long id) {
+		WSubWorkDao.delete(id);
+	}
+
+	@Override
+	@Transactional
+	public List<WSubWorkDTO> getAll() {
+		List<WSubWork> list = WSubWorkDao.findAll();
+		List<WSubWorkDTO> dtos = WSubWorkDTOConverter.convertFromDataBeanList(list);
+
+		return dtos;
+	}
+
+}

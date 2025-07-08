@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+<title></title>
+<style>
+.accordion-button {background-color: #009DCA; color: #FFFFFF}
+.accordion-fill-info .accordion-item .accordion-button:not(.collapsed) {background-color: #009DCA !important; color: #FFFFFF}
+</style>
+</head>
+<body ng-controller="courrierController" th:attr="ng-init='init();'">
+	<div layout:fragment="search">
+		<form class="form-inline" role="search">
+			<input type="text"
+				class="form-control b-a rounded px-3 form-control-sm"
+				style="min-width: 350px;" ng-model="dto.search.key"
+				placeholder="Rechercher courrier par code ou raison sociale" /> <a
+				href="#" ng-click="searchCourrier()" class="btn success p-x-md"
+				style="border-radius: 20px; padding-top: 3px; padding-bottom: 5px; margin-left: 10px; margin-right: 20px;"><i
+				class="fa fa-search"></i></a>
+		</form>
+	</div>
+
+	<div layout:fragment="content">
+	<div class="main-content">	
+	<div class="page-content">
+		<div class="container-fluid">
+			<div class="row">
+            	<div class="col-12">
+                	<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    	<h4 class="mb-sm-0">Gestion de courriers factures</h4>
+                    	
+                    	<div class="page-title-right">
+                        	<ol class="breadcrumb m-0">
+                            	<li class="breadcrumb-item font-weight-bold"><a th:href="@{/}">Tableau de bord</a></li>
+                                <li class="breadcrumb-item active">Gestion de courriers factures</li>
+                            </ol>
+                        </div>
+					</div>
+                </div>
+        	</div>
+        	
+        	<div class="col-xxl-12">
+                            <div class="card">
+                                <div class="card-body">
+                                	<div class="accordion custom-accordionwithicon accordion-flush accordion-fill-info" id="default-accordion-example">
+			                        	<div class="accordion-item shadow">
+			                            	<h2 class="accordion-header" id="headingTwo">
+			                                	<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+			                                    	FILTRE DE RECHERCHE
+			                                    </button>
+			                                </h2>
+			                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#default-accordion-example">
+			                                	<div class="accordion-body">
+			                                    	<form id="courrierSearchForm" name="courrierSearchForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+										          		<div class="row">
+										          		  <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>REFERENCE COURRIER</label>
+											                  <input type="text" class="form-control" name="refArriveeBoc" ng-model="dto.search.refArriveeBoc" />
+											                </div>
+											              </div>
+														  <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>DATE DE FACTURE (DEBUT)</label>
+											                  <input type="text" class="form-control" name="factureDateStart" ng-model="dto.search.factureDateStart" datepicker="datepicker" />
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>DATE DE FACTURE (FIN)</label>
+											                  <input type="text" class="form-control" name="factureDateEnd" ng-model="dto.search.factureDateEnd" datepicker="datepicker" />
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>Nº DE FACTURE</label>
+											                  <input type="text" class="form-control" name="code" ng-model="dto.search.numFacture" />
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>DATE DE RECEPTION (DEBUT)</label>
+											                  <input type="text" class="form-control" name="receptionDateStart" ng-model="dto.search.receptionDateStart" datepicker="datepicker" />
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>DATE DE RECEPTION (FIN)</label>
+											                  <input type="text" class="form-control" name="receptionDateEnd" ng-model="dto.search.receptionDateEnd" datepicker="datepicker" />
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>REFERENCE EXPEDITRICE</label>
+											                  <input type="text" class="form-control" name="refExpediteur" ng-model="dto.search.refExpediteur" />
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>DATE D'ENEREGISTREMENT (DEBUT)</label>
+											                  <input type="text" class="form-control" name="enregistrementDateStart" ng-model="dto.search.enregistrementDateStart" datepicker="datepicker" />
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>DATE D'ENEREGISTREMENT (FIN)</label>
+											                  <input type="text" class="form-control" name="enregistrementDateEnd" ng-model="dto.search.enregistrementDateEnd" datepicker="datepicker" />
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>EXPEDITEUR</label>
+											              	  <select class="form-select select2" style="width: 100%;" name="expediteur" ng-model="dto.search.expediteur" ng-options="s.raisonSociale as s.raisonSociale for s in senders">
+																  <option value="">Choisir une option</option>
+															  </select>
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>MONTANT DE FACTURE</label>
+											                  <input type="text" class="form-control" name="montantFacture" ng-model="dto.search.montantFacture" />
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>ATTESTATION DE REGULARITE</label>
+											                  <select class="form-select" name="status" ng-model="dto.search.attestationRegularite">
+																  <option value="">Choisir une option</option>
+																  <option value="Oui">Oui</option>
+																  <option value="Non">Non</option>
+															  </select>
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>DATE DE DECOMPTE (DEBUT)</label>
+											                  <input type="text" class="form-control" name="decompteDateStart" ng-model="dto.search.decompteDateStart" datepicker="datepicker" />
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>DATE DE DECOMPTE (FIN)</label>
+											                  <input type="text" class="form-control" name="decompteDateEnd" ng-model="dto.search.decompteDateEnd" datepicker="datepicker" />
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>Nº DE DECOMPTE</label>
+											                  <input type="text" class="form-control" name="code" ng-model="dto.search.numDecompte" />
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>DEVISE</label>
+											                  <select class="form-select" name="devise" ng-model="dto.search.devise">
+																  <option value="">Choisir une option</option>
+																  <option value="Dirham (DH)">Dirham (DH)</option>
+																  <option value="Euro (Euro)">Euro (Euro)</option>
+																  <option value="Dollar (USD)">Dollar (USD)</option>
+															  </select>
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>ELEMENT DE FACTURATION</label>
+											                  <select class="form-select" name="elementFacturation" ng-model="dto.search.elementFacturation">
+																  <option value="">Choisir une option</option>
+																  <option value="Décompte signé">Décompte signé</option>
+																  <option value="Bon de commande">Bon de commande</option>
+																  <option value="Autres">Autres</option>
+															  </select>
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>Nº BC/CONTRAT</label>
+											                  <input type="text" class="form-control" name="numBcContrat" ng-model="dto.search.numBcContrat" />
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>TYPE DE COURRIER</label>
+											                  <select class="form-select" name="typeCourrier" ng-model="dto.search.typeCourrier">
+																  <option value="">Choisir une option</option>
+																  <option value="Avoir">Avoir</option>
+																  <option value="Facture normale">Facture normale</option>
+																  <option value="Facture droit constaté">Facture droit constaté</option>
+															  </select>
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>DELAI DE PAIEMENT</label>
+											                  <input type="text" class="form-control" name="delaiPaiement" ng-model="dto.search.delaiPaiement" />
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>FORME JURIDIQUE DE L'EXPEDITEUR</label>
+											                  <select class="form-select" name="formeJuridique" ng-model="dto.search.formeJuridique">
+																  <option value="">Choisir une option</option>
+																  <option value="PP">PP</option>
+																  <option value="PM">PM</option>
+															  </select>
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>DATE DE VALIDATION (DEBUT)</label>
+											                  <input type="text" class="form-control" name="validationDateStart" ng-model="dto.search.validationDateStart" datepicker="datepicker" />
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>DATE DE VALIDATION (FIN)</label>
+											                  <input type="text" class="form-control" name="validationDateEnd" ng-model="dto.search.validationDateEnd" datepicker="datepicker" />
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-4'">
+											            	<div class="form-group">
+											              	  <label>STATUT</label>
+											                  <select class="form-select" name="status" ng-model="dto.search.status">
+																  <option value="">Choisir une option</option>
+																  <option value="current">EN COURS</option>
+																  <option value="completed">CLOTURE</option>
+															  </select>
+											                </div>
+											              </div>
+											              <div ng-class="'col-md-12'">
+														            	<div class="form-group" style="margin-top: 10px">
+														              	  <a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="advancedSearchInvoice()">
+																	        <i class="mdi mdi-magnify label-icon align-middle fs-16 me-2"></i> RECHERCHER
+																	      </a>                        
+														                </div>
+														              </div>
+										          		</div>
+										        	</form>
+			                                    </div>
+			                                </div>
+			                            </div>
+			                        </div>
+                                    <!-- Tab panes -->
+                                    <div class="tab-content text-muted">
+                                        <div class="tab-pane active" role="tabpanel">
+                                        	<div style="text-align: right; margin-bottom: 10px;">
+		                                        <div style="float: left;" class="btn-group btn-group-sm mt-2 shadow" role="group" aria-label="Basic example">
+				                                    <button type="button" ng-click="checkAll('sheetId');" class="btn btn-success waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-marked-circle label-icon align-middle fs-12"></i> Tout cocher</button>
+				                                	<button type="button" ng-click="uncheckAll('sheetId');" class="btn btn-success waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-blank-circle-outline label-icon align-middle fs-12"></i> Tout décocher</button>
+				                            	</div>
+				                            	<a href="#" style="float:right;" ng-show="checked" ng-click="exportSheets('sheetId')" class="btn btn-success btn-label waves-effect waves-light"><i class="mdi mdi-microsoft-excel label-icon align-middle fs-16 me-2"></i> Exporter sous Excel</a>	
+			                                	<div id="export-sheet" class="spinner-border text-info" role="status" style="float:right; height: 25px; width: 25px; margin-top: 7px; margin-right: 10px">
+					                            	<span class="sr-only">Loading...</span>
+					                            </div>
+			                                </div><br/><br/>
+                                        	<div class="live-preview">
+	                                            <div class="table-responsive">
+													<table id="courrierTable" ng-controller="courrierTableController"
+														th:attr="ng-init='init();'"
+														class="table dt-responsive nowrap table-striped align-middle">
+														<thead>
+															<tr>
+																<th></th>
+																<th>REFERENCE COURRIER</th>
+																<th>DATE ENREGISTREMENT</th>
+																<th>DATE RECEPTION</th>
+																<th>DATE FACTURE</th>
+																<th>Nº FACTURE</th>
+																<th>EXPEDITEUR</th>
+																<th>MONTANT FACTURE</th>
+																<th>ATTESTATION DE REGULARITE</th>
+																<th>ETAPE EN COURS</th>
+																<!-- <th>AFFECTE A L'UTILISATEUR</th> -->
+                                                				<th>STATUT</th>
+															</tr>
+														</thead>
+													</table>
+												</div>
+											</div>
+                                        </div>
+                                    </div>
+                                </div><!-- end card-body -->
+                            </div><!-- end card -->
+                        </div>
+        </div>
+    </div>
+    </div>
+	<div id="courrierDetailsModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content" style="border: none">
+						<div class="modal-header" style="background-color: #009DCA;">
+							<h5 class="modal-title" style="color: #FFFFFF">Informations du courrier Nº <span ng-bind="dto.refArriveeBoc"></span></h5>
+						</div>
+						<form id="invoiceForm" name="invoiceForm" method="post" action="#"
+							class="form-horizontal" ui-jp="parsley">
+							<div class="modal-body p-lg">
+								<div class="row">
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											REFERENCE COURRIER
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											<span style="font-weight: 600" ng-bind="dto.refArriveeBoc"></span>
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											REFERENCE EXPEDITEUR
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											<span style="font-weight: 600" ng-bind="dto.refExpediteur"></span>
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											EXPEDITEUR
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											<span style="font-weight: 600" ng-bind="dto.expediteur"></span>
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											DATE DE RECEPTION
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											<span style="font-weight: 600" ng-bind="dto.dateReception"></span>
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											DATE D'ENREGISTREMENT
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											<span style="font-weight: 600" ng-bind="dto.dateEnregistrement"></span>
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											DATE DE FACTURE
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											<span style="font-weight: 600" ng-bind="dto.dateFacture"></span>
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											Nº FACTURE
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											<span style="font-weight: 600" ng-bind="dto.numFacture"></span>
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											DATE DE DECOMPTE
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											<span style="font-weight: 600" ng-bind="dto.dateDecompte"></span>
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											Nº DECOMPTE
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											<span style="font-weight: 600" ng-bind="dto.numDecompte"></span>
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											MONTANT DE FACTURE (TTC)
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											<span style="font-weight: 600" ng-bind="dto.montantFacture"></span>
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											DEVISE
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											<span style="font-weight: 600" ng-bind="dto.devise"></span>
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											ELEMENT DE FACTURATION
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											<span style="font-weight: 600" ng-bind="dto.elementFacturation"></span>
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											Nº BC/CONTRAT
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											<span style="font-weight: 600" ng-bind="dto.numBcContrat"></span>
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											TYPE DE COURRIER
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											<span style="font-weight: 600" ng-bind="dto.typeCourrier"></span>
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											DELAI DE PAIEMENT
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											<span style="font-weight: 600" ng-bind="dto.delaiPaiement"></span>
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											ATTESTATION DE REGULARITE
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											<span style="font-weight: 600" ng-bind="dto.attestationRegularite"></span>
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											FORME JURIDIQUE DE L'EXPEDITEUR
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											<span style="font-weight: 600" ng-bind="dto.formeJuridique"></span>
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											COMMENTAIRES
+										</div>
+									</div>
+									<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											<span style="font-weight: 600" ng-bind="dto.objet"></span>
+										</div>
+									</div>
+									<div ng-class="'col-md-12'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+										<div class="form-group">
+											PIECES JOINTES &nbsp;&nbsp;<span ng-show="dto.documents == null">En cours de chargement...</span><span ng-show="dto.documents != null" ng-repeat="doc in dto.documents"><a class="badge text-bg-info" style="margin-right: 5px; margin-bottom: 5px; border-radius: 15px; padding-left: 20px; padding-right: 20px; padding-top: 5px; padding-bottom: 6px; font-weight: normal" href="#" ng-click="downloadAttachment(doc.dataId);">{{doc.name}}</a></span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="displayTasks()">
+									<i class="mdi mdi-format-list-bulleted-square label-icon align-middle fs-16 me-2"></i> HISTORIQUE DE TRAITEMENT
+								</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			
+			<div id="taskModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content" style="border: none">
+						<div class="modal-header" style="background-color: #009DCA;">
+							<h5 class="modal-title" style="color: #FFFFFF">Historique de traitement</h5>
+						</div>
+							<div class="modal-body p-lg">
+								<div class="table-responsive">
+													<table id="taskTable" ng-controller="taskTableController"
+														th:attr="ng-init='init();'"
+														class="table dt-responsive nowrap table-striped align-middle">
+														<thead>
+															<tr>
+																<th style="width: 5px"></th>
+																<th>ETAPE</th>
+																<th>DATE DE TRAITEMENT</th>
+																<th>DELAI DE TRAITEMENT (EN JOURS)</th>
+																<th>AFFECTE A</th>
+																<th>STATUT</th>
+															</tr>
+														</thead>
+													</table>
+												</div>
+							</div>
+							<div class="modal-footer">
+							</div>
+					</div>
+				</div>
+			</div>
+			
+	</div>
+
+	<div layout:fragment="plugins" class="page-content">
+		<script th:src='@{/resources/js/client/courrierFacture.js}'></script>
+	</div>
+</body>
+</html>

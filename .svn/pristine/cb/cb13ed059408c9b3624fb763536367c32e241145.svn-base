@@ -1,0 +1,24 @@
+package ma.brainit.aman.client.service;
+
+import ma.brainit.aman.client.dto.CourrierDTO;
+
+import java.util.List;
+
+public interface CourrierService {
+	
+	String getPage(Integer page, Integer limit, String sort, String direction, String search);
+	
+	CourrierDTO save(CourrierDTO dto);
+
+	CourrierDTO load(Long id);
+	
+	CourrierDTO loadByTypeByYear(String type, Integer year);
+
+	void delete(Long id);
+	
+	List<CourrierDTO> getAll();
+
+	String initiateWorkflow(CourrierDTO dto);
+	
+	String getReference(String type);
+}

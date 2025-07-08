@@ -1,0 +1,5068 @@
+package ma.brainit.aman.webservice;
+
+import java.util.Calendar;
+import java.util.Collections;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.WebApplicationException;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.namespace.QName;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPHeader;
+import javax.xml.soap.SOAPHeaderElement;
+import javax.xml.ws.BindingProvider;
+import javax.xml.ws.soap.MTOMFeature;
+import javax.xml.ws.soap.SOAPFaultException;
+
+import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.opentext.ecm.api.OTAuthentication;
+import com.opentext.livelink.service.core.Authentication;
+import com.opentext.livelink.service.core.Authentication_Service;
+import com.opentext.livelink.service.core.ContentService;
+import com.opentext.livelink.service.core.ContentService_Service;
+import com.opentext.livelink.service.core.DateValue;
+import com.opentext.livelink.service.core.FileAtts;
+import com.opentext.livelink.service.core.IntegerValue;
+import com.opentext.livelink.service.core.StringValue;
+import com.opentext.livelink.service.docman.Attribute;
+import com.opentext.livelink.service.docman.AttributeGroup;
+import com.opentext.livelink.service.docman.AttributeGroupDefinition;
+import com.opentext.livelink.service.docman.DateAttribute;
+import com.opentext.livelink.service.docman.DocumentManagement;
+import com.opentext.livelink.service.docman.DocumentManagement_Service;
+import com.opentext.livelink.service.docman.IntegerAttribute;
+import com.opentext.livelink.service.docman.Metadata;
+import com.opentext.livelink.service.docman.MultiLineAttribute;
+import com.opentext.livelink.service.docman.Node;
+import com.opentext.livelink.service.docman.RealAttribute;
+import com.opentext.livelink.service.docman.StringAttribute;
+import com.opentext.livelink.service.docman.UserAttribute;
+import com.opentext.livelink.service.memberservice.Group;
+import com.opentext.livelink.service.memberservice.Member;
+import com.opentext.livelink.service.memberservice.MemberService;
+import com.opentext.livelink.service.memberservice.MemberService_Service;
+import com.opentext.livelink.service.memberservice.User;
+import com.opentext.livelink.service.workflowservice.ActivityInstance;
+import com.opentext.livelink.service.workflowservice.ApplicationData;
+import com.opentext.livelink.service.workflowservice.AttachmentData;
+import com.opentext.livelink.service.workflowservice.FormData;
+import com.opentext.livelink.service.workflowservice.FormDataInstance;
+import com.opentext.livelink.service.workflowservice.ProcessInstance;
+import com.opentext.livelink.service.workflowservice.ProcessStartData;
+import com.opentext.livelink.service.workflowservice.ProcessStatus;
+import com.opentext.livelink.service.workflowservice.WorkItem;
+import com.opentext.livelink.service.workflowservice.WorkItemResult;
+import com.opentext.livelink.service.workflowservice.WorkflowService;
+import com.opentext.livelink.service.workflowservice.WorkflowService_Service;
+import com.sun.xml.ws.api.message.Header;
+import com.sun.xml.ws.api.message.Headers;
+import com.sun.xml.ws.developer.JAXWSProperties;
+import com.sun.xml.ws.developer.StreamingDataHandler;
+import com.sun.xml.ws.developer.WSBindingProvider;
+
+import ma.brainit.aman.client.dto.AudienceSgDTO;
+import ma.brainit.aman.client.dto.CongeExterneDTO;
+import ma.brainit.aman.client.dto.CorrespondanceDircabDTO;
+import ma.brainit.aman.client.dto.CorrespondanceSgDTO;
+import ma.brainit.aman.client.dto.CourrierDTO;
+import ma.brainit.aman.client.dto.DecisionDTO;
+import ma.brainit.aman.client.dto.MaterielDTO;
+import ma.brainit.aman.client.dto.MissionExterneDTO;
+import ma.brainit.aman.client.dto.MissionInterneDTO;
+import ma.brainit.aman.client.dto.NominationDTO;
+import ma.brainit.aman.client.dto.TitularisationDTO;
+import ma.brainit.aman.client.service.CourrierService;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+public class GedService {
+	
+	public final static int CHUNK_SIZE = 10240;
+	public final static String ECM_API_NAMESPACE = "urn:api.ecm.opentext.com";
+	public final static String CORE_NAMESPACE = "urn:Core.service.livelink.opentext.com";
+	
+	private static final String SUCCESS_MESSAGE = "SUCCESS!\n";
+	private static final String FAILED_MESSAGE = "FAILED!\n";
+	private static final String STRING_FORMAT = "%s : %s";
+	private static final String FAILED_AUTH = "Failed to set authentication SOAP header!\n";
+	
+	public final static int OTWS = 2000;
+	
+	static Logger logger = LoggerFactory.getLogger(GedService.class);
+	
+	@Autowired
+	private CourrierService courrierService;
+	
+	public String authentication(String opentextUrl,String USERNAME,String PASSWORD) {
+		Authentication_Service authService = null;
+		try {
+			authService = new Authentication_Service(new URL(opentextUrl+"/cws/Authentication.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		}
+		Authentication authClient = authService.getBasicHttpBindingAuthentication();
+
+		String authToken = null;
+
+		try
+		{
+			System.out.print("Authenticating User...");
+			authToken = authClient.authenticateUser(USERNAME, PASSWORD);
+			System.out.println("SUCCESS!\n");
+		}
+		catch (SOAPFaultException e)
+		{
+			System.out.println("FAILED!\n");
+			System.out.println(e.getFault().getFaultCode() + " : " + e.getMessage());
+			return "";
+		}
+		return authToken;
+	}
+	
+	public String initiateCorrespondanceSg(String opentextUrl, Long opentextCourrierCorrespondanceSgID, CorrespondanceSgDTO dto, String currentUser, String reference, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> attachments = new ArrayList<Long>();
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			ProcessStartData processStartData = workflowClient.getProcessStartData(opentextCourrierCorrespondanceSgID);
+			
+			List<ApplicationData> appDataList = processStartData.getApplicationData();
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Référence courrier"))
+                            {
+								StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, reference);
+                            }
+	                		if (attr.getDisplayName().equals("Référence expéditeur"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, dto.getReferenceExpediteur());
+                            }
+	                		if (attr.getDisplayName().equals("Expéditeur"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, dto.getExpediteur());
+                            }
+	                		if (attr.getDisplayName().equals("Date de réception"))
+                            {
+	                			DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateReceptionGregorian = new GregorianCalendar();
+                    			dateReceptionGregorian.setTime(dto.getDateReception());
+                    			XMLGregorianCalendar dateReception = null;
+								try {
+									dateReception = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateReceptionGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateReception);
+                            }
+	                		if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+	                			DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+	                		if (attr.getDisplayName().equals("Objet"))
+                            {
+	                			MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+                                sAttr.getValues().add(0, dto.getObjet());
+                            }
+	                		if (attr.getDisplayName().equals("Initiation"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, currentUser);
+                            }
+	                	}
+						formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.startProcess(processStartData, attachments, memberRoleIDs);
+			logger.warn(SUCCESS_MESSAGE);
+			return "SUCCESS";
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+	}
+	
+	public String initiateAudienceSg(String opentextUrl, Long opentextCourrierAudienceSgID, AudienceSgDTO dto, String currentUser, String reference, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> attachments = new ArrayList<Long>();
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			ProcessStartData processStartData = workflowClient.getProcessStartData(opentextCourrierAudienceSgID);
+			
+			List<ApplicationData> appDataList = processStartData.getApplicationData();
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Référence courrier"))
+                            {
+								StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, reference);
+                            }
+	                		if (attr.getDisplayName().equals("Référence expéditeur"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, dto.getReferenceExpediteur());
+                            }
+	                		if (attr.getDisplayName().equals("Expéditeur"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, dto.getExpediteur());
+                            }
+	                		if (attr.getDisplayName().equals("Date de réception"))
+                            {
+	                			DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateReceptionGregorian = new GregorianCalendar();
+                    			dateReceptionGregorian.setTime(dto.getDateReception());
+                    			XMLGregorianCalendar dateReception = null;
+								try {
+									dateReception = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateReceptionGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateReception);
+                            }
+	                		if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+	                			DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+	                		if (attr.getDisplayName().equals("Objet"))
+                            {
+	                			MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+                                sAttr.getValues().add(0, dto.getObjet());
+                            }
+	                		if (attr.getDisplayName().equals("Initiation"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, currentUser);
+                            }
+	                	}
+						formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.startProcess(processStartData, attachments, memberRoleIDs);
+			logger.warn(SUCCESS_MESSAGE);
+			return "SUCCESS";
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+	}
+	
+	public String initiateCorrespondanceDircab(String opentextUrl, Long opentextCourrierCorrespondanceDircabID, CorrespondanceDircabDTO dto, String currentUser, String reference, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> attachments = new ArrayList<Long>();
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			ProcessStartData processStartData = workflowClient.getProcessStartData(opentextCourrierCorrespondanceDircabID);
+			
+			List<ApplicationData> appDataList = processStartData.getApplicationData();
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Référence courrier"))
+                            {
+								StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, reference);
+                            }
+	                		if (attr.getDisplayName().equals("Référence expéditeur"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, dto.getReferenceExpediteur());
+                            }
+	                		if (attr.getDisplayName().equals("Expéditeur"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, dto.getExpediteur());
+                            }
+	                		if (attr.getDisplayName().equals("Date de réception"))
+                            {
+	                			DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateReceptionGregorian = new GregorianCalendar();
+                    			dateReceptionGregorian.setTime(dto.getDateReception());
+                    			XMLGregorianCalendar dateReception = null;
+								try {
+									dateReception = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateReceptionGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateReception);
+                            }
+	                		if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+	                			DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+	                		if (attr.getDisplayName().equals("Objet"))
+                            {
+	                			MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+                                sAttr.getValues().add(0, dto.getObjet());
+                            }
+	                		if (attr.getDisplayName().equals("Initiation"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, currentUser);
+                            }
+	                	}
+						formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.startProcess(processStartData, attachments, memberRoleIDs);
+			logger.warn(SUCCESS_MESSAGE);
+			return "SUCCESS";
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+	}
+	
+	public String initiateTitularisation(String opentextUrl, Long opentextCourrierTitularisationID, TitularisationDTO dto, String currentUser, String reference, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> attachments = new ArrayList<Long>();
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			ProcessStartData processStartData = workflowClient.getProcessStartData(opentextCourrierTitularisationID);
+			
+			List<ApplicationData> appDataList = processStartData.getApplicationData();
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Référence courrier"))
+                            {
+								StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, reference);
+                            }
+	                		if (attr.getDisplayName().equals("Référence expéditeur"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, dto.getReferenceExpediteur());
+                            }
+	                		if (attr.getDisplayName().equals("Expéditeur"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, dto.getExpediteur());
+                            }
+	                		if (attr.getDisplayName().equals("Date de réception"))
+                            {
+	                			DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateReceptionGregorian = new GregorianCalendar();
+                    			dateReceptionGregorian.setTime(dto.getDateReception());
+                    			XMLGregorianCalendar dateReception = null;
+								try {
+									dateReception = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateReceptionGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateReception);
+                            }
+	                		if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+	                			DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+	                		if (attr.getDisplayName().equals("Objet"))
+                            {
+	                			MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+                                sAttr.getValues().add(0, dto.getObjet());
+                            }
+	                		if (attr.getDisplayName().equals("Initiation"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, currentUser);
+                            }
+	                	}
+						formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.startProcess(processStartData, attachments, memberRoleIDs);
+			logger.warn(SUCCESS_MESSAGE);
+			return "SUCCESS";
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+	}
+	
+	public String initiateMissionExterne(String opentextUrl, Long opentextCourrierMissionExterneID, MissionExterneDTO dto, String currentUser, String reference, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> attachments = new ArrayList<Long>();
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			ProcessStartData processStartData = workflowClient.getProcessStartData(opentextCourrierMissionExterneID);
+			
+			List<ApplicationData> appDataList = processStartData.getApplicationData();
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Référence courrier"))
+                            {
+								StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, reference);
+                            }
+	                		if (attr.getDisplayName().equals("Référence expéditeur"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, dto.getReferenceExpediteur());
+                            }
+	                		if (attr.getDisplayName().equals("Expéditeur"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, dto.getExpediteur());
+                            }
+	                		if (attr.getDisplayName().equals("Date de réception"))
+                            {
+	                			DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateReceptionGregorian = new GregorianCalendar();
+                    			dateReceptionGregorian.setTime(dto.getDateReception());
+                    			XMLGregorianCalendar dateReception = null;
+								try {
+									dateReception = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateReceptionGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateReception);
+                            }
+	                		if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+	                			DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+	                		if (attr.getDisplayName().equals("Objet"))
+                            {
+	                			MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+                                sAttr.getValues().add(0, dto.getObjet());
+                            }
+	                		if (attr.getDisplayName().equals("Initiation"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, currentUser);
+                            }
+	                	}
+						formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.startProcess(processStartData, attachments, memberRoleIDs);
+			logger.warn(SUCCESS_MESSAGE);
+			return "SUCCESS";
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+	}
+	
+	public String initiateDecision(String opentextUrl, Long opentextCourrierDecisionID, DecisionDTO dto, String currentUser, String reference, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> attachments = new ArrayList<Long>();
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			ProcessStartData processStartData = workflowClient.getProcessStartData(opentextCourrierDecisionID);
+			
+			List<ApplicationData> appDataList = processStartData.getApplicationData();
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Référence courrier"))
+                            {
+								StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, reference);
+                            }
+	                		if (attr.getDisplayName().equals("Référence décision"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, dto.getReferenceDecision());
+                            }
+	                		if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+	                			DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+	                		if (attr.getDisplayName().equals("Objet"))
+                            {
+	                			MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+                                sAttr.getValues().add(0, dto.getObjet());
+                            }
+	                		if (attr.getDisplayName().equals("Initiation"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, currentUser);
+                            }
+	                	}
+						formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.startProcess(processStartData, attachments, memberRoleIDs);
+			logger.warn(SUCCESS_MESSAGE);
+			return "SUCCESS";
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+	}
+	
+	public String initiateCongeExterne(String opentextUrl, Long opentextCourrierCongeExterneID, CongeExterneDTO dto, String currentUser, String reference, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> attachments = new ArrayList<Long>();
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			ProcessStartData processStartData = workflowClient.getProcessStartData(opentextCourrierCongeExterneID);
+			
+			List<ApplicationData> appDataList = processStartData.getApplicationData();
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Référence courrier"))
+                            {
+								StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, reference);
+                            }
+	                		if (attr.getDisplayName().equals("Référence demande"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, dto.getReferenceDemande());
+                            }
+	                		if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+	                			DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+	                		if (attr.getDisplayName().equals("Date début de congé"))
+                            {
+	                			DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDebutCongeGregorian = new GregorianCalendar();
+                    			dateDebutCongeGregorian.setTime(dto.getDateDebutConge());
+                    			XMLGregorianCalendar dateDebutConge = null;
+								try {
+									dateDebutConge = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDebutCongeGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDebutConge);
+                            }
+	                		if (attr.getDisplayName().equals("Date fin de congé"))
+                            {
+	                			DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateFinCongeGregorian = new GregorianCalendar();
+                    			dateFinCongeGregorian.setTime(dto.getDateFinConge());
+                    			XMLGregorianCalendar dateFinConge = null;
+								try {
+									dateFinConge = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateFinCongeGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateFinConge);
+                            }
+	                		if (attr.getDisplayName().equals("Objet"))
+                            {
+	                			MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+                                sAttr.getValues().add(0, dto.getObjet());
+                            }
+	                		if (attr.getDisplayName().equals("Initiation"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, currentUser);
+                            }
+	                	}
+						formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.startProcess(processStartData, attachments, memberRoleIDs);
+			logger.warn(SUCCESS_MESSAGE);
+			return "SUCCESS";
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+	}
+	
+	public String initiateMissionInterne(String opentextUrl, Long opentextCourrierMissionInterneID, MissionInterneDTO dto, String currentUser, String reference, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> attachments = new ArrayList<Long>();
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			ProcessStartData processStartData = workflowClient.getProcessStartData(opentextCourrierMissionInterneID);
+			
+			List<ApplicationData> appDataList = processStartData.getApplicationData();
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Référence courrier"))
+                            {
+								StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, reference);
+                            }
+	                		if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+	                			DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+	                		if (attr.getDisplayName().equals("Objet"))
+                            {
+	                			MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+                                sAttr.getValues().add(0, dto.getObjet());
+                            }
+	                		if (attr.getDisplayName().equals("Initiation"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, currentUser);
+                            }
+	                	}
+						formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.startProcess(processStartData, attachments, memberRoleIDs);
+			logger.warn(SUCCESS_MESSAGE);
+			return "SUCCESS";
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+	}
+	
+	public String initiateNomination(String opentextUrl, Long opentextCourrierNominationID, NominationDTO dto, String currentUser, String reference, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> attachments = new ArrayList<Long>();
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			ProcessStartData processStartData = workflowClient.getProcessStartData(opentextCourrierNominationID);
+			
+			List<ApplicationData> appDataList = processStartData.getApplicationData();
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Référence courrier"))
+                            {
+								StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, reference);
+                            }
+	                		if (attr.getDisplayName().equals("Référence nomination"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, dto.getReferenceNomination());
+                            }
+	                		if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+	                			DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+	                		if (attr.getDisplayName().equals("Objet"))
+                            {
+	                			MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+                                sAttr.getValues().add(0, dto.getObjet());
+                            }
+	                		if (attr.getDisplayName().equals("Initiation"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, currentUser);
+                            }
+	                	}
+						formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.startProcess(processStartData, attachments, memberRoleIDs);
+			logger.warn(SUCCESS_MESSAGE);
+			return "SUCCESS";
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+	}
+	
+	public String initiateMateriel(String opentextUrl, Long opentextCourrierMaterielID, MaterielDTO dto, String currentUser, String reference, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> attachments = new ArrayList<Long>();
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			ProcessStartData processStartData = workflowClient.getProcessStartData(opentextCourrierMaterielID);
+			
+			List<ApplicationData> appDataList = processStartData.getApplicationData();
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Référence courrier"))
+                            {
+								StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, reference);
+                            }
+	                		if (attr.getDisplayName().equals("Référence bon de commande"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, dto.getReferenceBc());
+                            }
+	                		if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+	                			DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+	                		if (attr.getDisplayName().equals("Objet"))
+                            {
+	                			MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+                                sAttr.getValues().add(0, dto.getObjet());
+                            }
+	                		if (attr.getDisplayName().equals("Initiation"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+                                sAttr.getValues().add(0, currentUser);
+                            }
+	                	}
+						formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.startProcess(processStartData, attachments, memberRoleIDs);
+			logger.warn(SUCCESS_MESSAGE);
+			return "SUCCESS";
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+	}
+	
+	public String sendCorrespondanceSg(String opentextUrl, CorrespondanceSgDTO dto, String currentUser, String currentStep, String reasonStep, Integer activityID, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			List<ApplicationData> appDataList = workflowClient.getProcessData(dto.getwSubWorkId(), dto.getwSubWorkId());
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Date de réception"))
+                            {
+                                DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateReceptionGregorian = new GregorianCalendar();
+                    			dateReceptionGregorian.setTime(dto.getDateReception());
+                    			XMLGregorianCalendar dateReception = null;
+								try {
+									dateReception = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateReceptionGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateReception);
+                            }
+	                		if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+                                DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+	                		if (attr.getDisplayName().equals("Conseiller technique"))
+                            {
+	                			UserAttribute sAttr = (UserAttribute) attr;
+                                sAttr.getValues().clear();
+                    			sAttr.getValues().add(0, dto.getConseillerTechnique());
+                            }
+	                		if (attr.getDisplayName().equals("Transféré au"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+	                			sAttr.getValues().add(0, dto.getTransfereAu());
+                            }
+							if (attr.getDisplayName().equals(currentStep))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+	                			sAttr.getValues().add(0, currentUser);
+                            }
+							if (reasonStep != null && attr.getDisplayName().equals(reasonStep))
+                            {
+								MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+								sAttr.getValues().add(0, dto.getMotif());
+                            }
+	                	}
+	                	formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.acceptWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID);
+			workflowClient.updateWorkItemData(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, appDataList);
+			workflowClient.completeWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, null);
+			logger.warn(SUCCESS_MESSAGE);
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+		return "SUCCESS";
+	}
+	
+	public String sendAudienceSg(String opentextUrl, AudienceSgDTO dto, String currentUser, String currentStep, String reasonStep, Integer activityID, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			List<ApplicationData> appDataList = workflowClient.getProcessData(dto.getwSubWorkId(), dto.getwSubWorkId());
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Date de réception"))
+                            {
+                                DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateReceptionGregorian = new GregorianCalendar();
+                    			dateReceptionGregorian.setTime(dto.getDateReception());
+                    			XMLGregorianCalendar dateReception = null;
+								try {
+									dateReception = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateReceptionGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateReception);
+                            }
+	                		if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+                                DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+	                		if (attr.getDisplayName().equals("Conseiller technique"))
+                            {
+	                			UserAttribute sAttr = (UserAttribute) attr;
+                                sAttr.getValues().clear();
+                    			sAttr.getValues().add(0, dto.getConseillerTechnique());
+                            }
+	                		if (attr.getDisplayName().equals(currentStep))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+	                			sAttr.getValues().add(0, currentUser);
+                            }
+							if (reasonStep != null && attr.getDisplayName().equals(reasonStep))
+                            {
+								MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+								sAttr.getValues().add(0, dto.getMotif());
+                            }
+	                	}
+	                	formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.acceptWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID);
+			workflowClient.updateWorkItemData(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, appDataList);
+			workflowClient.completeWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, null);
+			logger.warn(SUCCESS_MESSAGE);
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+		return "SUCCESS";
+	}
+	
+	public String sendMissionExterne(String opentextUrl, MissionExterneDTO dto, String currentUser, String currentStep, String reasonStep, Integer activityID, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			List<ApplicationData> appDataList = workflowClient.getProcessData(dto.getwSubWorkId(), dto.getwSubWorkId());
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Date de réception"))
+                            {
+                                DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateReceptionGregorian = new GregorianCalendar();
+                    			dateReceptionGregorian.setTime(dto.getDateReception());
+                    			XMLGregorianCalendar dateReception = null;
+								try {
+									dateReception = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateReceptionGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateReception);
+                            }
+	                		if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+                                DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+	                		if (attr.getDisplayName().equals(currentStep))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+	                			sAttr.getValues().add(0, currentUser);
+                            }
+							if (reasonStep != null && attr.getDisplayName().equals(reasonStep))
+                            {
+								MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+								sAttr.getValues().add(0, dto.getMotif());
+                            }
+	                	}
+	                	formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.acceptWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID);
+			workflowClient.updateWorkItemData(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, appDataList);
+			workflowClient.completeWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, null);
+			logger.warn(SUCCESS_MESSAGE);
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+		return "SUCCESS";
+	}
+	
+	public String sendCorrespondanceDircab(String opentextUrl, CorrespondanceDircabDTO dto, String currentUser, String currentStep, String reasonStep, Integer activityID, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			List<ApplicationData> appDataList = workflowClient.getProcessData(dto.getwSubWorkId(), dto.getwSubWorkId());
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Date de réception"))
+                            {
+                                DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateReceptionGregorian = new GregorianCalendar();
+                    			dateReceptionGregorian.setTime(dto.getDateReception());
+                    			XMLGregorianCalendar dateReception = null;
+								try {
+									dateReception = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateReceptionGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateReception);
+                            }
+	                		if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+                                DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+	                		if (attr.getDisplayName().equals(currentStep))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+	                			sAttr.getValues().add(0, currentUser);
+                            }
+							if (reasonStep != null && attr.getDisplayName().equals(reasonStep))
+                            {
+								MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+								sAttr.getValues().add(0, dto.getMotif());
+                            }
+	                	}
+	                	formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.acceptWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID);
+			workflowClient.updateWorkItemData(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, appDataList);
+			workflowClient.completeWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, null);
+			logger.warn(SUCCESS_MESSAGE);
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+		return "SUCCESS";
+	}
+	
+	public String sendTitularisation(String opentextUrl, TitularisationDTO dto, String currentUser, String currentStep, String reasonStep, Integer activityID, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			List<ApplicationData> appDataList = workflowClient.getProcessData(dto.getwSubWorkId(), dto.getwSubWorkId());
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Date de réception"))
+                            {
+                                DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateReceptionGregorian = new GregorianCalendar();
+                    			dateReceptionGregorian.setTime(dto.getDateReception());
+                    			XMLGregorianCalendar dateReception = null;
+								try {
+									dateReception = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateReceptionGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateReception);
+                            }
+	                		if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+                                DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+	                		if (attr.getDisplayName().equals(currentStep))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+	                			sAttr.getValues().add(0, currentUser);
+                            }
+							if (reasonStep != null && attr.getDisplayName().equals(reasonStep))
+                            {
+								MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+								sAttr.getValues().add(0, dto.getMotif());
+                            }
+	                	}
+	                	formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.acceptWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID);
+			workflowClient.updateWorkItemData(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, appDataList);
+			workflowClient.completeWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, null);
+			logger.warn(SUCCESS_MESSAGE);
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+		return "SUCCESS";
+	}
+	
+	public String sendDecision(String opentextUrl, DecisionDTO dto, String currentUser, String currentStep, String reasonStep, Integer activityID, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			List<ApplicationData> appDataList = workflowClient.getProcessData(dto.getwSubWorkId(), dto.getwSubWorkId());
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+                                DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+	                		if (attr.getDisplayName().equals(currentStep))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+	                			sAttr.getValues().add(0, currentUser);
+                            }
+							if (reasonStep != null && attr.getDisplayName().equals(reasonStep))
+                            {
+								MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+								sAttr.getValues().add(0, dto.getMotif());
+                            }
+	                	}
+	                	formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.acceptWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID);
+			workflowClient.updateWorkItemData(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, appDataList);
+			workflowClient.completeWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, null);
+			logger.warn(SUCCESS_MESSAGE);
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+		return "SUCCESS";
+	}
+	
+	public String sendCongeExterne(String opentextUrl, CongeExterneDTO dto, String currentUser, String currentStep, String reasonStep, Integer activityID, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			List<ApplicationData> appDataList = workflowClient.getProcessData(dto.getwSubWorkId(), dto.getwSubWorkId());
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+                                DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+							if (attr.getDisplayName().equals("Date début de congé"))
+                            {
+	                			DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDebutCongeGregorian = new GregorianCalendar();
+                    			dateDebutCongeGregorian.setTime(dto.getDateDebutConge());
+                    			XMLGregorianCalendar dateDebutConge = null;
+								try {
+									dateDebutConge = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDebutCongeGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDebutConge);
+                            }
+	                		if (attr.getDisplayName().equals("Date fin de congé"))
+                            {
+	                			DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateFinCongeGregorian = new GregorianCalendar();
+                    			dateFinCongeGregorian.setTime(dto.getDateFinConge());
+                    			XMLGregorianCalendar dateFinConge = null;
+								try {
+									dateFinConge = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateFinCongeGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateFinConge);
+                            }
+	                		if (attr.getDisplayName().equals(currentStep))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+	                			sAttr.getValues().add(0, currentUser);
+                            }
+							if (reasonStep != null && attr.getDisplayName().equals(reasonStep))
+                            {
+								MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+								sAttr.getValues().add(0, dto.getMotif());
+                            }
+	                	}
+	                	formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.acceptWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID);
+			workflowClient.updateWorkItemData(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, appDataList);
+			workflowClient.completeWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, null);
+			logger.warn(SUCCESS_MESSAGE);
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+		return "SUCCESS";
+	}
+	
+	public String sendMissionInterne(String opentextUrl, MissionInterneDTO dto, String currentUser, String currentStep, String reasonStep, Integer activityID, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			List<ApplicationData> appDataList = workflowClient.getProcessData(dto.getwSubWorkId(), dto.getwSubWorkId());
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+                                DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+							if (attr.getDisplayName().equals("Transféré au"))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+	                			sAttr.getValues().add(0, dto.getTransfereAu());
+                            }
+	                		if (attr.getDisplayName().equals(currentStep))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+	                			sAttr.getValues().add(0, currentUser);
+                            }
+							if (reasonStep != null && attr.getDisplayName().equals(reasonStep))
+                            {
+								MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+								sAttr.getValues().add(0, dto.getMotif());
+                            }
+	                	}
+	                	formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.acceptWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID);
+			workflowClient.updateWorkItemData(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, appDataList);
+			workflowClient.completeWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, null);
+			logger.warn(SUCCESS_MESSAGE);
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+		return "SUCCESS";
+	}
+	
+	public String sendNomination(String opentextUrl, NominationDTO dto, String currentUser, String currentStep, String reasonStep, Integer activityID, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			List<ApplicationData> appDataList = workflowClient.getProcessData(dto.getwSubWorkId(), dto.getwSubWorkId());
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+                                DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+	                		if (attr.getDisplayName().equals(currentStep))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+	                			sAttr.getValues().add(0, currentUser);
+                            }
+							if (reasonStep != null && attr.getDisplayName().equals(reasonStep))
+                            {
+								MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+								sAttr.getValues().add(0, dto.getMotif());
+                            }
+	                	}
+	                	formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.acceptWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID);
+			workflowClient.updateWorkItemData(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, appDataList);
+			workflowClient.completeWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, null);
+			logger.warn(SUCCESS_MESSAGE);
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+		return "SUCCESS";
+	}
+	
+	public String sendMateriel(String opentextUrl, MaterielDTO dto, String currentUser, String currentStep, String reasonStep, Integer activityID, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			List<ApplicationData> appDataList = workflowClient.getProcessData(dto.getwSubWorkId(), dto.getwSubWorkId());
+			for(ApplicationData appData : appDataList) {
+				if(appData.getClass() == AttachmentData.class) {
+					AttachmentData attachmentData = (AttachmentData) appData;
+					if(dto.getDocuments() != null) {
+						for(MultipartFile document : dto.getDocuments())
+						{
+							uploadFile(opentextUrl, convert(document), attachmentData.getContainerID(), authToken);
+						}
+					}
+				}
+				if(appData.getClass() == FormData.class) {
+					FormData formData = (FormData) appData;
+					for (FormDataInstance formDataInstance : formData.getForms()) {
+						AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+						for(Attribute attr : groupDef.getAttributes()) {
+							if (attr.getDisplayName().equals("Date d'enregistrement"))
+                            {
+                                DateAttribute sAttr = (DateAttribute) attr;
+                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+                    			dateDepotGregorian.setTime(dto.getDateEnregistrement());
+                    			XMLGregorianCalendar dateDepot = null;
+								try {
+									dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+								} catch (DatatypeConfigurationException e) {
+									e.printStackTrace();
+								}
+                    			sAttr.getValues().clear();
+                    			sAttr.getValues().add(dateDepot);
+                            }
+	                		if (attr.getDisplayName().equals(currentStep))
+                            {
+	                			StringAttribute sAttr = (StringAttribute) attr;
+	                			sAttr.getValues().add(0, currentUser);
+                            }
+							if (reasonStep != null && attr.getDisplayName().equals(reasonStep))
+                            {
+								MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+								sAttr.getValues().add(0, dto.getMotif());
+                            }
+	                	}
+	                	formDataInstance.setData(groupDef);
+	                }
+				}
+			}
+			workflowClient.acceptWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID);
+			workflowClient.updateWorkItemData(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, appDataList);
+			workflowClient.completeWorkItem(dto.getwSubWorkId(), dto.getwSubWorkId(), activityID, null);
+			logger.warn(SUCCESS_MESSAGE);
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+		return "SUCCESS";
+	}
+	
+	public String getActivitiesList(String opentextUrl, AudienceSgDTO dto, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+			return "FAILED";
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return "FAILED";
+		}
+		
+		try
+		{
+			List<Long> memberRoleIDs = new ArrayList<Long>();
+			memberRoleIDs.add(new Long(1000));
+			
+			ProcessInstance process = workflowClient.getProcessStatus(dto.getwSubWorkId(), dto.getwSubWorkId());
+	        if(process != null) {
+	        	if(process.getActivities() != null) {
+	        		for(ActivityInstance activity : process.getActivities()) {
+	        			System.out.println(activity.getID() + " : " + activity.getTitle());
+	        		}
+	        	}
+	        }
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return "FAILED";
+		}
+		return "SUCCESS";
+	}
+	
+	public Long uploadFile(String opentextUrl, File document, Long parent_id, String authToken) {
+		
+		if (!document.exists())
+		{
+			logger.warn("ERROR!\n");
+			return null;
+		}
+		
+		DocumentManagement_Service docManService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+		}
+		
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return null;
+		}
+		String contextID = null;
+
+		try
+		{
+			logger.warn("Generating context ID...");
+			contextID = docManClient.createDocumentContext(parent_id, document.getName(), null, false, null);
+			logger.warn(SUCCESS_MESSAGE);
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return null;
+		}
+		
+		ContentService_Service contentService = null;
+		try {
+			contentService = new ContentService_Service(new URL(opentextUrl+"/cws/ContentService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+		}
+		
+		ContentService contentServiceClient = contentService.getBasicHttpBindingContentService(new MTOMFeature());
+
+		// Enable streaming and use chunked transfer encoding to send the request body to support large files
+		((BindingProvider) contentServiceClient).getRequestContext().put(JAXWSProperties.HTTP_CLIENT_STREAMING_CHUNK_SIZE, CHUNK_SIZE);
+
+		// Get the file attributes
+		BasicFileAttributes fileAttributes;
+		try
+		{
+			fileAttributes = Files.readAttributes(document.toPath(), BasicFileAttributes.class);
+		}
+		catch (IOException e)
+		{
+			logger.warn("Failed to read file attributes!\n");
+			logger.warn(e.getMessage());
+			return null;
+		}
+
+		// Create the FileAtts object to send in the upload call
+		FileAtts fileAtts = new FileAtts();
+
+		try
+		{
+			fileAtts.setCreatedDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(fileAttributes.creationTime().toString()));
+			fileAtts.setFileName(document.getName());
+			fileAtts.setFileSize(document.length());
+			fileAtts.setModifiedDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(fileAttributes.lastModifiedTime().toString()));
+		}
+		catch (DatatypeConfigurationException e)
+		{
+			logger.warn("Failed to set file attributes!\n");
+			logger.warn(e.getMessage());
+			return null;
+		}
+
+		try
+		{
+			// Create a SOAP header
+			SOAPHeader header = MessageFactory.newInstance().createMessage().getSOAPPart().getEnvelope().getHeader();
+
+			// Add the OTAuthentication SOAP header element
+			SOAPHeaderElement otAuthElement = header.addHeaderElement(new QName(ECM_API_NAMESPACE, "OTAuthentication"));
+
+			// Add the AuthenticationToken
+			SOAPElement authTokenElement = otAuthElement.addChildElement(new QName(ECM_API_NAMESPACE, "AuthenticationToken"));
+			authTokenElement.addTextNode(otAuth.getAuthenticationToken());
+
+			// Add the ContextID SOAP header element
+			SOAPHeaderElement contextIDElement = header.addHeaderElement(new QName(CORE_NAMESPACE, "contextID"));
+			contextIDElement.addTextNode(contextID);
+
+			// Add the FileAtts SOAP header element
+			SOAPHeaderElement fileAttsElement = header.addHeaderElement(new QName(CORE_NAMESPACE, "fileAtts"));
+
+			// Add the CreatedDate element
+			SOAPElement createdDateElement = fileAttsElement.addChildElement(new QName(CORE_NAMESPACE, "CreatedDate"));
+			createdDateElement.addTextNode(fileAtts.getCreatedDate().toString());
+			
+			// Add the ModifiedDate element
+			SOAPElement modifiedDateElement = fileAttsElement.addChildElement(new QName(CORE_NAMESPACE, "ModifiedDate"));
+			modifiedDateElement.addTextNode(fileAtts.getModifiedDate().toString());
+			
+			// Add the FileSize element
+			SOAPElement fileSizeElement = fileAttsElement.addChildElement(new QName(CORE_NAMESPACE, "FileSize"));
+			fileSizeElement.addTextNode(fileAtts.getFileSize().toString());
+			
+			// Add the FileName element
+			SOAPElement fileNameElement = fileAttsElement.addChildElement(new QName(CORE_NAMESPACE, "FileName"));
+			fileNameElement.addTextNode(fileAtts.getFileName());
+			
+			// Set the headers on the binding provider
+			List<Header> headers = new ArrayList<>();
+			headers.add(Headers.create(otAuthElement));
+			headers.add(Headers.create(contextIDElement));
+			headers.add(Headers.create(fileAttsElement));
+
+			((WSBindingProvider) contentServiceClient).setOutboundHeaders(headers);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn("Failed to set SOAP headers!\n");
+			logger.warn(e.getMessage());
+			return null;
+		}
+
+		// Call the UploadContent() method to upload the file
+		String objectID = "";
+		try
+		{
+			logger.warn("Uploading document...");
+			objectID = contentServiceClient.uploadContent(new DataHandler(new FileDataSource(document)));
+			if(document.delete())
+				logger.warn("Document uploaded !");
+			
+			logger.warn(SUCCESS_MESSAGE);
+			logger.warn(String.format("New document uploaded with ID = %s",objectID.toString()));
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return null;
+		}
+		
+		return Long.parseLong(objectID);
+	}
+	
+	public String stopCourrier(String opentextUrl, Long id, String authToken) {
+		String result = "";
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return result;
+		}
+		
+		try
+		{
+			workflowClient.stopProcess(id);
+			result = "SUCCESS";
+			logger.warn(SUCCESS_MESSAGE);
+		}
+		catch (SOAPFaultException e)
+		{
+			result = "ERROR";
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return result;
+		}
+		return result;
+	}
+	
+	public static Integer findMax(List<Integer> list) { 
+		if (list == null || list.size() == 0) { 
+            return Integer.MIN_VALUE; 
+        } 
+  
+        List<Integer> sortedlist = new ArrayList<>(list); 
+  
+        Collections.sort(sortedlist); 
+  
+        return sortedlist.get(sortedlist.size() - 1); 
+    }
+	
+	public List<Node> getAttachments(String opentextUrl, Long parentNode, String authToken) throws IOException {
+		DocumentManagement_Service docManService = null;
+		//WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			//workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		//WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			//setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+		}
+		
+		List<Node> attachments = docManClient.listNodes(parentNode, false);
+		
+		return attachments;
+		
+		/*WorkItemResult wr = workflowClient.
+        List<WorkItem> wiList = wr.getWorkItems(); 
+        Iterator<WorkItem> itr2 = wiList.iterator();
+        
+        while (itr2.hasNext())
+        {
+            WorkItem t = itr2.next();
+
+            List<ApplicationData> appData0 = workflowClient.getWorkItemData(t.getProcessID(),                      t.getSubProcessID(), t.getID());
+
+            for(ApplicationData data : appData0)
+
+{
+
+           System.out.println(data.getDescription());
+
+}
+        }*/
+        
+        
+        /*ProcessInstance process = workflowClient.getProcessStatus(workID, workID);
+        if(process != null) {
+        	List<Integer> activityIDs = new ArrayList<Integer>();
+        	if(process.getActivities() != null) {
+        		for(ActivityInstance activity : process.getActivities()) {
+        			activityIDs.add(activity.getID());
+        		}
+        	}
+        	//List<ApplicationData> appDataList = workflowClient.getProcessData(workID, workID);
+    		List<ApplicationData> appDataList = workflowClient.getWorkItemData(process.getProcessID(), process.getSubProcessID(), findMax(activityIDs));
+    		
+    		System.out.println("ApplicationData List : "+appDataList);
+    		for(ApplicationData appData : appDataList) {
+    			if(appData.getClass() == AttachmentData.class) {
+    				AttachmentData attachmentData = (AttachmentData) appData;
+    				attachments = docManClient.listNodes(attachmentData.getContainerID(), false);
+    			}
+    		}
+        }*/
+	}
+	
+	public List<String> getCategoryAttachment(String opentextUrl, Long workID, Integer taskID, String authToken) throws IOException {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+		}
+		List<ApplicationData> appDataList = workflowClient.getWorkItemData(workID, workID, taskID);
+		List<String> categories = new ArrayList<String>();
+		List<Node> attachments = null;
+		for(ApplicationData appData : appDataList) {
+			if(appData.getClass() == AttachmentData.class) {
+				AttachmentData attachmentData = (AttachmentData) appData;
+				attachments = docManClient.listNodes(attachmentData.getContainerID(), false);
+			}
+		}
+		if(attachments != null && attachments.size() > 0) {
+			List<AttributeGroup> attributeGroups = attachments.get(0).getMetadata().getAttributeGroups();
+			if(attributeGroups != null) {
+				for(int i = 0; i < attributeGroups.size(); i++) {
+					if(attributeGroups.get(i).getDisplayName().equals("RH")) {
+						categories.add(((StringValue) attributeGroups.get(i).getValues().get(11)).getValues().get(0));
+						categories.add(((StringValue) attributeGroups.get(i).getValues().get(12)).getValues().get(0));
+						categories.add(((StringValue) attributeGroups.get(i).getValues().get(18)).getValues().get(0));
+					}
+				}
+			}
+		}
+		return categories;
+	}
+	
+	public Node getAttachment(String opentextUrl, Long workID, Integer taskID, String authToken) throws IOException {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+		}
+		List<ApplicationData> appDataList = workflowClient.getWorkItemData(workID, workID, taskID);
+		List<Node> attachments = null;
+		for(ApplicationData appData : appDataList) {
+			if(appData.getClass() == AttachmentData.class) {
+				AttachmentData attachmentData = (AttachmentData) appData;
+				attachments = docManClient.listNodes(attachmentData.getContainerID(), false);
+			}
+		}
+		Node dossierOrigine = null;
+		Node sousdossierOrigine = null;
+		Node sousdossierOrigine1 = null;
+		Node sousdossierOrigine2 = null;
+		Node sousdossierOrigine3 = null;
+		Node dossierReference = null;
+		Node dossierTypeDocument = null;
+		Node documentOrigine = null;
+		
+		if(attachments != null && attachments.size() > 0) {
+			List<AttributeGroup> attributeGroups = attachments.get(0).getMetadata().getAttributeGroups();
+			if(attributeGroups != null) {
+				for(int i = 0; i < attributeGroups.size(); i++) {
+					if(attributeGroups.get(i).getDisplayName().equals("RH")) {
+						if(((StringValue) attributeGroups.get(i).getValues().get(1)).getValues().size() > 0 && !((StringValue) attributeGroups.get(i).getValues().get(1)).getValues().get(0).equals("<Aucun>")) {
+							dossierOrigine = docManClient.getNodeByName(OTWS, ((StringValue) attributeGroups.get(i).getValues().get(1)).getValues().get(0));
+							if(dossierOrigine != null && dossierOrigine.isIsContainer()) {
+								if(((StringValue) attributeGroups.get(i).getValues().get(2)).getValues().size() > 0 && !((StringValue) attributeGroups.get(i).getValues().get(2)).getValues().get(0).equals("<Aucun>")) {
+									sousdossierOrigine = docManClient.getNodeByName(dossierOrigine.getID(), ((StringValue) attributeGroups.get(i).getValues().get(2)).getValues().get(0));
+									if(sousdossierOrigine != null && sousdossierOrigine.isIsContainer()) {
+										if(((StringValue) attributeGroups.get(i).getValues().get(3)).getValues().size() > 0 && !((StringValue) attributeGroups.get(i).getValues().get(3)).getValues().get(0).equals("<Aucun>")) {
+											sousdossierOrigine1 = docManClient.getNodeByName(sousdossierOrigine.getID(), ((StringValue) attributeGroups.get(i).getValues().get(3)).getValues().get(0));
+											if(sousdossierOrigine1 != null && sousdossierOrigine1.isIsContainer()) {
+												if(((StringValue) attributeGroups.get(i).getValues().get(4)).getValues().size() > 0 && !((StringValue) attributeGroups.get(i).getValues().get(4)).getValues().get(0).equals("<Aucun>")) {
+													sousdossierOrigine2 = docManClient.getNodeByName(sousdossierOrigine1.getID(), ((StringValue) attributeGroups.get(i).getValues().get(4)).getValues().get(0));
+													if(sousdossierOrigine2 != null && sousdossierOrigine2.isIsContainer()) {
+														if(((StringValue) attributeGroups.get(i).getValues().get(5)).getValues().size() > 0 && !((StringValue) attributeGroups.get(i).getValues().get(5)).getValues().get(0).equals("<Aucun>")) {
+															sousdossierOrigine3 = docManClient.getNodeByName(sousdossierOrigine2.getID(), ((StringValue) attributeGroups.get(i).getValues().get(5)).getValues().get(0));
+															if(sousdossierOrigine3 != null && sousdossierOrigine3.isIsContainer()) {
+																dossierReference = docManClient.getNodeByName(sousdossierOrigine3.getID(), ((StringValue) attributeGroups.get(i).getValues().get(11)).getValues().get(0)+"_"+((StringValue) attributeGroups.get(i).getValues().get(12)).getValues().get(0)+"_"+((StringValue) attributeGroups.get(i).getValues().get(16)).getValues().get(0));	
+																if(dossierReference != null && dossierReference.isIsContainer()) {
+																	dossierTypeDocument = docManClient.getNodeByName(dossierReference.getID(), ((StringValue) attributeGroups.get(i).getValues().get(18)).getValues().get(0));	
+																	if(dossierTypeDocument != null && dossierTypeDocument.isIsContainer()) {
+																		documentOrigine = docManClient.getNodeByName(dossierTypeDocument.getID(), ((StringValue) attributeGroups.get(i).getValues().get(18)).getValues().get(0));	
+																	}
+																}
+															}
+														} else {
+															dossierReference = docManClient.getNodeByName(sousdossierOrigine2.getID(), ((StringValue) attributeGroups.get(i).getValues().get(11)).getValues().get(0)+"_"+((StringValue) attributeGroups.get(i).getValues().get(12)).getValues().get(0)+"_"+((StringValue) attributeGroups.get(i).getValues().get(16)).getValues().get(0));	
+															if(dossierReference != null && dossierReference.isIsContainer()) {
+																dossierTypeDocument = docManClient.getNodeByName(dossierReference.getID(), ((StringValue) attributeGroups.get(i).getValues().get(18)).getValues().get(0));	
+																if(dossierTypeDocument != null && dossierTypeDocument.isIsContainer()) {
+																	documentOrigine = docManClient.getNodeByName(dossierTypeDocument.getID(), ((StringValue) attributeGroups.get(i).getValues().get(18)).getValues().get(0));	
+																}
+															}
+														}
+													}
+												} else {
+													dossierReference = docManClient.getNodeByName(sousdossierOrigine1.getID(), ((StringValue) attributeGroups.get(i).getValues().get(11)).getValues().get(0)+"_"+((StringValue) attributeGroups.get(i).getValues().get(12)).getValues().get(0)+"_"+((StringValue) attributeGroups.get(i).getValues().get(16)).getValues().get(0));	
+													if(dossierReference != null && dossierReference.isIsContainer()) {
+														dossierTypeDocument = docManClient.getNodeByName(dossierReference.getID(), ((StringValue) attributeGroups.get(i).getValues().get(18)).getValues().get(0));	
+														if(dossierTypeDocument != null && dossierTypeDocument.isIsContainer()) {
+															documentOrigine = docManClient.getNodeByName(dossierTypeDocument.getID(), ((StringValue) attributeGroups.get(i).getValues().get(18)).getValues().get(0));	
+														}
+													}
+												}
+											}
+										} else {
+											dossierReference = docManClient.getNodeByName(sousdossierOrigine.getID(), ((StringValue) attributeGroups.get(i).getValues().get(11)).getValues().get(0)+"_"+((StringValue) attributeGroups.get(i).getValues().get(12)).getValues().get(0)+"_"+((StringValue) attributeGroups.get(i).getValues().get(16)).getValues().get(0));	
+											if(dossierReference != null && dossierReference.isIsContainer()) {
+												dossierTypeDocument = docManClient.getNodeByName(dossierReference.getID(), ((StringValue) attributeGroups.get(i).getValues().get(18)).getValues().get(0));	
+												if(dossierTypeDocument != null && dossierTypeDocument.isIsContainer()) {
+													documentOrigine = docManClient.getNodeByName(dossierTypeDocument.getID(), ((StringValue) attributeGroups.get(i).getValues().get(18)).getValues().get(0));	
+												}
+											}
+										}
+									}
+								} else {
+									dossierReference = docManClient.getNodeByName(dossierOrigine.getID(), ((StringValue) attributeGroups.get(i).getValues().get(11)).getValues().get(0)+"_"+((StringValue) attributeGroups.get(i).getValues().get(12)).getValues().get(0)+"_"+((StringValue) attributeGroups.get(i).getValues().get(16)).getValues().get(0));	
+									if(dossierReference != null && dossierReference.isIsContainer()) {
+										dossierTypeDocument = docManClient.getNodeByName(dossierReference.getID(), ((StringValue) attributeGroups.get(i).getValues().get(18)).getValues().get(0));	
+										if(dossierTypeDocument != null && dossierTypeDocument.isIsContainer()) {
+											documentOrigine = docManClient.getNodeByName(dossierTypeDocument.getID(), ((StringValue) attributeGroups.get(i).getValues().get(18)).getValues().get(0));	
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return documentOrigine;
+	}
+	
+	public Node createShortcut(String opentextUrl, Node source, String dossier, String sousdossier, String sousdossier1, String sousdossier2, String sousdossier3, String documentType, String matricule, String nomPrenom, String cin, String authToken) throws IOException {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+		}
+		
+		Node dossierNode = null;
+		Node sousdossierNode = null;
+		Node sousdossier1Node = null;
+		Node sousdossier2Node = null;
+		Node sousdossier3Node = null;
+		Node dossierReference = null;
+		Node dossierTypeDocument = null;
+		Node documentOrigine = null;
+		
+		if(dossier != null && !dossier.equals("<Aucun>")) {
+			dossierNode = createFolder(opentextUrl, (long) OTWS, dossier, authToken);
+			if(sousdossier != null && !sousdossier.equals("<Aucun>")) {
+				sousdossierNode = createFolder(opentextUrl, (long) dossierNode.getID(), sousdossier, authToken);
+				if(sousdossier1 != null && !sousdossier1.equals("<Aucun>")) {
+					sousdossier1Node = createFolder(opentextUrl, (long) sousdossierNode.getID(), sousdossier1, authToken);
+					if(sousdossier2 != null && !sousdossier2.equals("<Aucun>")) {
+						sousdossier2Node = createFolder(opentextUrl, (long) sousdossier1Node.getID(), sousdossier2, authToken);
+						if(sousdossier3 != null && !sousdossier3.equals("<Aucun>")) {
+							sousdossier3Node = createFolder(opentextUrl, (long) sousdossier2Node.getID(), sousdossier3, authToken);
+							if(matricule != null && matricule != "" && nomPrenom != null && nomPrenom != "" && cin != null && cin != "") {
+								dossierReference = createFolder(opentextUrl, (long) sousdossier3Node.getID(), matricule+"-"+nomPrenom+"-"+cin, authToken);
+								if(dossierReference != null) {
+									dossierTypeDocument = createFolder(opentextUrl, (long) dossierReference.getID(), documentType, authToken);
+									if(dossierTypeDocument != null) {
+										documentOrigine = docManClient.createShortcut(dossierTypeDocument.getID(), documentType, "", source.getID(), null);
+									}
+								}
+							}
+						} else {
+							if(matricule != null && matricule != "" && nomPrenom != null && nomPrenom != "" && cin != null && cin != "") {
+								dossierReference = createFolder(opentextUrl, (long) sousdossier2Node.getID(), matricule+"-"+nomPrenom+"-"+cin, authToken);
+								if(dossierReference != null) {
+									dossierTypeDocument = createFolder(opentextUrl, (long) dossierReference.getID(), documentType, authToken);
+									if(dossierTypeDocument != null) {
+										documentOrigine = docManClient.createShortcut(dossierTypeDocument.getID(), documentType, "", source.getID(), null);
+									}
+								}
+							}
+						}
+					} else {
+						if(matricule != null && matricule != "" && nomPrenom != null && nomPrenom != "" && cin != null && cin != "") {
+							dossierReference = createFolder(opentextUrl, (long) sousdossier1Node.getID(), matricule+"-"+nomPrenom+"-"+cin, authToken);
+							if(dossierReference != null) {
+								dossierTypeDocument = createFolder(opentextUrl, (long) dossierReference.getID(), documentType, authToken);
+								if(dossierTypeDocument != null) {
+									documentOrigine = docManClient.createShortcut(dossierTypeDocument.getID(), documentType, "", source.getID(), null);
+								}
+							}
+						}
+					}
+				} else {
+					if(matricule != null && matricule != "" && nomPrenom != null && nomPrenom != "" && cin != null && cin != "") {
+						dossierReference = createFolder(opentextUrl, (long) sousdossierNode.getID(), matricule+"-"+nomPrenom+"-"+cin, authToken);
+						if(dossierReference != null) {
+							dossierTypeDocument = createFolder(opentextUrl, (long) dossierReference.getID(), documentType, authToken);
+							if(dossierTypeDocument != null) {
+								documentOrigine = docManClient.createShortcut(dossierTypeDocument.getID(), documentType, "", source.getID(), null);
+							}
+						}
+					}
+				}
+			} else {
+				if(matricule != null && matricule != "" && nomPrenom != null && nomPrenom != "" && cin != null && cin != "") {
+					dossierReference = createFolder(opentextUrl, (long) dossierNode.getID(), matricule+"-"+nomPrenom+"-"+cin, authToken);
+					if(dossierReference != null) {
+						dossierTypeDocument = createFolder(opentextUrl, (long) dossierReference.getID(), documentType, authToken);
+						if(dossierTypeDocument != null) {
+							documentOrigine = docManClient.createShortcut(dossierTypeDocument.getID(), documentType, "", source.getID(), null);
+						}
+					}
+				}
+			}
+		}
+		
+		return documentOrigine;
+	}
+	
+	public Node createFolder(String opentextUrl, Long parentID, String name, String authToken) {
+		Node folder = null;
+		DocumentManagement_Service docManService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+			return null;
+		}
+		
+		try
+		{
+			folder = docManClient.getNodeByName(parentID, name);
+			if(folder == null) {
+				folder = docManClient.createFolder(parentID, name, "", null);
+			}
+			logger.warn(SUCCESS_MESSAGE);
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+			return null;
+		}
+		
+		return folder;
+	}
+	
+	public List<String> createAttachment(String opentextUrl, Long workID, Integer taskID, String authToken) throws IOException {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+		}
+		List<ApplicationData> appDataList = workflowClient.getWorkItemData(workID, workID, taskID);
+		List<String> categories = new ArrayList<String>();
+		List<Node> attachments = null;
+		for(ApplicationData appData : appDataList) {
+			if(appData.getClass() == AttachmentData.class) {
+				AttachmentData attachmentData = (AttachmentData) appData;
+				attachments = docManClient.listNodes(attachmentData.getContainerID(), false);
+			}
+		}
+		if(attachments != null && attachments.size() > 0) {
+			List<AttributeGroup> attributeGroups = attachments.get(0).getMetadata().getAttributeGroups();
+			if(attributeGroups != null) {
+				for(int i = 0; i < attributeGroups.size(); i++) {
+					if(attributeGroups.get(i).getDisplayName().equals("RH")) {
+						categories.add(((StringValue) attributeGroups.get(i).getValues().get(11)).getValues().get(0));
+						categories.add(((StringValue) attributeGroups.get(i).getValues().get(12)).getValues().get(0));
+					}
+				}
+			}
+		}
+		return categories;
+	}
+	
+	public void initiateWorkflow(String opentextUrl, Long opentextFolderEntrantID, Long opentextCourrierEntrantStandardID, Long opentextCourrierEntrantAttachementID, Long opentextWorkflowFoldercat, String authToken) {
+		DocumentManagement_Service docManService = null;
+		WorkflowService_Service workflowService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			logger.warn(e1.getMessage());
+		}
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			logger.warn(FAILED_AUTH);
+			logger.warn(e.getMessage());
+		}
+		
+		try
+		{
+//			List<Node> entities = docManClient.listNodes(2000, false);
+//			if(entities != null) {
+//				for(Node entity : entities) {
+//					
+//				}
+//			}
+			
+			List<Node> years = docManClient.listNodes(opentextFolderEntrantID, false);
+			if(years != null) {
+				for(Node year : years) {
+					List<Node> months = docManClient.listNodes(year.getID(), false);
+					if(months != null) {
+						for(Node month : months) {
+							List<Node> days = docManClient.listNodes(month.getID(), false);
+							if(days != null) {
+								for(Node day : days) {
+									List<Node> references = docManClient.listNodes(day.getID(), false);
+									if(references != null) {
+										for(Node reference : references) {
+											if(reference.getMetadata().getAttributeGroups().size() == 2) {
+												List<Node> documents = docManClient.listNodes(reference.getID(), false);
+												if(documents != null) {
+													Boolean find = false;
+													for(Node document : documents) {
+														List<AttributeGroup> attributeGroups = document.getMetadata().getAttributeGroups();
+														for(int i = 0; i < attributeGroups.size(); i++) {
+															if(attributeGroups.get(i).getDisplayName().equals("DOCUMENT")) {
+																if(((StringValue) attributeGroups.get(i).getValues().get(2)).getValues().size() != 0 && ((StringValue) attributeGroups.get(i).getValues().get(2)).getValues().get(0).equals("Terminé"))
+																	find = true;
+															}
+														}
+													}
+													if(find) {
+														List<AttributeGroup> attributeGroups = reference.getMetadata().getAttributeGroups();
+															
+														List<Long> attachments = new ArrayList<Long>();
+														List<Long> memberRoleIDs = new ArrayList<Long>();
+														memberRoleIDs.add(new Long(1000));
+														
+														ProcessStartData processStartData = workflowClient.getProcessStartData(opentextCourrierEntrantStandardID);
+														
+														List<ApplicationData> appDataList = processStartData.getApplicationData();
+														
+														for(ApplicationData appData : appDataList) {
+															if(appData.getClass() == AttachmentData.class) {
+																AttachmentData attachmentData = (AttachmentData) appData;
+																for (Node document : documents) {
+																	docManClient.copyNode(document.getID(), attachmentData.getContainerID(), document.getName(), null);
+																}
+															}
+															if(appData.getClass() == FormData.class) {
+																FormData formData = (FormData) appData;
+												                for (FormDataInstance formDataInstance : formData.getForms()) {
+												                	AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+												                	for(Attribute attr : groupDef.getAttributes()) {
+												                		if (attr.getDisplayName().equals("REFERENCE COURRIER"))
+											                            {
+												                			StringAttribute sAttr = (StringAttribute) attr;
+											                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(0)).getValues().get(0));
+											                            }
+//												                		if (attr.getDisplayName().equals("LANGUECOURRIER"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(1)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(1)).getValues().get(0));
+//													                		}
+//											                            }
+												                		if (attr.getDisplayName().equals("TYPE COURRIER"))
+											                            {
+												                			if(((StringValue) attributeGroups.get(0).getValues().get(2)).getValues().size() > 0) {
+												                				StringAttribute sAttr = (StringAttribute) attr;
+												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(2)).getValues().get(0));
+													                		}
+											                            }
+												                		if (attr.getDisplayName().equals("VOIE DEPOT"))
+											                            {
+												                			if(((StringValue) attributeGroups.get(0).getValues().get(3)).getValues().size() > 0) {
+												                				StringAttribute sAttr = (StringAttribute) attr;
+												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(3)).getValues().get(0));
+													                		}
+											                            }
+												                		if (attr.getDisplayName().equals("TYPE EXPEDITEUR"))
+											                            {
+												                			if(((StringValue) attributeGroups.get(0).getValues().get(4)).getValues().size() > 0) {
+												                				StringAttribute sAttr = (StringAttribute) attr;
+												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(4)).getValues().get(0));
+													                		}
+											                            }
+												                		if (attr.getDisplayName().equals("EXPEDITEUR"))
+											                            {
+												                			if(((StringValue) attributeGroups.get(0).getValues().get(5)).getValues().size() > 0) {
+												                				StringAttribute sAttr = (StringAttribute) attr;
+												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(5)).getValues().get(0));
+													                		}
+											                            }
+												                		if (attr.getDisplayName().equals("NOM PARTICULIER"))
+											                            {
+												                			if(((StringValue) attributeGroups.get(0).getValues().get(7)).getValues().size() > 0) {
+												                				StringAttribute sAttr = (StringAttribute) attr;
+												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(7)).getValues().get(0));
+													                		}
+											                            }
+												                		if (attr.getDisplayName().equals("REFERENCE EXPEDITRICE"))
+											                            {
+												                			if(((StringValue) attributeGroups.get(0).getValues().get(8)).getValues().size() > 0) {
+												                				StringAttribute sAttr = (StringAttribute) attr;
+												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(8)).getValues().get(0));
+													                		}
+											                            }
+												                		if (attr.getDisplayName().equals("DATE RECEPTION"))
+											                            {
+											                                DateAttribute sAttr = (DateAttribute) attr;
+											                                GregorianCalendar dateReceptionGregorian = new GregorianCalendar();
+											                    			dateReceptionGregorian.setTime(new Date());
+											                    			XMLGregorianCalendar dateReception = null;
+																			try {
+																				dateReception = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateReceptionGregorian);
+																			} catch (DatatypeConfigurationException e) {
+																				e.printStackTrace();
+																			}
+											                    			sAttr.getValues().clear();
+											                    			sAttr.getValues().add(dateReception);
+											                            }
+												                		if (attr.getDisplayName().equals("DATE ENREGISTREMENT"))
+											                            {
+											                                DateAttribute sAttr = (DateAttribute) attr;
+											                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+											                    			dateDepotGregorian.setTime(new Date());
+											                    			XMLGregorianCalendar dateDepot = null;
+																			try {
+																				dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+																			} catch (DatatypeConfigurationException e) {
+																				e.printStackTrace();
+																			}
+											                    			sAttr.getValues().clear();
+											                    			sAttr.getValues().add(dateDepot);
+											                            }
+												                		if (attr.getDisplayName().equals("RECU PAR"))
+											                            {
+											                                UserAttribute sAttr = (UserAttribute) attr;
+											                                sAttr.getValues().clear();
+											                    			sAttr.getValues().add(0, ((IntegerValue) attributeGroups.get(0).getValues().get(11)).getValues().get(0));
+											                            }
+												                		if (attr.getDisplayName().equals("OBJET"))
+											                            {
+												                			if(((StringValue) attributeGroups.get(0).getValues().get(12)).getValues().size() > 0) {
+												                				StringAttribute sAttr = (StringAttribute) attr;
+												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(12)).getValues().get(0));
+												                			}
+											                            }
+												                		if (attr.getDisplayName().equals("MESSAGE"))
+											                            {
+												                			if(((StringValue) attributeGroups.get(0).getValues().get(13)).getValues().size() > 0) {
+												                				MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(13)).getValues().get(0));
+												                			}
+											                            }
+												                		if (attr.getDisplayName().equals("NOMBRE PJ"))
+											                            {
+												                			if(((IntegerValue) attributeGroups.get(0).getValues().get(14)).getValues().size() > 0) {
+												                				IntegerAttribute sAttr = (IntegerAttribute) attr;
+												                                sAttr.getValues().clear();
+												                    			sAttr.getValues().add(0, ((IntegerValue) attributeGroups.get(0).getValues().get(14)).getValues().get(0));
+												                			}
+											                            }
+												                		if (attr.getDisplayName().equals("ECHEANCE JOURS"))
+											                            {
+												                			if(((StringValue) attributeGroups.get(0).getValues().get(15)).getValues().size() > 0) {
+												                				StringAttribute sAttr = (StringAttribute) attr;
+												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(15)).getValues().get(0));
+													                		}
+											                            }
+																	}
+												                	formDataInstance.setData(groupDef);
+												                }
+															}
+														}
+														workflowClient.startProcess(processStartData, attachments, memberRoleIDs);
+														
+														Metadata metadata = reference.getMetadata();
+														AttributeGroup categoryTemplate = docManClient.getCategoryTemplate(opentextWorkflowFoldercat);
+														
+													    ((StringValue) categoryTemplate.getValues().get(0)).getValues().add("Terminé");
+														metadata.getAttributeGroups().add(categoryTemplate);
+														
+														docManClient.setNodeMetadata((long) reference.getID(), metadata);
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			logger.warn(SUCCESS_MESSAGE);
+		}
+		catch (SOAPFaultException e)
+		{
+			logger.warn(FAILED_MESSAGE);
+			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+		}
+	}
+	
+	public void setSoapHeader(WSBindingProvider bindingProvider, OTAuthentication otAuth) throws SOAPException {
+		final String ECM_API_NAMESPACE = "urn:api.ecm.opentext.com";
+
+		SOAPHeader header = MessageFactory.newInstance().createMessage().getSOAPPart().getEnvelope().getHeader();
+
+		SOAPHeaderElement otAuthElement = header.addHeaderElement(new QName(ECM_API_NAMESPACE, "OTAuthentication"));
+
+		SOAPElement authTokenElement = otAuthElement.addChildElement(new QName(ECM_API_NAMESPACE, "AuthenticationToken"));
+		authTokenElement.addTextNode(otAuth.getAuthenticationToken());
+
+		bindingProvider.setOutboundHeaders(Headers.create(otAuthElement));
+	}
+
+//	
+//	public ResultatDTO createFolderBis(String opentextFoldercat, Long opentextWorkflowFoldercat, String opentextUrl,CourrierDTO dto, String authToken, Long sequence, Long bo) {
+//		Node folderCourrier = null;
+//		Node folderYear = null;
+//		Node folderMonth = null;
+//		Node folderDay = null;
+//		
+//		LocalDate dateDepot = dto.getDateDepot().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//		String month = "";
+//		String day   = "";
+//		
+//		if(dateDepot.getMonthValue() < 10) month = "0"+dateDepot.getMonthValue(); else month = ""+dateDepot.getMonthValue();
+//		if(dateDepot.getDayOfMonth() < 10) day = "0"+dateDepot.getDayOfMonth(); else day = ""+dateDepot.getDayOfMonth();
+//		
+//		ResultatDTO resultatDTO=new ResultatDTO();
+//		
+//		DocumentManagement_Service docManService = null;
+//		try {
+//			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+//		} catch (MalformedURLException e1) {
+//			logger.warn(e1.getMessage());
+//		}
+//		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+//
+//		OTAuthentication otAuth = new OTAuthentication();
+//		otAuth.setAuthenticationToken(authToken);
+//		
+//		try
+//		{
+//			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+//		}
+//		catch (SOAPException e)
+//		{
+//			logger.warn(FAILED_AUTH);
+//			logger.warn(e.getMessage());
+//			resultatDTO.setFolderId(null);
+//			resultatDTO.setCodeErreur(null);
+//			return resultatDTO;
+//		}
+//		
+//		try
+//		{
+//			folderYear = docManClient.getNodeByName(dto.getDestinataireId(), ""+dateDepot.getYear());
+//			if(folderYear == null)
+//				folderYear = docManClient.createFolder(dto.getDestinataireId(), ""+dateDepot.getYear(), "", null);
+//			
+//			folderMonth = docManClient.getNodeByName(folderYear.getID(), month);
+//			if(folderMonth == null)
+//				folderMonth = docManClient.createFolder(folderYear.getID(), month, "", null);
+//			
+//			folderDay = docManClient.getNodeByName(folderMonth.getID(), day);
+//			if(folderDay == null)
+//				folderDay = docManClient.createFolder(folderMonth.getID(), day, "", null);
+//
+//			folderCourrier = docManClient.createFolder(folderDay.getID(), dto.getReference(), "", null);
+//			setCategoryFolderBis(opentextFoldercat, opentextWorkflowFoldercat, docManClient, folderCourrier.getID(), dto, bo);
+//			
+//			if(dto.getDocumentsDTO() != null && dto.getDocumentsDTO().size() > 0) {
+//				for (DocumentDTO documentDTO : dto.getDocumentsDTO()) {
+//					uploadFile(opentextUrl, documentDTO, folderCourrier.getID(), authToken);
+//				}
+//			}
+//			
+//			logger.warn(SUCCESS_MESSAGE);
+//		}
+//		catch (SOAPFaultException e)
+//		{
+//			logger.warn(FAILED_MESSAGE);
+//			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+//			resultatDTO.setFolderId(null);
+//			resultatDTO.setCodeErreur(e.getFault().getFaultCode());
+//			return resultatDTO;
+//		}
+//		
+//		resultatDTO.setReferenCourrier(dto.getReference());
+//		resultatDTO.setFolderId(folderCourrier.getID());
+//		resultatDTO.setCodeErreur(null);
+//		return resultatDTO;
+//
+//	}
+//	
+
+//
+//	public ResultatDTO createFolderSortant(String opentextFolderSortantcat,String opentextUrl,CourrierDTO dto, String authToken, Long sequence, Long bo) {
+//		Node folderCourrier = null;
+//		Node folderYear = null;
+//		Node folderMonth = null;
+//		Node folderDay = null;
+//		
+//		LocalDate dateDepot = dto.getDateDepot().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//		
+//		String month = "";
+//		String day   = "";
+//		if(dateDepot.getMonthValue() < 10) month = "0"+dateDepot.getMonthValue(); else month = ""+dateDepot.getMonthValue();
+//		if(dateDepot.getDayOfMonth() < 10) day = "0"+dateDepot.getDayOfMonth(); else day = ""+dateDepot.getDayOfMonth();
+//		
+//		ResultatDTO resultatDTO=new ResultatDTO();
+//		DocumentManagement_Service docManService = null;
+//		try {
+//			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+//		} catch (MalformedURLException e1) {
+//			logger.warn(e1.getMessage());
+//		}
+//		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+//
+//		OTAuthentication otAuth = new OTAuthentication();
+//		otAuth.setAuthenticationToken(authToken);
+//		
+//		try
+//		{
+//			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+//		}
+//		catch (SOAPException e)
+//		{
+//			logger.warn(FAILED_AUTH);
+//			logger.warn(e.getMessage());
+//			resultatDTO.setFolderId(null);
+//			resultatDTO.setCodeErreur(null);
+//			return resultatDTO;
+//		}
+//		
+//		try
+//		{
+//			folderYear = docManClient.getNodeByName(dto.getDestinataireId(), ""+dateDepot.getYear());
+//			if(folderYear == null)
+//				folderYear = docManClient.createFolder(dto.getDestinataireId(), ""+dateDepot.getYear(), "", null);
+//			
+//			folderMonth = docManClient.getNodeByName(folderYear.getID(), month);
+//			if(folderMonth == null)
+//				folderMonth = docManClient.createFolder(folderYear.getID(), month, "", null);
+//			
+//			folderDay = docManClient.getNodeByName(folderMonth.getID(), day);
+//			if(folderDay == null)
+//				folderDay = docManClient.createFolder(folderMonth.getID(), day, "", null);
+//			folderCourrier = docManClient.createFolder(folderDay.getID(), dto.getReferenceDepart(), "", null);
+//			setCategoryFolderSortant(opentextFolderSortantcat,docManClient, folderCourrier.getID(), dto, bo);
+//			logger.warn(SUCCESS_MESSAGE);
+//		}
+//		catch (SOAPFaultException e)
+//		{
+//			logger.warn(FAILED_MESSAGE);
+//			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+//			resultatDTO.setFolderId(null);
+//			resultatDTO.setCodeErreur(e.getFault().getFaultCode());
+//			return resultatDTO;
+//		}
+//		
+//		resultatDTO.setReferenCourrier(dto.getReference());
+//		resultatDTO.setFolderId(folderCourrier.getID());
+//		resultatDTO.setCodeErreur(null);
+//		return resultatDTO;
+//
+//	}
+//	
+//	public void setSoapHeader(WSBindingProvider bindingProvider, OTAuthentication otAuth) throws SOAPException {
+//		final String ECM_API_NAMESPACE = "urn:api.ecm.opentext.com";
+//
+//		SOAPHeader header = MessageFactory.newInstance().createMessage().getSOAPPart().getEnvelope().getHeader();
+//
+//		SOAPHeaderElement otAuthElement = header.addHeaderElement(new QName(ECM_API_NAMESPACE, "OTAuthentication"));
+//
+//		SOAPElement authTokenElement = otAuthElement.addChildElement(new QName(ECM_API_NAMESPACE, "AuthenticationToken"));
+//		authTokenElement.addTextNode(otAuth.getAuthenticationToken());
+//
+//		bindingProvider.setOutboundHeaders(Headers.create(otAuthElement));
+//	}
+//
+//	public List<String> getListReferenceCourrier(String type, String opentextUrl, Long folderEntrantID, String folderEntrantName, Long folderSortantID, String folderSortantName, String authToken) {
+//		long parentID = 0;
+//		if(type.equals(folderEntrantName)) {
+//			parentID = folderEntrantID;
+//		}
+//		if(type.equals(folderSortantName)) {
+//			parentID = folderSortantID;
+//		}
+//		DocumentManagement_Service docManService = null;
+//		List<String> referenceNames = new ArrayList<String>();
+//		try {
+//			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+//		} catch (MalformedURLException e1) {
+//			logger.warn(e1.getMessage());
+//		}
+//		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+//
+//		OTAuthentication otAuth = new OTAuthentication();
+//		otAuth.setAuthenticationToken(authToken);
+//		
+//		try
+//		{
+//			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+//		}
+//		catch (SOAPException e)
+//		{
+//			logger.warn(FAILED_AUTH);
+//			logger.warn(e.getMessage());
+//		}
+//		
+//		try
+//		{
+//			List<Node> years = docManClient.listNodes(parentID, false);
+//			if(years != null) {
+//				for(Node year : years) {
+//					List<Node> months = docManClient.listNodes(year.getID(), false);
+//					if(months != null) {
+//						for(Node month : months) {
+//							List<Node> days = docManClient.listNodes(month.getID(), false);
+//							if(days != null) {
+//								for(Node day : days) {
+//									List<Node> references = docManClient.listNodes(day.getID(), false);
+//									if(references != null) {
+//										for(Node reference : references) {
+//											if(reference.getMetadata().getAttributeGroups().size() == 2) {
+//												referenceNames.add(reference.getName());
+//											}
+//										}
+//									}
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+//			logger.warn(SUCCESS_MESSAGE);
+//		}
+//		catch (SOAPFaultException e)
+//		{
+//			logger.warn(FAILED_MESSAGE);
+//			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+//		}
+//		return referenceNames;
+//	}
+//	
+	public void downloadFile(HttpServletResponse response, String opentextUrl, long dataID, String authToken) {
+		
+		DocumentManagement_Service docManService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		}
+		
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			System.out.println("Failed to set authentication SOAP header!\n");
+			System.out.println(e.getMessage());
+			return;
+		}
+		String contextID = null;
+
+		Node document = docManClient.getNode(dataID);
+		
+		try
+		{
+			System.out.print("Generating context ID...");
+			contextID = docManClient.getVersionContentsContext(document.getID(), 0);
+			System.out.println("SUCCESS!\n");
+		}
+		catch (SOAPFaultException e)
+		{
+			System.out.println("FAILED!\n");
+			System.out.println(e.getFault().getFaultCode() + " : " + e.getMessage());
+			return;
+		}
+		
+		ContentService_Service contentService = null;
+		try {
+			contentService = new ContentService_Service(new URL(opentextUrl+"/cws/ContentService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		}
+		
+		ContentService contentServiceClient = contentService.getBasicHttpBindingContentService(new MTOMFeature());
+		
+		// Enable streaming and use chunked transfer encoding to send the request body to support large files
+		((BindingProvider) contentServiceClient).getRequestContext().put(JAXWSProperties.HTTP_CLIENT_STREAMING_CHUNK_SIZE, CHUNK_SIZE);
+				
+		// We need to manually set the SOAP headers to include the authentication token and context ID
+		try {
+			// Create a SOAP header
+			SOAPHeader header = MessageFactory.newInstance().createMessage().getSOAPPart().getEnvelope().getHeader();
+
+			// Add the OTAuthentication SOAP header element
+			SOAPHeaderElement otAuthElement = header.addHeaderElement(new QName(ECM_API_NAMESPACE, "OTAuthentication"));
+
+			// Add the AuthenticationToken
+			SOAPElement authTokenElement = otAuthElement.addChildElement(new QName(ECM_API_NAMESPACE, "AuthenticationToken"));
+			authTokenElement.addTextNode(otAuth.getAuthenticationToken());
+
+			// Add the ContextID SOAP header element
+			SOAPHeaderElement contextIDElement = header.addHeaderElement(new QName(CORE_NAMESPACE, "contextID"));
+			contextIDElement.addTextNode(contextID);
+
+			// Set the headers on the binding provider
+			List<Header> headers = new ArrayList<Header>();
+			headers.add(Headers.create(otAuthElement));
+			headers.add(Headers.create(contextIDElement));
+
+			((WSBindingProvider) contentServiceClient).setOutboundHeaders(headers);
+		}
+		catch (SOAPException e) {
+			System.out.println("Failed to set SOAP headers!\n");
+			System.out.println(e.getMessage());
+			return;
+		}
+
+		// Create a StreamingDataHandler to download the file with
+		StreamingDataHandler downloadStream = null;
+
+		// Call the downloadContent() method
+		try {
+			System.out.print("Downloading file...");
+			downloadStream = (StreamingDataHandler) contentServiceClient.downloadContent(contextID);
+		}
+		catch (SOAPFaultException e) {
+			System.out.println("FAILED!\n");
+			System.out.println(e.getFault().getFaultCode() + " : " + e.getMessage());
+			return;
+		}
+
+		// Stream the download to the local file path
+		try {
+//			String ext = "pdf";
+//			if(dto.getExt() != null) ext = dto.getExt();
+			String FILE_PATH = document.getName();
+			File file = new File(FILE_PATH);
+			downloadStream.moveTo(file);
+			
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			FileInputStream fileInputStream = new FileInputStream(file);
+			IOUtils.copy(fileInputStream, baos);
+			fileInputStream.close();
+			baos.close();
+			
+			response.addHeader("Content-Disposition", "attachment; filename="+document.getName());
+			response.setContentLength(baos.size());
+			OutputStream outStream = response.getOutputStream();
+			outStream.write(baos.toByteArray());
+			outStream.close();
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		finally {
+			try {
+				downloadStream.close();
+			}
+			catch (IOException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+	}
+	
+//	public void downloadDocument(HttpServletResponse response, String opentextUrl, OutputStream outputStream, long dataID, String authToken) {
+//		DocumentManagement_Service docManService = null;
+//		try {
+//			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+//		} catch (MalformedURLException e1) {
+//			e1.printStackTrace();
+//		}
+//		
+//		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+//
+//		OTAuthentication otAuth = new OTAuthentication();
+//		otAuth.setAuthenticationToken(authToken);
+//		
+//		try
+//		{
+//			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+//		}
+//		catch (SOAPException e)
+//		{
+//			System.out.println("Failed to set authentication SOAP header!\n");
+//			System.out.println(e.getMessage());
+//			return;
+//		}
+//		String contextID = null;
+//
+//		Node document = docManClient.getNode(dataID);
+//		try
+//		{
+//			System.out.print("Generating context ID...");
+//			contextID = docManClient.getVersionContentsContext(document.getID(), 0);
+//			System.out.println("SUCCESS!\n");
+//		}
+//		catch (SOAPFaultException e)
+//		{
+//			System.out.println("FAILED!\n");
+//			System.out.println(e.getFault().getFaultCode() + " : " + e.getMessage());
+//			return;
+//		}
+//		
+//		ContentService_Service contentService = null;
+//		try {
+//			contentService = new ContentService_Service(new URL(opentextUrl+"/cws/ContentService.svc?wsdl"));
+//		} catch (MalformedURLException e1) {
+//			e1.printStackTrace();
+//		}
+//		
+//		ContentService contentServiceClient = contentService.getBasicHttpBindingContentService(new MTOMFeature());
+//		
+//		// Enable streaming and use chunked transfer encoding to send the request body to support large files
+//		((BindingProvider) contentServiceClient).getRequestContext().put(JAXWSProperties.HTTP_CLIENT_STREAMING_CHUNK_SIZE, CHUNK_SIZE);
+//				
+//		// We need to manually set the SOAP headers to include the authentication token and context ID
+//		try {
+//			// Create a SOAP header
+//			SOAPHeader header = MessageFactory.newInstance().createMessage().getSOAPPart().getEnvelope().getHeader();
+//
+//			// Add the OTAuthentication SOAP header element
+//			SOAPHeaderElement otAuthElement = header.addHeaderElement(new QName(ECM_API_NAMESPACE, "OTAuthentication"));
+//
+//			// Add the AuthenticationToken
+//			SOAPElement authTokenElement = otAuthElement.addChildElement(new QName(ECM_API_NAMESPACE, "AuthenticationToken"));
+//			authTokenElement.addTextNode(otAuth.getAuthenticationToken());
+//
+//			// Add the ContextID SOAP header element
+//			SOAPHeaderElement contextIDElement = header.addHeaderElement(new QName(CORE_NAMESPACE, "contextID"));
+//			contextIDElement.addTextNode(contextID);
+//
+//			// Set the headers on the binding provider
+//			List<Header> headers = new ArrayList<Header>();
+//			headers.add(Headers.create(otAuthElement));
+//			headers.add(Headers.create(contextIDElement));
+//
+//			((WSBindingProvider) contentServiceClient).setOutboundHeaders(headers);
+//		}
+//		catch (SOAPException e) {
+//			System.out.println("Failed to set SOAP headers!\n");
+//			System.out.println(e.getMessage());
+//			return;
+//		}
+//
+//		// Create a StreamingDataHandler to download the file with
+//		StreamingDataHandler downloadStream = null;
+//
+//		// Call the downloadContent() method
+//		try {
+//			System.out.print("Downloading file...");
+//			downloadStream = (StreamingDataHandler) contentServiceClient.downloadContent(contextID);
+//		}
+//		catch (SOAPFaultException e) {
+//			System.out.println("FAILED!\n");
+//			System.out.println(e.getFault().getFaultCode() + " : " + e.getMessage());
+//			return;
+//		}
+//
+//        // Détermination du type MIME
+//        String contentType = downloadStream.getContentType();
+//        if (contentType == null || contentType.equals("application/octet-stream")) {
+//            // Déterminer le type MIME à partir de l'extension
+//            String fileName = document.getName();
+//            String extension = getFileExtension(fileName);
+//            contentType = getMimeTypeFromExtension(extension);
+//        }
+//        
+//        // Configuration des en-têtes de réponse HTTP
+//        response.setContentType(contentType);
+//        response.setHeader("Content-Disposition", "inline; filename=\"" + document.getName() + "\"");
+//        
+//        // Stream des données vers la réponse HTTP
+//        try (InputStream inputStream = downloadStream.getInputStream()) {
+//            byte[] buffer = new byte[CHUNK_SIZE];
+//            int bytesRead;
+//            
+//            while ((bytesRead = inputStream.read(buffer)) != -1) {
+//                outputStream.write(buffer, 0, bytesRead);
+//            }
+//            
+//            outputStream.flush();
+//        } catch (IOException e) {
+//        	System.out.println(e.getMessage());
+//        } finally {
+//            try {
+//                if (downloadStream != null) {
+//                    downloadStream.close();
+//                }
+//            } catch (IOException e) {
+//                // Log l'erreur mais continue
+//                System.err.println("Erreur lors de la fermeture du stream: " + e.getMessage());
+//            }
+//        }
+//    }
+
+	public ByteArrayOutputStream downloadDocument(String opentextUrl, long dataID, String authToken) {
+		DocumentManagement_Service docManService = null;
+		try {
+			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		}
+		
+		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+
+		OTAuthentication otAuth = new OTAuthentication();
+		otAuth.setAuthenticationToken(authToken);
+		
+		try
+		{
+			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+		}
+		catch (SOAPException e)
+		{
+			System.out.println("Failed to set authentication SOAP header!\n");
+			System.out.println(e.getMessage());
+			return null;
+		}
+		String contextID = null;
+
+		Node document = docManClient.getNode(dataID);
+		
+		try
+		{
+			System.out.print("Generating context ID...");
+			contextID = docManClient.getVersionContentsContext(document.getID(), 0);
+			System.out.println("SUCCESS!\n");
+		}
+		catch (SOAPFaultException e)
+		{
+			System.out.println("FAILED!\n");
+			System.out.println(e.getFault().getFaultCode() + " : " + e.getMessage());
+			return null;
+		}
+		
+		ContentService_Service contentService = null;
+		try {
+			contentService = new ContentService_Service(new URL(opentextUrl+"/cws/ContentService.svc?wsdl"));
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		}
+		
+		ContentService contentServiceClient = contentService.getBasicHttpBindingContentService(new MTOMFeature());
+		
+		// Enable streaming and use chunked transfer encoding to send the request body to support large files
+		((BindingProvider) contentServiceClient).getRequestContext().put(JAXWSProperties.HTTP_CLIENT_STREAMING_CHUNK_SIZE, CHUNK_SIZE);
+				
+		// We need to manually set the SOAP headers to include the authentication token and context ID
+		try {
+			// Create a SOAP header
+			SOAPHeader header = MessageFactory.newInstance().createMessage().getSOAPPart().getEnvelope().getHeader();
+
+			// Add the OTAuthentication SOAP header element
+			SOAPHeaderElement otAuthElement = header.addHeaderElement(new QName(ECM_API_NAMESPACE, "OTAuthentication"));
+
+			// Add the AuthenticationToken
+			SOAPElement authTokenElement = otAuthElement.addChildElement(new QName(ECM_API_NAMESPACE, "AuthenticationToken"));
+			authTokenElement.addTextNode(otAuth.getAuthenticationToken());
+
+			// Add the ContextID SOAP header element
+			SOAPHeaderElement contextIDElement = header.addHeaderElement(new QName(CORE_NAMESPACE, "contextID"));
+			contextIDElement.addTextNode(contextID);
+
+			// Set the headers on the binding provider
+			List<Header> headers = new ArrayList<Header>();
+			headers.add(Headers.create(otAuthElement));
+			headers.add(Headers.create(contextIDElement));
+
+			((WSBindingProvider) contentServiceClient).setOutboundHeaders(headers);
+		}
+		catch (SOAPException e) {
+			System.out.println("Failed to set SOAP headers!\n");
+			System.out.println(e.getMessage());
+			return null;
+		}
+
+		// Create a StreamingDataHandler to download the file with
+		StreamingDataHandler downloadStream = null;
+
+		// Call the downloadContent() method
+		try {
+			System.out.print("Downloading file...");
+			downloadStream = (StreamingDataHandler) contentServiceClient.downloadContent(contextID);
+		}
+		catch (SOAPFaultException e) {
+			System.out.println("FAILED!\n");
+			System.out.println(e.getFault().getFaultCode() + " : " + e.getMessage());
+			return null;
+		}
+
+        // Détermination du type MIME
+        String contentType = downloadStream.getContentType();
+        if (contentType == null || contentType.equals("application/octet-stream")) {
+            // Déterminer le type MIME à partir de l'extension
+            String fileName = document.getName();
+            String extension = getFileExtension(fileName);
+            contentType = getMimeTypeFromExtension(extension);
+        }
+        
+        try {
+            // Créer un ByteArrayOutputStream pour capturer les données
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            
+            // Stream des données vers les deux OutputStream
+            try (InputStream inputStream = downloadStream.getInputStream()) {
+                byte[] buffer = new byte[CHUNK_SIZE];
+                int bytesRead;
+                
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    byteArrayOutputStream.write(buffer, 0, bytesRead);
+                }
+                
+                byteArrayOutputStream.flush();
+            }
+            
+            return byteArrayOutputStream;
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return null;
+        } finally {
+            try {
+                if (downloadStream != null) {
+                    downloadStream.close();
+                }
+            } catch (IOException e) {
+                // Log l'erreur mais continue
+                System.err.println("Erreur lors de la fermeture du stream: " + e.getMessage());
+            }
+        }
+    }
+	
+	private String getFileExtension(String fileName) {
+        if (fileName == null) return "";
+        int lastDotIndex = fileName.lastIndexOf('.');
+        if (lastDotIndex > 0) {
+            return fileName.substring(lastDotIndex + 1).toLowerCase();
+        }
+        return "";
+    }
+    
+    private String getMimeTypeFromExtension(String extension) {
+        Map<String, String> mimeTypes = new HashMap<>();
+        // Images
+        mimeTypes.put("jpg", "image/jpeg");
+        mimeTypes.put("jpeg", "image/jpeg");
+        mimeTypes.put("png", "image/png");
+        mimeTypes.put("gif", "image/gif");
+        mimeTypes.put("svg", "image/svg+xml");
+        // Documents
+        mimeTypes.put("pdf", "application/pdf");
+        mimeTypes.put("txt", "text/plain");
+        mimeTypes.put("html", "text/html");
+        mimeTypes.put("csv", "text/csv");
+        mimeTypes.put("md", "text/markdown");
+        mimeTypes.put("doc", "application/msword");
+        mimeTypes.put("docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        mimeTypes.put("xls", "application/vnd.ms-excel");
+        mimeTypes.put("xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        
+        return mimeTypes.getOrDefault(extension, "application/octet-stream");
+    }
+	
+//
+////	private void setCategoryFolder(String opentextFoldercat,DocumentManagement docManClient, Long dataID, CourrierDTO dto, Long bo) {
+////		Metadata metadata = new Metadata();
+////		AttributeGroup categoryTemplate = docManClient.getCategoryTemplate(Long.parseLong(opentextFoldercat));
+////		
+////		((StringValue) categoryTemplate.getValues().get(0)).getValues().add(dto.getReference());
+////	    ((StringValue) categoryTemplate.getValues().get(1)).getValues().add(dto.getLangueCourrier());
+////	    ((StringValue) categoryTemplate.getValues().get(2)).getValues().add(dto.getTypeCourrier());
+////	    ((StringValue) categoryTemplate.getValues().get(3)).getValues().add(dto.getVoieDepot());
+////	    IntegerValue recuPar = (IntegerValue) categoryTemplate.getValues().get(11);
+////	    recuPar.getValues().clear();
+////	    recuPar.getValues().add(bo);
+////	    
+////		metadata.getAttributeGroups().add(categoryTemplate);
+////		
+////		docManClient.setNodeMetadata((long) dataID, metadata);	
+////	}
+//	
+//	private void setCategoryFolder(String opentextFoldercat,DocumentManagement docManClient, Long dataID, CourrierDTO dto, Long bo) {
+//		Metadata metadata = new Metadata();
+//		AttributeGroup categoryTemplate = docManClient.getCategoryTemplate(Long.parseLong(opentextFoldercat));
+//		
+//		XMLGregorianCalendar dateReception = null;
+//		XMLGregorianCalendar dateDepot = null;
+//		
+//		Date dateRec = dto.getDateReception();
+//		Calendar c = Calendar.getInstance(); 
+//		c.setTime(dateRec); 
+//		c.add(Calendar.DATE, 1);
+//		dateRec = c.getTime();
+//		
+//		Date dateDep = dto.getDateDepot();
+//		c.setTime(dateDep); 
+//		c.add(Calendar.DATE, 1);
+//		dateDep = c.getTime();
+//		
+//		try {
+//			GregorianCalendar dateReceptionGregorian = new GregorianCalendar();
+//			if(dto.getDateReception() != null)
+//				dateReceptionGregorian.setTime(dateRec);
+//			else
+//				dateReceptionGregorian.setTime(dateDep);
+//			dateReception = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateReceptionGregorian);
+//			
+//			GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+//			dateDepotGregorian.setTime(dateDep);
+//			dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+//		} catch (DatatypeConfigurationException e) {
+//			
+//		}
+//		
+//		((StringValue) categoryTemplate.getValues().get(0)).getValues().add(dto.getReference());
+//	    ((StringValue) categoryTemplate.getValues().get(2)).getValues().add(dto.getTypeCourrier());
+//	    ((StringValue) categoryTemplate.getValues().get(3)).getValues().add(dto.getVoieDepot());
+//	    IntegerValue recuPar = (IntegerValue) categoryTemplate.getValues().get(11);
+//	    recuPar.getValues().clear();
+//	    recuPar.getValues().add(bo);
+//	    DateValue dr = (DateValue) categoryTemplate.getValues().get(9);
+//	    dr.getValues().clear();
+//	    dr.getValues().add(dateReception);
+//	    DateValue dd = (DateValue) categoryTemplate.getValues().get(10);
+//	    dd.getValues().clear();
+//	    dd.getValues().add(dateDepot);
+//	    ((StringValue) categoryTemplate.getValues().get(15)).getValues().add(dto.getEcheanceJours());
+//	    
+//		metadata.getAttributeGroups().add(categoryTemplate);
+//		
+//		docManClient.setNodeMetadata((long) dataID, metadata);	
+//	}
+//	
+//	private void setCategoryFolderBis(String opentextFoldercat, Long opentextWorkflowFoldercat, DocumentManagement docManClient, Long dataID, CourrierDTO dto, Long bo) {
+//		Metadata metadata = new Metadata();
+//		AttributeGroup categoryTemplate = docManClient.getCategoryTemplate(Long.parseLong(opentextFoldercat));
+//		
+//		XMLGregorianCalendar dateReception = null;
+//		XMLGregorianCalendar dateDepot = null;
+//		
+//		Date dateRec = dto.getDateReception();
+//		Calendar c = Calendar.getInstance(); 
+//		c.setTime(dateRec); 
+//		c.add(Calendar.DATE, 1);
+//		dateRec = c.getTime();
+//		
+//		Date dateDep = dto.getDateDepot();
+//		c.setTime(dateDep); 
+//		c.add(Calendar.DATE, 1);
+//		dateDep = c.getTime();
+//		
+//		try {
+//			GregorianCalendar dateReceptionGregorian = new GregorianCalendar();
+//			if(dto.getDateReception() != null)
+//				dateReceptionGregorian.setTime(dateRec);
+//			else
+//				dateReceptionGregorian.setTime(dateDep);
+//			dateReception = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateReceptionGregorian);
+//			
+//			GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+//			dateDepotGregorian.setTime(dateDep);
+//			dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+//		} catch (DatatypeConfigurationException e) {
+//			
+//		}
+//		
+//		((StringValue) categoryTemplate.getValues().get(0)).getValues().add(dto.getReference());
+//	    ((StringValue) categoryTemplate.getValues().get(2)).getValues().add(dto.getTypeCourrier());
+//	    ((StringValue) categoryTemplate.getValues().get(3)).getValues().add(dto.getVoieDepot());
+//	    IntegerValue recuPar = (IntegerValue) categoryTemplate.getValues().get(11);
+//	    recuPar.getValues().clear();
+//	    recuPar.getValues().add(bo);
+//	    DateValue dr = (DateValue) categoryTemplate.getValues().get(9);
+//	    dr.getValues().clear();
+//	    dr.getValues().add(dateReception);
+//	    DateValue dd = (DateValue) categoryTemplate.getValues().get(10);
+//	    dd.getValues().clear();
+//	    dd.getValues().add(dateDepot);
+//	    ((StringValue) categoryTemplate.getValues().get(15)).getValues().add(dto.getEcheanceJours());
+//	    
+//		metadata.getAttributeGroups().add(categoryTemplate);
+//		
+//		AttributeGroup categoryWorkflowTemplate = docManClient.getCategoryTemplate(opentextWorkflowFoldercat);
+//		
+//	    ((StringValue) categoryWorkflowTemplate.getValues().get(0)).getValues().add("Terminé");
+//		metadata.getAttributeGroups().add(categoryWorkflowTemplate);
+//		
+//		docManClient.setNodeMetadata((long) dataID, metadata);	
+//	}
+	
+//	private void setCategoryFolder(String opentextFoldercat,DocumentManagement docManClient, Long dataID, String reference, String dateDepot, String filiale, String objet, String commentaire, String demandeurLibelle, String demandeurNatureLibelle) {
+//		Metadata metadata = new Metadata();
+//		AttributeGroup categoryTemplate = docManClient.getCategoryTemplate(Long.parseLong(opentextFoldercat));
+//		
+//	    ((StringValue) categoryTemplate.getValues().get(0)).getValues().add(reference);
+//	    
+//	    ((StringValue) categoryTemplate.getValues().get(1)).getValues().add(dateDepot);
+//	    
+//	    ((StringValue) categoryTemplate.getValues().get(2)).getValues().add(filiale);
+//	    
+//	    ((StringValue) categoryTemplate.getValues().get(3)).getValues().add(objet);
+//	    
+//	    ((StringValue) categoryTemplate.getValues().get(4)).getValues().add(commentaire);
+//	    
+//	    ((StringValue) categoryTemplate.getValues().get(5)).getValues().add(demandeurLibelle);
+//	    
+//	    ((StringValue) categoryTemplate.getValues().get(6)).getValues().add(demandeurNatureLibelle);
+//	    
+//		metadata.getAttributeGroups().add(categoryTemplate);
+//		
+//		docManClient.setNodeMetadata((long) dataID, metadata);
+//	}
+	
+//	private void setCategoryFolderSortant(String opentextFolderSortantcat,DocumentManagement docManClient, Long dataID, CourrierDTO dto, Long bo) {
+//		Metadata metadata = new Metadata();
+//		AttributeGroup categoryTemplate = docManClient.getCategoryTemplate(Long.parseLong(opentextFolderSortantcat));
+//		
+//		XMLGregorianCalendar aLivrerAvant = null;
+//
+//		if(dto.getDateLivraison() != null) {
+//			Date dateLiv = dto.getDateLivraison();
+//			Calendar c = Calendar.getInstance(); 
+//			c.setTime(dateLiv); 
+//			c.add(Calendar.DATE, 1);
+//			dateLiv = c.getTime();
+//			
+//			try {
+//				GregorianCalendar dateLivGregorian = new GregorianCalendar();
+//				if(dto.getDateLivraison() != null)
+//					dateLivGregorian.setTime(dateLiv);
+//				aLivrerAvant = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateLivGregorian);
+//			} catch (DatatypeConfigurationException e) {
+//				
+//			}
+//			
+//			DateValue dl = (DateValue) categoryTemplate.getValues().get(13);
+//		    dl.getValues().clear();
+//		    dl.getValues().add(aLivrerAvant);
+//		}
+//		
+//		if(dto.getReferenceDepart() != "")
+//			((StringValue) categoryTemplate.getValues().get(0)).getValues().add(dto.getReferenceDepart());
+//		if(dto.getVoieDepot() != "")
+//			((StringValue) categoryTemplate.getValues().get(1)).getValues().add(dto.getVoieDepot());
+////		((StringValue) categoryTemplate.getValues().get(2)).getValues().add(dto.getLangueCourrier());
+////	    ((StringValue) categoryTemplate.getValues().get(3)).getValues().add(dto.getTypeCourrier());
+//		if(dto.getTypeDestinataire() != "")
+//			((StringValue) categoryTemplate.getValues().get(4)).getValues().add(dto.getTypeDestinataire());
+//		if(dto.getDestinataireExterne() != "")
+//			((StringValue) categoryTemplate.getValues().get(5)).getValues().add(dto.getDestinataireExterne());
+//		if(dto.getParticulier() != "")
+//			((StringValue) categoryTemplate.getValues().get(6)).getValues().add(dto.getParticulier());
+//		if(dto.getAdresse() != "")
+//			((StringValue) categoryTemplate.getValues().get(7)).getValues().add(dto.getAdresse());
+//		if(dto.getVille() != "")
+//			((StringValue) categoryTemplate.getValues().get(8)).getValues().add(dto.getVille());
+//		if(dto.getReferenceDestinataire() != "")
+//			((StringValue) categoryTemplate.getValues().get(9)).getValues().add(dto.getReferenceDestinataire());
+//		if(dto.getEntiteEmettrice() != "")
+//			((StringValue) categoryTemplate.getValues().get(10)).getValues().add(dto.getEntiteEmettrice());
+//		if(dto.getObjetSortant() != "")
+//			((StringValue) categoryTemplate.getValues().get(11)).getValues().add(dto.getObjetSortant());
+//		if(dto.getUrgence() != "")
+//			((StringValue) categoryTemplate.getValues().get(12)).getValues().add(dto.getUrgence());
+//		if(dto.getAutresInstructionsLivraison() != "")
+//			((StringValue) categoryTemplate.getValues().get(14)).getValues().add(dto.getAutresInstructionsLivraison());
+//		if(dto.getReferenceCourrierEntrant() != "")
+//			((StringValue) categoryTemplate.getValues().get(15)).getValues().add(dto.getReferenceCourrierEntrant());
+//	    
+//		metadata.getAttributeGroups().add(categoryTemplate);
+//		
+//		docManClient.setNodeMetadata((long) dataID, metadata);	
+//	}
+//	
+//	private void setCategoryDocument(String opentextDocumentcat,DocumentManagement docManClient, Long dataID, String type) {
+//		Metadata metadata = new Metadata();
+//		AttributeGroup categoryTemplate = docManClient.getCategoryTemplate(Long.parseLong(opentextDocumentcat));
+//		
+//	    ((StringValue) categoryTemplate.getValues().get(0)).getValues().add(type);
+//	 
+//		metadata.getAttributeGroups().add(categoryTemplate);
+//		
+//		docManClient.setNodeMetadata((long) dataID, metadata);	
+//	}
+//	
+//	public String getAttributCourrier(String reference, String opentextUrl, String opentextLogin, String opentextPassword, String authToken) {
+//		OkHttpClient client1 = new OkHttpClient().newBuilder().build();
+//		MediaType mediaType = MediaType.parse("application/json");
+//		RequestBody body1 = RequestBody.create(mediaType, "{\"user_name\" : \""+opentextLogin+"\",\"password\" : \""+opentextPassword+"\"}");
+//		Request request1 = new Request.Builder().url(opentextUrl+":8002/otdsws/v1/authentication/credentials").method("POST", body1).addHeader("Content-Type", "application/json").build();
+//		String ticket = "";
+//		try {
+//			Response response1 = client1.newCall(request1).execute();
+//			JSONObject json1 = new JSONObject(response1.body().string());
+//			ticket = json1.get("ticket").toString();
+//		} catch (IOException e2) {
+//			e2.printStackTrace();
+//		}
+//		
+//		String data = "";
+//		OkHttpClient client = new OkHttpClient().newBuilder().build();
+//		RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("where","OTName:"+reference.replace("_", "/")).build();
+//		Request request = new Request.Builder().url(opentextUrl+"/otcs/cs.exe/api/v2/search").method("POST", body).addHeader("OTDSTicket", ticket).build();
+//		try {
+//			Response response = client.newCall(request).execute();
+//			JSONObject json = new JSONObject(response.body().string());
+//			if(((JSONArray) json.get("results")).length() == 0)
+//				return "";
+//			Integer courrierID = (Integer) ((JSONObject) ((JSONObject) ((JSONObject) ((JSONArray) json.get("results")).get(0)).get("data")).get("properties")).get("id");
+//			DocumentManagement_Service docManService = null;
+//			try {
+//				docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+//			} catch (MalformedURLException e1) {
+//				logger.warn(e1.getMessage());
+//			}
+//			DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+//			
+//			OTAuthentication otAuth = new OTAuthentication();
+//			otAuth.setAuthenticationToken(authToken);
+//			
+//			try
+//			{
+//				setSoapHeader((WSBindingProvider) docManClient, otAuth);
+//			}
+//			catch (SOAPException e)
+//			{
+//				logger.warn(FAILED_AUTH);
+//				logger.warn(e.getMessage());
+//			}
+//			
+//			try
+//			{
+//				Node courrier = docManClient.getNode(courrierID);
+//				Node day = docManClient.getNode(courrier.getParentID());
+//				Node month = docManClient.getNode(day.getParentID());
+//				Node year = docManClient.getNode(month.getParentID());
+//				
+//				data = day.getName()+"_"+month.getName()+"_"+year.getName();
+//				
+//				logger.warn(SUCCESS_MESSAGE);
+//			}
+//			catch (SOAPFaultException e)
+//			{
+//				logger.warn(FAILED_MESSAGE);
+//				logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+//			}
+//			
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		return data;
+//	}
+//	
+//	public Long getGroupID(String opentextUrl, String name, String authToken) {
+//		MemberService_Service memberService = null;
+//		Group group = null;
+//		User user = null;
+//		Long id = null;
+//		try {
+//			memberService = new MemberService_Service(new URL(opentextUrl+"/cws/MemberService.svc?wsdl"));
+//		} catch (MalformedURLException e1) {
+//			logger.warn(e1.getMessage());
+//		}
+//		MemberService memberClient = memberService.getBasicHttpBindingMemberService();
+//		OTAuthentication otAuth = new OTAuthentication();
+//		otAuth.setAuthenticationToken(authToken);
+//		try
+//		{
+//			setSoapHeader((WSBindingProvider) memberClient, otAuth);
+//		}
+//		catch (SOAPException e)
+//		{
+//			logger.warn(FAILED_AUTH);
+//			logger.warn(e.getMessage());
+//		}
+//		try
+//		{
+//			group = memberClient.getGroupByName(name);
+//			if(group != null) {
+//				id = group.getID();
+//			}
+//			else {
+//				user = memberClient.getUserByLoginName(name);
+//				if(user != null)
+//					id = user.getID();
+//			}
+//			logger.warn(SUCCESS_MESSAGE);
+//		}
+//		catch (SOAPFaultException e)
+//		{
+//			logger.warn(FAILED_MESSAGE);
+//			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+//		}
+//		return id;
+//	}
+//	
+////	public List<String> getEntities(String opentextUrl, String typeEntity, String parentEntity, String authToken) {
+////		List<String> entities = new ArrayList<String>();
+////		
+////		MemberService_Service memberService = null;
+////		try {
+////			memberService = new MemberService_Service(new URL(opentextUrl+"/cws/MemberService.svc?wsdl"));
+////		} catch (MalformedURLException e1) {
+////			logger.warn(e1.getMessage());
+////		}
+////		MemberService memberClient = memberService.getBasicHttpBindingMemberService();
+////		OTAuthentication otAuth = new OTAuthentication();
+////		otAuth.setAuthenticationToken(authToken);
+////		try
+////		{
+////			setSoapHeader((WSBindingProvider) memberClient, otAuth);
+////		}
+////		catch (SOAPException e)
+////		{
+////			logger.warn(FAILED_AUTH);
+////			logger.warn(e.getMessage());
+////		}
+////		try
+////		{
+////			Group parentGroup = memberClient.getGroupByName(parentEntity);
+////			
+////			List<Member> members = memberClient.listMembers(parentGroup.getID());
+////			
+////			for(Member member : members) {
+////				if(member.getType().equals("Group")) {
+////					if(member.getName().startsWith(typeEntity) && !member.getName().equals("SECRETARIAT DIRECTION GENERALE (SDG)")) {
+////						entities.add(member.getName());
+////					}
+////					List<Member> subMembers = memberClient.listMembers(member.getID());
+////					for(Member subMember : subMembers) {
+////						if(subMember.getType().equals("Group")) {
+////							if(subMember.getName().startsWith(typeEntity) && !subMember.getName().equals("SECRETARIAT DIRECTION GENERALE (SDG)")) {
+////								entities.add(subMember.getName());
+////							}
+////							List<Member> subMembers1 = memberClient.listMembers(subMember.getID());
+////							for(Member subMember1 : subMembers1) {
+////								if(subMember1.getType().equals("Group")) {
+////									if(subMember1.getName().startsWith(typeEntity) && !subMember1.getName().equals("SECRETARIAT DIRECTION GENERALE (SDG)")) {
+////										entities.add(subMember1.getName());
+////									}
+////								}
+////							}
+////						}
+////					}
+////				}
+////			}
+////			
+////			logger.warn(SUCCESS_MESSAGE);
+////		}
+////		catch (SOAPFaultException e)
+////		{
+////			logger.warn(FAILED_MESSAGE);
+////			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+////		}
+////		return entities;
+////	}
+//	
+//	public List<String> getEntities(String opentextUrl, String typeEntity, String parentEntity, String authToken) {
+//		List<String> entities = new ArrayList<String>();
+//		
+//		MemberService_Service memberService = null;
+//		try {
+//			memberService = new MemberService_Service(new URL(opentextUrl+"/cws/MemberService.svc?wsdl"));
+//		} catch (MalformedURLException e1) {
+//			logger.warn(e1.getMessage());
+//		}
+//		MemberService memberClient = memberService.getBasicHttpBindingMemberService();
+//		OTAuthentication otAuth = new OTAuthentication();
+//		otAuth.setAuthenticationToken(authToken);
+//		try
+//		{
+//			setSoapHeader((WSBindingProvider) memberClient, otAuth);
+//		}
+//		catch (SOAPException e)
+//		{
+//			logger.warn(FAILED_AUTH);
+//			logger.warn(e.getMessage());
+//		}
+//		try
+//		{
+//			Group parentGroup = memberClient.getGroupByName(parentEntity);
+//			
+//			List<Member> members = memberClient.listMembers(parentGroup.getID());
+//			
+//			for(Member member : members) {
+//				if(member.getType().equals("Group")) {
+//					if(member.getName().startsWith(typeEntity) && !member.getName().equals("SECRETARIAT DIRECTION GENERALE (SDG)")) {
+//						entities.add(member.getName());
+//					}
+//					List<Member> subMembers = memberClient.listMembers(member.getID());
+//					for(Member subMember : subMembers) {
+//						if(subMember.getType().equals("Group")) {
+//							if(subMember.getName().startsWith(typeEntity) && !subMember.getName().equals("SECRETARIAT DIRECTION GENERALE (SDG)")) {
+//								entities.add(subMember.getName());
+//							}
+//							List<Member> subMembers1 = memberClient.listMembers(subMember.getID());
+//							for(Member subMember1 : subMembers1) {
+//								if(subMember1.getType().equals("Group")) {
+//									if(subMember1.getName().startsWith(typeEntity) && !subMember1.getName().equals("SECRETARIAT DIRECTION GENERALE (SDG)")) {
+//										entities.add(subMember1.getName());
+//									}
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+//			
+//			logger.warn(SUCCESS_MESSAGE);
+//		}
+//		catch (SOAPFaultException e)
+//		{
+//			logger.warn(FAILED_MESSAGE);
+//			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+//		}
+//		return entities;
+//	}
+//	
+//	public List<String> getReferenceBis(String opentextUrl, Date dateReception, Long folderEntrantID, String authToken) {
+//		List<String> references = new ArrayList<String>();
+//		Node folderYear = null;
+//		Node folderMonth = null;
+//		Node folderDay = null;
+//		
+//		LocalDate dateDepot = dateReception.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//		String month = "";
+//		String day   = "";
+//		
+//		if(dateDepot.getMonthValue() < 10) month = "0"+dateDepot.getMonthValue(); else month = ""+dateDepot.getMonthValue();
+//		if(dateDepot.getDayOfMonth() < 10) day = "0"+dateDepot.getDayOfMonth(); else day = ""+dateDepot.getDayOfMonth();
+//		
+//		DocumentManagement_Service docManService = null;
+//		try {
+//			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+//		} catch (MalformedURLException e1) {
+//			logger.warn(e1.getMessage());
+//		}
+//		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+//
+//		OTAuthentication otAuth = new OTAuthentication();
+//		otAuth.setAuthenticationToken(authToken);
+//		
+//		try
+//		{
+//			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+//		}
+//		catch (SOAPException e)
+//		{
+//			logger.warn(FAILED_AUTH);
+//			logger.warn(e.getMessage());
+//			return null;
+//		}
+//		
+//		try
+//		{
+//			folderYear = docManClient.getNodeByName(folderEntrantID, ""+dateDepot.getYear());
+//			folderMonth = docManClient.getNodeByName(folderYear.getID(), month);
+//			folderDay = docManClient.getNodeByName(folderMonth.getID(), day);
+//			
+//			List<Node> nodes = docManClient.listNodes(folderDay.getID(), false);
+//			
+//			if (nodes != null)
+//			{
+//				for(Node node : nodes) {
+//					references.add(node.getName());
+//				}
+//			}
+//			
+//			
+//			logger.warn(SUCCESS_MESSAGE);
+//		}
+//		catch (SOAPFaultException e)
+//		{
+//			logger.warn(FAILED_MESSAGE);
+//			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+//			return null;
+//		}
+//		
+//		return references;
+//	}
+//	
+//	public List<String> getCollaborateurs(String opentextUrl, String typeEntity, String parentEntity, String authToken) {
+//		List<String> collaborateurs = new ArrayList<String>();
+//		
+//		MemberService_Service memberService = null;
+//		try {
+//			memberService = new MemberService_Service(new URL(opentextUrl+"/cws/MemberService.svc?wsdl"));
+//		} catch (MalformedURLException e1) {
+//			logger.warn(e1.getMessage());
+//		}
+//		MemberService memberClient = memberService.getBasicHttpBindingMemberService();
+//		OTAuthentication otAuth = new OTAuthentication();
+//		otAuth.setAuthenticationToken(authToken);
+//		try
+//		{
+//			setSoapHeader((WSBindingProvider) memberClient, otAuth);
+//		}
+//		catch (SOAPException e)
+//		{
+//			logger.warn(FAILED_AUTH);
+//			logger.warn(e.getMessage());
+//		}
+//		try
+//		{
+//			Group parentGroup = memberClient.getGroupByName(parentEntity);
+//			
+//			List<Member> members = memberClient.listMembers(parentGroup.getID());
+//			
+//			if(typeEntity.equals("DIRECTION")) {
+//				for(Member member : members) {
+//					if(member.getType().equals("User"))
+//						collaborateurs.add(member.getName());
+//					else {
+//						List<Member> subMembers = memberClient.listMembers(member.getID());
+//						for(Member subMember : subMembers) {
+//							if(subMember.getType().equals("User"))
+//								collaborateurs.add(subMember.getName());
+//						}
+//					}
+//				}
+//			}
+//			if(typeEntity.equals("DEPARTEMENT")) {
+//				for(Member member : members) {
+//					if(member.getType().equals("User"))
+//						collaborateurs.add(member.getName());
+//				}
+//			}
+//			logger.warn(SUCCESS_MESSAGE);
+//		}
+//		catch (SOAPFaultException e)
+//		{
+//			logger.warn(FAILED_MESSAGE);
+//			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+//		}
+//		return collaborateurs;
+//	}
+//	
+//	public void delegateWorkflow(String opentextUrl, Long workID, Long subworkID, Integer taskID, String userName, String authToken) {
+//		WorkflowService_Service workflowService = null;
+//		MemberService_Service memberService = null;
+//		try {
+//			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+//			memberService = new MemberService_Service(new URL(opentextUrl+"/cws/MemberService.svc?wsdl"));
+//		} catch (MalformedURLException e1) {
+//			logger.warn(e1.getMessage());
+//		}
+//		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+//		MemberService memberClient = memberService.getBasicHttpBindingMemberService();
+//
+//		OTAuthentication otAuth = new OTAuthentication();
+//		otAuth.setAuthenticationToken(authToken);
+//		
+//		try
+//		{
+//			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+//			setSoapHeader((WSBindingProvider) memberClient, otAuth);
+//		}
+//		catch (SOAPException e)
+//		{
+//			logger.warn(FAILED_AUTH);
+//			logger.warn(e.getMessage());
+//		}
+//		
+//		try
+//		{
+//			User user = memberClient.getUserByLoginName(userName);
+//			if(user != null) {
+//				Member group = memberClient.getMemberById(user.getDepartmentGroupID());
+//				if(group != null) {
+//					Group groupLeader = memberClient.getGroupByName(group.getName());
+//					if(groupLeader != null) {
+//						workflowClient.reassignActivity(workID, subworkID, taskID, groupLeader.getLeaderID());
+//					}
+//				}
+//			}
+//			
+//			logger.warn(SUCCESS_MESSAGE);
+//		}
+//		catch (SOAPFaultException e)
+//		{
+//			logger.warn(FAILED_MESSAGE);
+//			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+//		}
+//	}
+//	
+//	public void initiateWorkflow(String opentextUrl, Long opentextFolderEntrantID, Long opentextCourrierEntrantStandardID, Long opentextCourrierEntrantAttachementID, Long opentextWorkflowFoldercat, String authToken) {
+//		DocumentManagement_Service docManService = null;
+//		WorkflowService_Service workflowService = null;
+//		try {
+//			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+//			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+//		} catch (MalformedURLException e1) {
+//			logger.warn(e1.getMessage());
+//		}
+//		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+//		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+//
+//		OTAuthentication otAuth = new OTAuthentication();
+//		otAuth.setAuthenticationToken(authToken);
+//		
+//		try
+//		{
+//			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+//			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+//		}
+//		catch (SOAPException e)
+//		{
+//			logger.warn(FAILED_AUTH);
+//			logger.warn(e.getMessage());
+//		}
+//		
+//		try
+//		{
+////			List<Node> entities = docManClient.listNodes(2000, false);
+////			if(entities != null) {
+////				for(Node entity : entities) {
+////					
+////				}
+////			}
+//			
+//			List<Node> years = docManClient.listNodes(opentextFolderEntrantID, false);
+//			if(years != null) {
+//				for(Node year : years) {
+//					List<Node> months = docManClient.listNodes(year.getID(), false);
+//					if(months != null) {
+//						for(Node month : months) {
+//							List<Node> days = docManClient.listNodes(month.getID(), false);
+//							if(days != null) {
+//								for(Node day : days) {
+//									List<Node> references = docManClient.listNodes(day.getID(), false);
+//									if(references != null) {
+//										for(Node reference : references) {
+//											if(reference.getMetadata().getAttributeGroups().size() == 2) {
+//												List<Node> documents = docManClient.listNodes(reference.getID(), false);
+//												if(documents != null) {
+//													Boolean find = false;
+//													for(Node document : documents) {
+//														List<AttributeGroup> attributeGroups = document.getMetadata().getAttributeGroups();
+//														for(int i = 0; i < attributeGroups.size(); i++) {
+//															if(attributeGroups.get(i).getDisplayName().equals("DOCUMENT")) {
+//																if(((StringValue) attributeGroups.get(i).getValues().get(2)).getValues().size() != 0 && ((StringValue) attributeGroups.get(i).getValues().get(2)).getValues().get(0).equals("Terminé"))
+//																	find = true;
+//															}
+//														}
+//													}
+//													if(find) {
+//														List<AttributeGroup> attributeGroups = reference.getMetadata().getAttributeGroups();
+//															
+//														List<Long> attachments = new ArrayList<Long>();
+//														List<Long> memberRoleIDs = new ArrayList<Long>();
+//														memberRoleIDs.add(new Long(1000));
+//														
+//														ProcessStartData processStartData = workflowClient.getProcessStartData(opentextCourrierEntrantStandardID);
+//														
+//														List<ApplicationData> appDataList = processStartData.getApplicationData();
+//														
+//														for(ApplicationData appData : appDataList) {
+//															if(appData.getClass() == AttachmentData.class) {
+//																AttachmentData attachmentData = (AttachmentData) appData;
+//																for (Node document : documents) {
+//																	docManClient.copyNode(document.getID(), attachmentData.getContainerID(), document.getName(), null);
+//																}
+//															}
+//															if(appData.getClass() == FormData.class) {
+//																FormData formData = (FormData) appData;
+//												                for (FormDataInstance formDataInstance : formData.getForms()) {
+//												                	AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+//												                	for(Attribute attr : groupDef.getAttributes()) {
+//												                		if (attr.getDisplayName().equals("REFERENCE COURRIER"))
+//											                            {
+//												                			StringAttribute sAttr = (StringAttribute) attr;
+//											                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(0)).getValues().get(0));
+//											                            }
+////												                		if (attr.getDisplayName().equals("LANGUECOURRIER"))
+////											                            {
+////												                			if(((StringValue) attributeGroups.get(0).getValues().get(1)).getValues().size() > 0) {
+////												                				StringAttribute sAttr = (StringAttribute) attr;
+////												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(1)).getValues().get(0));
+////													                		}
+////											                            }
+//												                		if (attr.getDisplayName().equals("TYPE COURRIER"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(2)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(2)).getValues().get(0));
+//													                		}
+//											                            }
+//												                		if (attr.getDisplayName().equals("VOIE DEPOT"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(3)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(3)).getValues().get(0));
+//													                		}
+//											                            }
+//												                		if (attr.getDisplayName().equals("TYPE EXPEDITEUR"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(4)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(4)).getValues().get(0));
+//													                		}
+//											                            }
+//												                		if (attr.getDisplayName().equals("EXPEDITEUR"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(5)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(5)).getValues().get(0));
+//													                		}
+//											                            }
+//												                		if (attr.getDisplayName().equals("NOM PARTICULIER"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(7)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(7)).getValues().get(0));
+//													                		}
+//											                            }
+//												                		if (attr.getDisplayName().equals("REFERENCE EXPEDITRICE"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(8)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(8)).getValues().get(0));
+//													                		}
+//											                            }
+//												                		if (attr.getDisplayName().equals("DATE RECEPTION"))
+//											                            {
+//											                                DateAttribute sAttr = (DateAttribute) attr;
+//											                                GregorianCalendar dateReceptionGregorian = new GregorianCalendar();
+//											                    			dateReceptionGregorian.setTime(new Date());
+//											                    			XMLGregorianCalendar dateReception = null;
+//																			try {
+//																				dateReception = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateReceptionGregorian);
+//																			} catch (DatatypeConfigurationException e) {
+//																				e.printStackTrace();
+//																			}
+//											                    			sAttr.getValues().clear();
+//											                    			sAttr.getValues().add(dateReception);
+//											                            }
+//												                		if (attr.getDisplayName().equals("DATE ENREGISTREMENT"))
+//											                            {
+//											                                DateAttribute sAttr = (DateAttribute) attr;
+//											                                GregorianCalendar dateDepotGregorian = new GregorianCalendar();
+//											                    			dateDepotGregorian.setTime(new Date());
+//											                    			XMLGregorianCalendar dateDepot = null;
+//																			try {
+//																				dateDepot = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateDepotGregorian);
+//																			} catch (DatatypeConfigurationException e) {
+//																				e.printStackTrace();
+//																			}
+//											                    			sAttr.getValues().clear();
+//											                    			sAttr.getValues().add(dateDepot);
+//											                            }
+//												                		if (attr.getDisplayName().equals("RECU PAR"))
+//											                            {
+//											                                UserAttribute sAttr = (UserAttribute) attr;
+//											                                sAttr.getValues().clear();
+//											                    			sAttr.getValues().add(0, ((IntegerValue) attributeGroups.get(0).getValues().get(11)).getValues().get(0));
+//											                            }
+//												                		if (attr.getDisplayName().equals("OBJET"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(12)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(12)).getValues().get(0));
+//												                			}
+//											                            }
+//												                		if (attr.getDisplayName().equals("MESSAGE"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(13)).getValues().size() > 0) {
+//												                				MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(13)).getValues().get(0));
+//												                			}
+//											                            }
+//												                		if (attr.getDisplayName().equals("NOMBRE PJ"))
+//											                            {
+//												                			if(((IntegerValue) attributeGroups.get(0).getValues().get(14)).getValues().size() > 0) {
+//												                				IntegerAttribute sAttr = (IntegerAttribute) attr;
+//												                                sAttr.getValues().clear();
+//												                    			sAttr.getValues().add(0, ((IntegerValue) attributeGroups.get(0).getValues().get(14)).getValues().get(0));
+//												                			}
+//											                            }
+//												                		if (attr.getDisplayName().equals("ECHEANCE JOURS"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(15)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(15)).getValues().get(0));
+//													                		}
+//											                            }
+//																	}
+//												                	formDataInstance.setData(groupDef);
+//												                }
+//															}
+//														}
+//														workflowClient.startProcess(processStartData, attachments, memberRoleIDs);
+//														
+//														Metadata metadata = reference.getMetadata();
+//														AttributeGroup categoryTemplate = docManClient.getCategoryTemplate(opentextWorkflowFoldercat);
+//														
+//													    ((StringValue) categoryTemplate.getValues().get(0)).getValues().add("Terminé");
+//														metadata.getAttributeGroups().add(categoryTemplate);
+//														
+//														docManClient.setNodeMetadata((long) reference.getID(), metadata);
+//													}
+//												}
+//											}
+//										}
+//									}
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+//			
+//			logger.warn(SUCCESS_MESSAGE);
+//		}
+//		catch (SOAPFaultException e)
+//		{
+//			logger.warn(FAILED_MESSAGE);
+//			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+//		}
+//	}
+	
+//	public void initiateWorkflowDepart(String opentextUrl, Long opentextFolderSortantID, Long opentextCourrierSortantID, Long opentextWorkflowFoldercat, String authToken) {
+//		DocumentManagement_Service docManService = null;
+//		WorkflowService_Service workflowService = null;
+//		try {
+//			docManService = new DocumentManagement_Service(new URL(opentextUrl+"/cws/DocumentManagement.svc?wsdl"));
+//			workflowService = new WorkflowService_Service(new URL(opentextUrl+"/cws/WorkflowService.svc?wsdl"));
+//		} catch (MalformedURLException e1) {
+//			logger.warn(e1.getMessage());
+//		}
+//		DocumentManagement docManClient = docManService.getBasicHttpBindingDocumentManagement();
+//		WorkflowService workflowClient = workflowService.getBasicHttpBindingWorkflowService();
+//
+//		OTAuthentication otAuth = new OTAuthentication();
+//		otAuth.setAuthenticationToken(authToken);
+//		
+//		try
+//		{
+//			setSoapHeader((WSBindingProvider) docManClient, otAuth);
+//			setSoapHeader((WSBindingProvider) workflowClient, otAuth);
+//		}
+//		catch (SOAPException e)
+//		{
+//			logger.warn(FAILED_AUTH);
+//			logger.warn(e.getMessage());
+//		}
+//		
+//		try
+//		{	
+//			List<Node> years = docManClient.listNodes(opentextFolderSortantID, false);
+//			if(years != null) {
+//				for(Node year : years) {
+//					List<Node> months = docManClient.listNodes(year.getID(), false);
+//					if(months != null) {
+//						for(Node month : months) {
+//							List<Node> days = docManClient.listNodes(month.getID(), false);
+//							if(days != null) {
+//								for(Node day : days) {
+//									List<Node> references = docManClient.listNodes(day.getID(), false);
+//									if(references != null) {
+//										for(Node reference : references) {
+//											if(reference.getMetadata().getAttributeGroups().size() == 2) {
+//												List<Node> documents = docManClient.listNodes(reference.getID(), false);
+//												if(documents != null) {
+//													Boolean find = false;
+//													for(Node document : documents) {
+//														List<AttributeGroup> attributeGroups = document.getMetadata().getAttributeGroups();
+//														for(int i = 0; i < attributeGroups.size(); i++) {
+//															if(attributeGroups.get(i).getDisplayName().equals("DOCUMENT")) {
+//																if(((StringValue) attributeGroups.get(i).getValues().get(2)).getValues().size() != 0 && ((StringValue) attributeGroups.get(i).getValues().get(2)).getValues().get(0).equals("Terminé"))
+//																	find = true;
+//															}
+//														}
+//													}
+//													
+//													if(find) {
+//														List<AttributeGroup> attributeGroups = reference.getMetadata().getAttributeGroups();
+//															
+//														List<Long> attachments = new ArrayList<Long>();
+//														List<Long> memberRoleIDs = new ArrayList<Long>();
+//														memberRoleIDs.add(new Long(1000));
+//														
+//														ProcessStartData processStartData = workflowClient.getProcessStartData(opentextCourrierSortantID);
+//														
+//														List<ApplicationData> appDataList = processStartData.getApplicationData();
+//														for(ApplicationData appData : appDataList) {
+//															if(appData.getClass() == AttachmentData.class) {
+//																AttachmentData attachmentData = (AttachmentData) appData;
+//																for (Node document : documents) {
+//																	docManClient.copyNode(document.getID(), attachmentData.getContainerID(), document.getName(), null);
+//																}
+//															}
+//															if(appData.getClass() == FormData.class) {
+//																FormData formData = (FormData) appData;
+//												                for (FormDataInstance formDataInstance : formData.getForms()) {
+//												                	AttributeGroupDefinition groupDef = docManClient.getCategoryDefinition(formDataInstance.getTemplateID());
+//												                	for(Attribute attr : groupDef.getAttributes()) {
+//												                		if (attr.getDisplayName().equals("REFERENCE DEPART"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(0)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//													                			sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(0)).getValues().get(0));
+//												                			}
+//												                		}
+//												                		if (attr.getDisplayName().equals("MODE ENVOI"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(1)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(1)).getValues().get(0));
+//													                		}
+//												                		}
+////												                		if (attr.getDisplayName().equals("Langue du courrier"))
+////											                            {
+////												                			if(((StringValue) attributeGroups.get(0).getValues().get(2)).getValues().size() > 0) {
+////												                				StringAttribute sAttr = (StringAttribute) attr;
+////												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(2)).getValues().get(0));
+////													                		}
+////											                            }
+////												                		if (attr.getDisplayName().equals("Type courrier"))
+////											                            {
+////												                			if(((StringValue) attributeGroups.get(0).getValues().get(3)).getValues().size() > 0) {
+////												                				StringAttribute sAttr = (StringAttribute) attr;
+////												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(3)).getValues().get(0));
+////													                		}
+////											                            }
+//												                		
+//												                		if (attr.getDisplayName().equals("TYPE DESTINATAIRE"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(4)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(4)).getValues().get(0));
+//													                		}
+//												                		}
+//												                		if (attr.getDisplayName().equals("DESTINATAIRE EXTERNE"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(5)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(5)).getValues().get(0));
+//													                		}
+//												                		}
+//												                		if (attr.getDisplayName().equals("NOM PARTICULIER"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(6)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(6)).getValues().get(0));
+//													                		}
+//											                            }
+//												                		if (attr.getDisplayName().equals("ADRESSE"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(7)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(7)).getValues().get(0));
+//													                		}
+//												                		}
+//												                		if (attr.getDisplayName().equals("VILLE"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(8)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(8)).getValues().get(0));
+//													                		}
+//											                            }
+//												                		if (attr.getDisplayName().equals("REF DESTINATAIRE"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(9)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(9)).getValues().get(0));
+//													                		}
+//												                		}
+//												                		if (attr.getDisplayName().equals("ENTITE EMETTRICE"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(10)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(10)).getValues().get(0));
+//													                		}
+//												                		}
+//												                		if (attr.getDisplayName().equals("OBJET"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(11)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(11)).getValues().get(0));
+//													                		}
+//												                		}
+//												                		if (attr.getDisplayName().equals("URGENCE"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(12)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(12)).getValues().get(0));
+//													                		}
+//												                		}
+//												                		if (attr.getDisplayName().equals("A LIVRER AVANT"))
+//											                            {
+//											                                DateAttribute sAttr = (DateAttribute) attr;
+//											                                GregorianCalendar dateLivraionGregorian = new GregorianCalendar();
+//											                    			dateLivraionGregorian.setTime(new Date());
+//											                    			XMLGregorianCalendar dateLivraion = null;
+//																			try {
+//																				dateLivraion = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateLivraionGregorian);
+//																			} catch (DatatypeConfigurationException e) {
+//																				e.printStackTrace();
+//																			}
+//											                    			sAttr.getValues().clear();
+//											                    			sAttr.getValues().add(dateLivraion);
+//											                            }
+//												                		if (attr.getDisplayName().equals("AUTRES INSTRUCTIONS DE LIVRAISON"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(14)).getValues().size() > 0) {
+//												                				MultiLineAttribute sAttr = (MultiLineAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(14)).getValues().get(0));
+//												                			}
+//												                		}
+//												                		if (attr.getDisplayName().equals("REFERENCE COURRIER ENTRANT"))
+//											                            {
+//												                			if(((StringValue) attributeGroups.get(0).getValues().get(15)).getValues().size() > 0) {
+//												                				StringAttribute sAttr = (StringAttribute) attr;
+//												                                sAttr.getValues().add(0, ((StringValue) attributeGroups.get(0).getValues().get(15)).getValues().get(0));
+//													                		}
+//												                		}
+//																	}
+//												                	formDataInstance.setData(groupDef);
+//												                }
+//															}
+//														}
+//														workflowClient.startProcess(processStartData, attachments, memberRoleIDs);
+//														
+//														Metadata metadata = reference.getMetadata();
+//														AttributeGroup categoryTemplate = docManClient.getCategoryTemplate(opentextWorkflowFoldercat);
+//														
+//													    ((StringValue) categoryTemplate.getValues().get(0)).getValues().add("Terminé");
+//														metadata.getAttributeGroups().add(categoryTemplate);
+//														
+//														docManClient.setNodeMetadata((long) reference.getID(), metadata);
+//													}
+//												}
+//											}
+//										}
+//									}
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+//			
+//			logger.warn(SUCCESS_MESSAGE);
+//		}
+//		catch (SOAPFaultException e)
+//		{
+//			logger.warn(FAILED_MESSAGE);
+//			logger.warn(String.format(STRING_FORMAT,e.getFault().getFaultCode(),e.getMessage()));
+//		}
+//	}
+	
+	private XMLGregorianCalendar stringToXMLGregorianCalendar(String s) throws ParseException, DatatypeConfigurationException
+	{
+		 XMLGregorianCalendar result = null;
+		 SimpleDateFormat simpleDateFormat;
+		 GregorianCalendar gregorianCalendar;
+	 
+		 simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		 Date date = (Date) simpleDateFormat.parse(s);        
+		 gregorianCalendar = (GregorianCalendar)GregorianCalendar.getInstance(); 
+		 gregorianCalendar.setTime(date);
+		 result = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar);
+		 
+		 return result;
+	}
+	
+	private File convert(MultipartFile file) {
+		File convFile = new File(file.getOriginalFilename());
+		try {
+			convFile.createNewFile();
+			FileOutputStream fos = new FileOutputStream(convFile);
+			fos.write(file.getBytes());
+			fos.close();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		return convFile;
+	}
+	
+}

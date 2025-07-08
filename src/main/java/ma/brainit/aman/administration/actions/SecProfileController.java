@@ -1,0 +1,109 @@
+package ma.brainit.aman.administration.actions;
+
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import ma.brainit.base.utils.Util;
+import ma.brainit.aman.administration.dto.SecProfileDTO;
+import ma.brainit.aman.administration.dto.SecUtilisateurDTO;
+import ma.brainit.aman.administration.service.SecProfileService;
+import ma.brainit.aman.administration.service.SecUtilisateurService;
+//import ma.brainit.aman.client.service.ClientService;
+//import ma.brainit.aman.client.service.ContactService;
+
+
+@Controller
+@RequestMapping(value = "/administration/profile")
+public class SecProfileController {
+
+	@Autowired
+	private SecProfileService secProfileService;
+	
+//	@Autowired
+//	private ClientService clientService;
+	
+//	@Autowired
+//	private ContactService contactService;
+	
+	@Autowired
+	private SecUtilisateurService secUtilisateurService;
+
+	@RequestMapping(value = { "", "/" }, method = RequestMethod.GET)
+	public ModelAndView login(Model model, HttpServletResponse response) {
+		ModelAndView modelAndView = new ModelAndView("administration/profileList");
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (!(auth instanceof AnonymousAuthenticationToken)) {
+			SecUtilisateurDTO user = secUtilisateurService.getCurrentUser();
+			modelAndView.addObject("name", user.getNom());
+			modelAndView.addObject("profile", user.getSecProfileCode());
+		} else {
+			response.addHeader("REQUIRES_AUTH", "1");
+			modelAndView.setViewName("home/login");
+		}
+		
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/rest/list", method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<String> getData(@RequestParam("page") Optional<Integer> page,
+			@RequestParam("limit") Optional<Integer> limit, @RequestParam("sort") Optional<String> sort,
+			@RequestParam("direction") Optional<String> direction, @RequestParam("search") Optional<String> search) {
+		String result = secProfileService.getPaginator(page.orElse(0), limit.orElse(null), sort.orElse(null),
+				direction.orElse(null), search.orElse(null));
+		return new ResponseEntity<String>(result, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/rest/load/{id}", method = RequestMethod.GET)
+	public @ResponseBody String load(@PathVariable("id") Long id) {
+		SecProfileDTO returnedDTO = secProfileService.load(id);
+		return Util.toJson(returnedDTO);
+	}
+	
+	@RequestMapping(value = "/rest/loadByPerformer/{id}", method = RequestMethod.GET)
+	public @ResponseBody String loadByPerformer(@PathVariable("id") Long id) {
+		SecProfileDTO returnedDTO = secProfileService.loadByPerformer(id);
+		return Util.toJson(returnedDTO);
+	}
+	
+	@RequestMapping(value = "/rest/getAllConseillers", method = RequestMethod.GET)
+	public @ResponseBody String loadAllConseillers() {
+		return Util.toJson(secProfileService.getAllConseillers());
+	}
+
+	@RequestMapping(value = "/rest/save", method = RequestMethod.POST)
+	public @ResponseBody String save(@RequestBody SecProfileDTO dto) {
+		SecProfileDTO returnedDTO = secProfileService.save(dto);
+		return Util.toJson(returnedDTO);
+	}
+
+	@RequestMapping(value = "/rest/delete/{id}", method = RequestMethod.POST)
+	public @ResponseBody String remove(@PathVariable("id") Long id) {
+		secProfileService.delete(id);
+		
+		return Util.OK;
+	}
+	
+	@RequestMapping(value="/rest/modulesByUser/{userId}", method=RequestMethod.GET)
+	public @ResponseBody String getModulesByUser(@PathVariable("userId") Long userId){
+		
+		return Util.toJson(secProfileService.getModulesByUser(userId));
+	}
+
+}

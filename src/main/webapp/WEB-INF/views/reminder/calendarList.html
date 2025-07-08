@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+	<title></title>
+	<script>
+  	
+</script>
+</head>
+<body ng-controller="calendarController" th:attr="ng-init='init();'">
+<div layout:fragment="content" class="page-content">
+<!-- ############ PAGE START-->
+<div class="p-a white lt box-shadow">
+	<div class="row">
+		<div class="col-sm-3">
+			<h4 class="mb-0 _300">Agenda</h4>
+			<small class="text-muted">Agenda</small>
+		</div>
+	</div>
+</div>
+<!-- ############ PAGE START-->
+<div class="padding">
+  <div class="row">
+    <div class="col-md-12">
+    	<div class="box">
+			<div class="box-header">
+				<div style="float:left; margin-top: 3px;">
+					<h2 class="mb-0 _300">Agenda</h2>
+				    <small class="text-muted"><a style="font-size: 13px !important;" th:href="@{/}"><span class="nav-link-breadcrumb label">Tableau de bord</span></a> <span class="nav-link-breadcrumb label">Relance</span> <span class="nav-link-breadcrumb label primary">Agenda</span></small>
+				</div>
+			</div>
+			<div class="table-responsive" style="padding: 10px">
+				<div id='calendar'></div>
+			</div>
+		</div>
+    </div>
+  </div>
+  <div id="fullCalModal" class="modal fade">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+        	<div class="modal-header">
+            	<h4 class="modal-title">Informations de la réunion</h4>
+            </div>
+            <div id="modalBody" class="modal-body">
+            	<p id="modalTitle" style="font-weight: bold">Titre : <span></span></p>
+            	<p class="start">Date de début : <span></span></p>
+                <p class="end">Date de fin : <span></span></p>
+            </div>
+            <div class="modal-footer">
+            	<button type="button" class="btn danger p-x-md" data-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+  </div>
+  </div>
+</div>
+<div layout:fragment="plugins" class="page-content">
+	<script th:src='@{/resources/js/reminder/calendar.js}'></script>
+	<script>
+		setTimeout(getEvents, 2000);
+		function getEvents() {
+			var calendarEl = document.getElementById('calendar');
+		
+			    var calendar = new FullCalendar.Calendar(calendarEl, {
+			      headerToolbar: {
+			        left: 'prevYear,prev,next,nextYear today',
+			        center: 'title',
+			        right: 'dayGridMonth,dayGridWeek,dayGridDay'
+			      },
+			      locale: 'fr',
+			      initialDate: new Date().toISOString().slice(0, 10),
+			      navLinks: true, // can click day/week names to navigate views
+			      editable: true,
+			      dayMaxEvents: true, // allow "more" link when too many events
+			      events: angular.element(document.querySelector('[ng-controller="calendarController"]')).scope().events,
+			      eventClick: function(event, jsEvent, view) {
+			    	  startDate = moment(new Date(event.event._instance.range.start)).format("DD/MM/YYYY HH:mm:ss");
+			          endDate = moment(new Date(event.event._instance.range.end)).format("DD/MM/YYYY HH:mm:ss");
+
+			          if (event.event._instance.range.end == null) {
+			        	  endDate = moment(new Date(event.event._instance.range.start)).format("DD/MM/YYYY HH:mm:ss");
+			          }
+			          
+			          $('#modalTitle span').text(event.event._def.title);
+			          $('#modalBody .start span').text(startDate);
+			          $('#modalBody .end span').text(endDate);
+			          $('#fullCalModal').modal('show');
+			      }
+			    });
+		
+			    calendar.render();
+		}
+	</script>
+</div>
+</body>
+</html>

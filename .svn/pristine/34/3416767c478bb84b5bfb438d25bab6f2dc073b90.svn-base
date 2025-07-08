@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+	<title></title>
+</head>
+<body ng-controller="profileController" th:attr="ng-init='init();'">
+	<div layout:fragment="content" class="page-content">
+		<div ng-view="ng-view"></div>
+		<div class="panel panel-inverse" >
+			<div class="panel-heading">
+				<div class="panel-heading-btn">
+					<a href="javascript:;" th:title="#{icon.reduire}"
+						class="btn btn-xs btn-icon btn-circle btn-warning"
+						data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+				</div>
+				<h4 class="panel-title" th:text="#{administration.profile.list}"></h4>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12">
+						<table id="profileTable"
+							class="table table-striped table-bordered"
+							ng-controller="profileTableController"
+							th:attr="ng-init='init();'">
+							<thead>
+								<tr>
+									<th th:text="#{administration.profile.id}"></th>
+									<th th:text="#{administration.profile.intitule}"></th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<th:block th:include="administration/profile/profileForm::form"></th:block>
+	</div>
+	<div layout:fragment="plugins" class="page-content">
+		<script th:src='@{/resources/js/administration/profile/profile.js}'></script>
+	</div>
+</body>
+</html>

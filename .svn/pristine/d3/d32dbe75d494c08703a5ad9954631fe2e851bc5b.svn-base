@@ -1,0 +1,1367 @@
+12:57:44,220  WARN EntityManagerFactoryRegistry:63 - HHH000436: Entity manager factory name (default) is already registered.  If entity manager will be clustered or passivated, specify a unique value for property 'hibernate.ejb.entitymanager_factory_name'
+12:57:44,789  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:57:44,789  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:57:44,789  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:57:44,797  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:57:44,797  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:57:44,797  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:57:44,877  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:57:44,877  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:57:44,877  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:57:44,917  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:57:44,917  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:57:44,917  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:57:44,949  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:57:44,950  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:57:44,950  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:57:44,964  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:57:44,964  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:57:44,965  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+13:35:36,642 ERROR ExceptionHandlingController:67 - 
+16:19:07,573  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+16:19:07,574  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+16:19:07,579 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+16:19:07,579 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+07:09:35,557  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:09:35,558  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:09:35,561 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+07:09:35,561 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+07:10:22,452  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:10:22,452  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:10:22,453 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+07:10:22,454 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+07:11:19,129  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:11:19,131  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:11:19,137 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+07:11:19,138 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+07:16:13,645  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:16:13,645  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:16:13,646 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+07:16:13,647 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+07:21:49,686  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:21:49,689 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+07:21:49,693  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:21:49,694 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+07:21:54,804  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:21:54,805 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+07:21:54,805  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:21:54,809 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+07:21:55,307 ERROR ExceptionHandlingController:67 - 
+07:25:31,637  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:25:31,638  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:25:31,650 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+07:25:31,651 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+19:34:25,096  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+19:34:25,097  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+19:34:25,102 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+19:34:25,102 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+19:35:03,130  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+19:35:03,130  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+19:35:03,131 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+19:35:03,131 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+19:35:13,982  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+19:35:13,983 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+19:35:13,983  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+19:35:13,987 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+20:02:42,367  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+20:02:42,368  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+20:02:42,370 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+20:02:42,371 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+20:03:28,889  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+20:03:28,889  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+20:03:28,890 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+20:03:28,890 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+20:14:41,337  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+20:14:41,341  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+20:14:41,351 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+20:14:41,351 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+23:52:50,129  WARN JdbcEnvironmentInitiator:132 - HHH000342: Could not obtain connection to query metadata : Échec de l'ouverture de session de l'utilisateur 'GED'. ClientConnectionId:26701bfa-8613-4026-a1f6-a71aaa7acf6c
+23:52:51,313  WARN JdbcEnvironmentInitiator:132 - HHH000342: Could not obtain connection to query metadata : Échec de l'ouverture de session de l'utilisateur 'GED'. ClientConnectionId:f8d3bc4b-1d56-4e51-b724-3ee126ba5054
+23:52:51,388  WARN EntityManagerFactoryRegistry:63 - HHH000436: Entity manager factory name (default) is already registered.  If entity manager will be clustered or passivated, specify a unique value for property 'hibernate.ejb.entitymanager_factory_name'
+23:52:51,881  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:52:51,881  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:52:51,882  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:52:51,890  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:52:51,890  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:52:51,890  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:52:51,969  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:52:51,970  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:52:51,970  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:52:52,005  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:52:52,006  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:52:52,006  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:52:52,034  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:52:52,034  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:52:52,035  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:52:52,046  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:52:52,047  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:52:52,047  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:53:18,480  WARN SqlExceptionHelper:127 - SQL Error: 18456, SQLState: S0001
+23:53:18,484 ERROR SqlExceptionHelper:129 - Échec de l'ouverture de session de l'utilisateur 'GED'. ClientConnectionId:a0a0bb79-e8c0-485a-8cec-e8b42bfac369
+23:54:00,934  WARN EntityManagerFactoryRegistry:63 - HHH000436: Entity manager factory name (default) is already registered.  If entity manager will be clustered or passivated, specify a unique value for property 'hibernate.ejb.entitymanager_factory_name'
+23:54:01,414  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:54:01,415  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:54:01,415  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:54:01,423  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:54:01,424  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:54:01,424  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:54:01,495  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:54:01,496  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:54:01,496  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:54:01,532  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:54:01,532  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:54:01,533  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:54:01,560  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:54:01,560  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:54:01,561  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:54:01,574  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:54:01,574  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:54:01,574  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+23:54:10,668  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/login] in DispatcherServlet with name 'DispatcherServlet'
+23:54:10,673 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/login
+23:54:11,032  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/login] in DispatcherServlet with name 'DispatcherServlet'
+23:54:11,033 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/login
+12:14:40,938  WARN JdbcEnvironmentInitiator:132 - HHH000342: Could not obtain connection to query metadata : The TCP/IP connection to the host 65.108.2.210, port 1433 has failed. Error: "Network is unreachable. Verify the connection properties. Make sure that an instance of SQL Server is running on the host and accepting TCP/IP connections at the port. Make sure that TCP connections to the port are not blocked by a firewall.".
+12:14:56,233  WARN JdbcEnvironmentInitiator:132 - HHH000342: Could not obtain connection to query metadata : The TCP/IP connection to the host 65.108.2.210, port 1433 has failed. Error: "Network is unreachable. Verify the connection properties. Make sure that an instance of SQL Server is running on the host and accepting TCP/IP connections at the port. Make sure that TCP connections to the port are not blocked by a firewall.".
+12:14:56,316  WARN EntityManagerFactoryRegistry:63 - HHH000436: Entity manager factory name (default) is already registered.  If entity manager will be clustered or passivated, specify a unique value for property 'hibernate.ejb.entitymanager_factory_name'
+12:14:56,818  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:14:56,818  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:14:56,819  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:14:56,827  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:14:56,827  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:14:56,827  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:14:56,904  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:14:56,904  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:14:56,904  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:14:56,941  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:14:56,941  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:14:56,941  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:14:56,970  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:14:56,970  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:14:56,970  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:14:56,982  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:14:56,982  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:14:56,982  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+12:15:27,798  WARN SqlExceptionHelper:127 - SQL Error: 0, SQLState: 08S01
+12:15:27,800 ERROR SqlExceptionHelper:129 - The TCP/IP connection to the host 65.108.2.210, port 1433 has failed. Error: "Network is unreachable. Verify the connection properties. Make sure that an instance of SQL Server is running on the host and accepting TCP/IP connections at the port. Make sure that TCP connections to the port are not blocked by a firewall.".
+18:43:19,158  WARN EntityManagerFactoryRegistry:63 - HHH000436: Entity manager factory name (default) is already registered.  If entity manager will be clustered or passivated, specify a unique value for property 'hibernate.ejb.entitymanager_factory_name'
+18:43:19,667  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+18:43:19,667  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+18:43:19,667  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+18:43:19,677  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+18:43:19,677  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+18:43:19,677  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+18:43:19,753  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+18:43:19,753  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+18:43:19,753  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+18:43:19,789  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+18:43:19,789  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+18:43:19,789  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+18:43:19,818  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+18:43:19,818  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+18:43:19,818  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+18:43:19,830  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+18:43:19,830  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+18:43:19,830  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+19:07:53,783 ERROR ExceptionHandlingController:67 - 
+19:16:41,274  WARN SqlExceptionHelper:127 - SQL Error: 0, SQLState: 08S01
+19:16:41,277 ERROR SqlExceptionHelper:129 - Connection reset
+19:16:41,322 ERROR TransactionInterceptor:506 - Application exception overridden by rollback exception
+org.springframework.dao.DataAccessResourceFailureException: could not extract ResultSet; nested exception is org.hibernate.exception.JDBCConnectionException: could not extract ResultSet
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:238)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:225)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:417)
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:59)
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:213)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:147)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:131)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:92)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:208)
+	at com.sun.proxy.$Proxy104.getCompletedDepartCount(Unknown Source)
+	at ma.brainit.aman.client.service.impl.CourrierDepartServiceImpl.getCompletedDepartCount(CourrierDepartServiceImpl.java:295)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:302)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:190)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:157)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:99)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:281)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:96)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:208)
+	at com.sun.proxy.$Proxy107.getCompletedDepartCount(Unknown Source)
+	at ma.brainit.aman.client.actions.CourrierDepartController.getCompletedDepartCount(CourrierDepartController.java:185)
+	at ma.brainit.aman.client.actions.CourrierDepartController$$FastClassBySpringCGLIB$$1ae4e5e3.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:204)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:651)
+	at ma.brainit.aman.client.actions.CourrierDepartController$$EnhancerBySpringCGLIB$$b193509f.getCompletedDepartCount(<generated>)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:222)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:137)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:110)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:814)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:737)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:85)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:959)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:893)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:969)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:860)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:687)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:845)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:790)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:867)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1623)
+	at org.eclipse.jetty.websocket.server.WebSocketUpgradeFilter.doFilter(WebSocketUpgradeFilter.java:214)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1610)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:316)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:126)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:90)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:114)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:122)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:111)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:169)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:48)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:205)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:121)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:64)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:91)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:53)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:213)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:176)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:346)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:262)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1602)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:540)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:146)
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:548)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:257)
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:1588)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:255)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1345)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:203)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:480)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1557)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:201)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1247)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:144)
+	at org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:220)
+	at org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:126)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.Server.handle(Server.java:502)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:364)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:260)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:305)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:103)
+	at org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:118)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:333)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:310)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:168)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:126)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:366)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:765)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:683)
+	at java.lang.Thread.run(Thread.java:750)
+Caused by: org.hibernate.exception.JDBCConnectionException: could not extract ResultSet
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:115)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:42)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:109)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:95)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.extract(ResultSetReturnImpl.java:79)
+	at org.hibernate.loader.Loader.getResultSet(Loader.java:2116)
+	at org.hibernate.loader.Loader.executeQueryStatement(Loader.java:1899)
+	at org.hibernate.loader.Loader.executeQueryStatement(Loader.java:1875)
+	at org.hibernate.loader.Loader.doQuery(Loader.java:919)
+	at org.hibernate.loader.Loader.doQueryAndInitializeNonLazyCollections(Loader.java:336)
+	at org.hibernate.loader.Loader.doList(Loader.java:2611)
+	at org.hibernate.loader.Loader.doList(Loader.java:2594)
+	at org.hibernate.loader.Loader.listIgnoreQueryCache(Loader.java:2423)
+	at org.hibernate.loader.Loader.list(Loader.java:2418)
+	at org.hibernate.loader.hql.QueryLoader.list(QueryLoader.java:501)
+	at org.hibernate.hql.internal.ast.QueryTranslatorImpl.list(QueryTranslatorImpl.java:371)
+	at org.hibernate.engine.query.spi.HQLQueryPlan.performList(HQLQueryPlan.java:216)
+	at org.hibernate.internal.SessionImpl.list(SessionImpl.java:1326)
+	at org.hibernate.internal.QueryImpl.list(QueryImpl.java:87)
+	at org.hibernate.jpa.internal.QueryImpl.list(QueryImpl.java:606)
+	at org.hibernate.jpa.internal.QueryImpl.getSingleResult(QueryImpl.java:529)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$SingleEntityExecution.doExecute(JpaQueryExecution.java:206)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:78)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:100)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:91)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$QueryExecutorMethodInterceptor.doInvoke(RepositoryFactorySupport.java:462)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$QueryExecutorMethodInterceptor.invoke(RepositoryFactorySupport.java:440)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:61)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:99)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:281)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:96)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:136)
+	... 112 more
+Caused by: com.microsoft.sqlserver.jdbc.SQLServerException: Connection reset
+	at com.microsoft.sqlserver.jdbc.SQLServerConnection.terminate(SQLServerConnection.java:2435)
+	at com.microsoft.sqlserver.jdbc.TDSChannel.read(IOBuffer.java:1991)
+	at com.microsoft.sqlserver.jdbc.TDSReader.readPacket(IOBuffer.java:6310)
+	at com.microsoft.sqlserver.jdbc.TDSCommand.startResponse(IOBuffer.java:7545)
+	at com.microsoft.sqlserver.jdbc.SQLServerPreparedStatement.doExecutePreparedStatement(SQLServerPreparedStatement.java:465)
+	at com.microsoft.sqlserver.jdbc.SQLServerPreparedStatement$PrepStmtExecCmd.doExecute(SQLServerPreparedStatement.java:409)
+	at com.microsoft.sqlserver.jdbc.TDSCommand.execute(IOBuffer.java:7151)
+	at com.microsoft.sqlserver.jdbc.SQLServerConnection.executeCommand(SQLServerConnection.java:2478)
+	at com.microsoft.sqlserver.jdbc.SQLServerStatement.executeCommand(SQLServerStatement.java:219)
+	at com.microsoft.sqlserver.jdbc.SQLServerStatement.executeStatement(SQLServerStatement.java:199)
+	at com.microsoft.sqlserver.jdbc.SQLServerPreparedStatement.executeQuery(SQLServerPreparedStatement.java:331)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.extract(ResultSetReturnImpl.java:70)
+	... 142 more
+Caused by: java.net.SocketException: Connection reset
+	at java.net.SocketInputStream.read(SocketInputStream.java:210)
+	at java.net.SocketInputStream.read(SocketInputStream.java:141)
+	at com.microsoft.sqlserver.jdbc.TDSChannel.read(IOBuffer.java:1981)
+	... 152 more
+19:16:41,328 ERROR ExceptionHandlingController:46 - Erreur :Could not roll back JPA transaction; nested exception is javax.persistence.PersistenceException: unexpected error when rollbackingCould not roll back JPA transaction; nested exception is javax.persistence.PersistenceException: unexpected error when rollbacking
+19:30:31,583  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+19:30:31,583  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+19:30:31,584 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+19:30:31,584 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+19:34:36,992  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+19:34:36,992  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+19:34:36,994 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+19:34:36,994 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+19:34:44,661  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+19:34:44,661  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+19:34:44,661 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+19:34:44,661 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+19:34:47,911 ERROR ExceptionHandlingController:67 - 
+20:14:58,631  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+20:14:58,633 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+20:14:58,632  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+20:14:58,634 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+20:28:21,356 ERROR TemplateEngine:1085 - [THYMELEAF][qtp2017980204-77] Exception processing template "index": Could not parse as expression: "@{/correspndance" (template/layout:116)
+20:28:45,749 ERROR TemplateEngine:1085 - [THYMELEAF][qtp2017980204-79] Exception processing template "index": Could not parse as expression: "@{/correspndances" (template/layout:116)
+20:29:22,865  WARN AnnotationConfigWebApplicationContext:546 - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to parse configuration class [ma.brainit.config.SpringWebConfig]; nested exception is org.springframework.context.annotation.ConflictingBeanDefinitionException: Annotation-specified bean name 'courrierClassiqueDTOConverter' for bean class [ma.brainit.aman.client.dto.converters.CourrierClassiqueDTOConverter] conflicts with existing, non-compatible bean definition of same name and class [ma.brainit.aman.client.dto.converters.CorrespondanceDTOConverter]
+20:29:22,869 ERROR ContextLoader:353 - Context initialization failed
+org.springframework.beans.factory.BeanDefinitionStoreException: Failed to parse configuration class [ma.brainit.config.SpringWebConfig]; nested exception is org.springframework.context.annotation.ConflictingBeanDefinitionException: Annotation-specified bean name 'courrierClassiqueDTOConverter' for bean class [ma.brainit.aman.client.dto.converters.CourrierClassiqueDTOConverter] conflicts with existing, non-compatible bean definition of same name and class [ma.brainit.aman.client.dto.converters.CorrespondanceDTOConverter]
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:181)
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:321)
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:243)
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:273)
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:98)
+	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:678)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:520)
+	at org.springframework.web.context.ContextLoader.configureAndRefreshWebApplicationContext(ContextLoader.java:446)
+	at org.springframework.web.context.ContextLoader.initWebApplicationContext(ContextLoader.java:328)
+	at org.springframework.web.context.ContextLoaderListener.contextInitialized(ContextLoaderListener.java:107)
+	at org.eclipse.jetty.server.handler.ContextHandler.callContextInitialized(ContextHandler.java:957)
+	at org.eclipse.jetty.servlet.ServletContextHandler.callContextInitialized(ServletContextHandler.java:552)
+	at org.eclipse.jetty.server.handler.ContextHandler.startContext(ContextHandler.java:922)
+	at org.eclipse.jetty.servlet.ServletContextHandler.startContext(ServletContextHandler.java:364)
+	at org.eclipse.jetty.webapp.WebAppContext.startWebapp(WebAppContext.java:1497)
+	at org.eclipse.jetty.maven.plugin.JettyWebAppContext.startWebapp(JettyWebAppContext.java:360)
+	at org.eclipse.jetty.webapp.WebAppContext.startContext(WebAppContext.java:1459)
+	at org.eclipse.jetty.server.handler.ContextHandler.doStart(ContextHandler.java:852)
+	at org.eclipse.jetty.servlet.ServletContextHandler.doStart(ServletContextHandler.java:278)
+	at org.eclipse.jetty.webapp.WebAppContext.doStart(WebAppContext.java:545)
+	at org.eclipse.jetty.maven.plugin.JettyWebAppContext.doStart(JettyWebAppContext.java:428)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:138)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:117)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:113)
+	at org.eclipse.jetty.server.handler.ContextHandlerCollection.doStart(ContextHandlerCollection.java:168)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:138)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:117)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:113)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:138)
+	at org.eclipse.jetty.server.Server.start(Server.java:415)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:108)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:113)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:382)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.maven.plugin.AbstractJettyMojo.startJetty(AbstractJettyMojo.java:477)
+	at org.eclipse.jetty.maven.plugin.AbstractJettyMojo.execute(AbstractJettyMojo.java:343)
+	at org.eclipse.jetty.maven.plugin.JettyRunMojo.execute(JettyRunMojo.java:169)
+	at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo(DefaultBuildPluginManager.java:126)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute2(MojoExecutor.java:328)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute(MojoExecutor.java:316)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:212)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:174)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.access$000(MojoExecutor.java:75)
+	at org.apache.maven.lifecycle.internal.MojoExecutor$1.run(MojoExecutor.java:162)
+	at org.apache.maven.plugin.DefaultMojosExecutionStrategy.execute(DefaultMojosExecutionStrategy.java:39)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:159)
+	at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject(LifecycleModuleBuilder.java:105)
+	at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject(LifecycleModuleBuilder.java:73)
+	at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build(SingleThreadedBuilder.java:53)
+	at org.apache.maven.lifecycle.internal.LifecycleStarter.execute(LifecycleStarter.java:118)
+	at org.apache.maven.DefaultMaven.doExecute(DefaultMaven.java:261)
+	at org.apache.maven.DefaultMaven.doExecute(DefaultMaven.java:173)
+	at org.apache.maven.DefaultMaven.execute(DefaultMaven.java:101)
+	at org.apache.maven.cli.MavenCli.execute(MavenCli.java:906)
+	at org.apache.maven.cli.MavenCli.doMain(MavenCli.java:283)
+	at org.apache.maven.cli.MavenCli.main(MavenCli.java:206)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced(Launcher.java:255)
+	at org.codehaus.plexus.classworlds.launcher.Launcher.launch(Launcher.java:201)
+	at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode(Launcher.java:361)
+	at org.codehaus.plexus.classworlds.launcher.Launcher.main(Launcher.java:314)
+Caused by: org.springframework.context.annotation.ConflictingBeanDefinitionException: Annotation-specified bean name 'courrierClassiqueDTOConverter' for bean class [ma.brainit.aman.client.dto.converters.CourrierClassiqueDTOConverter] conflicts with existing, non-compatible bean definition of same name and class [ma.brainit.aman.client.dto.converters.CorrespondanceDTOConverter]
+	at org.springframework.context.annotation.ClassPathBeanDefinitionScanner.checkCandidate(ClassPathBeanDefinitionScanner.java:320)
+	at org.springframework.context.annotation.ClassPathBeanDefinitionScanner.doScan(ClassPathBeanDefinitionScanner.java:259)
+	at org.springframework.context.annotation.ComponentScanAnnotationParser.parse(ComponentScanAnnotationParser.java:137)
+	at org.springframework.context.annotation.ConfigurationClassParser.doProcessConfigurationClass(ConfigurationClassParser.java:267)
+	at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:231)
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:198)
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:167)
+	... 66 more
+20:31:30,431  WARN EntityManagerFactoryRegistry:63 - HHH000436: Entity manager factory name (default) is already registered.  If entity manager will be clustered or passivated, specify a unique value for property 'hibernate.ejb.entitymanager_factory_name'
+20:31:31,038  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:31:31,038  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:31:31,038  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:31:31,048  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:31:31,049  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:31:31,049  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:31:31,105  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:31:31,105  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:31:31,105  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:31:31,113  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:31:31,113  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:31:31,114  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:31:31,162  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:31:31,162  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:31:31,162  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:31:31,174  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:31:31,174  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:31:31,174  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:31:52,061 ERROR TemplateEngine:1085 - [THYMELEAF][qtp1294361489-19] Exception processing template "index": Could not parse as expression: "@{/correspndances" (template/layout:116)
+20:33:40,376 ERROR TemplateEngine:1085 - [THYMELEAF][qtp1294361489-16] Exception processing template "index": Could not parse as expression: "@{/correspndances" (template/layout:116)
+20:35:10,330 ERROR TemplateEngine:1085 - [THYMELEAF][qtp1294361489-21] Exception processing template "index": Could not parse as expression: "@{/correspndances" (template/layout:116)
+20:35:30,115  WARN EntityManagerFactoryRegistry:63 - HHH000436: Entity manager factory name (default) is already registered.  If entity manager will be clustered or passivated, specify a unique value for property 'hibernate.ejb.entitymanager_factory_name'
+20:35:30,614  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:35:30,614  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:35:30,615  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:35:30,628  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:35:30,628  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:35:30,629  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:35:30,688  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:35:30,690  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:35:30,690  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:35:30,698  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:35:30,698  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:35:30,698  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:35:30,750  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:35:30,751  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:35:30,751  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:35:30,764  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:35:30,765  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:35:30,765  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:35:44,500 ERROR TemplateEngine:1085 - [THYMELEAF][qtp1104938392-24] Exception processing template "index": Could not parse as expression: "@{/correspndances" (template/layout:116)
+20:45:22,099  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+20:45:22,099  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+20:45:22,102 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+20:45:22,102 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+20:45:34,212 ERROR ExceptionHandlingController:67 - 
+20:53:21,102  WARN EntityManagerFactoryRegistry:63 - HHH000436: Entity manager factory name (default) is already registered.  If entity manager will be clustered or passivated, specify a unique value for property 'hibernate.ejb.entitymanager_factory_name'
+20:53:21,617  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:53:21,618  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:53:21,618  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:53:21,631  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:53:21,632  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:53:21,632  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:53:21,699  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:53:21,700  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:53:21,700  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:53:21,708  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:53:21,708  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:53:21,709  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:53:21,761  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:53:21,761  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:53:21,761  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:53:21,772  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:53:21,773  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:53:21,773  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:54:21,176  WARN EntityManagerFactoryRegistry:63 - HHH000436: Entity manager factory name (default) is already registered.  If entity manager will be clustered or passivated, specify a unique value for property 'hibernate.ejb.entitymanager_factory_name'
+20:54:21,677  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:54:21,677  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:54:21,677  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:54:21,688  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:54:21,688  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:54:21,689  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:54:21,754  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:54:21,755  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:54:21,755  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:54:21,763  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:54:21,763  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:54:21,763  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:54:21,818  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:54:21,818  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:54:21,819  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:54:21,830  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:54:21,831  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:54:21,831  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+20:55:02,597  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+20:55:02,597  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+20:55:02,598 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js
+20:55:02,598 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js
+07:25:25,459  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:25:25,461 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js
+07:25:25,460  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:25:25,462 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js
+07:27:21,122  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:27:21,125 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+07:27:21,126  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:27:21,127 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+07:29:23,313  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:29:23,313  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:29:23,315 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+07:29:23,315 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+07:30:31,522  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:30:31,523 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js
+07:30:31,524  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:30:31,525 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js
+07:43:20,318  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:43:20,318  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:43:20,319 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js
+07:43:20,319 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js
+07:45:02,000  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:45:02,003 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js
+07:45:02,001  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:45:02,004 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js
+07:45:14,393  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:45:14,396 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js
+07:45:14,396  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:45:14,397 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js
+07:56:16,271  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:56:16,272  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:56:16,273 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js
+07:56:16,273 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js
+07:57:36,526  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:57:36,526 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js
+07:57:36,527  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:57:36,527 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js
+07:58:03,841  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:58:03,841  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+07:58:03,842 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js
+07:58:03,842 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js
+08:02:17,881  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:02:17,881  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:02:17,883 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js
+08:02:17,883 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:02:50,451  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:02:50,451  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:02:50,452 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:02:50,452 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js
+08:03:11,543  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:03:11,543 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:03:11,544  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:03:11,544 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js
+08:07:23,311  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:07:23,313 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+08:07:23,317  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:07:23,318 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:10:42,476  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:10:42,479  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:10:42,481 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+08:10:42,481 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:11:15,240  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:11:15,240  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:11:15,243 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:11:15,243 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+08:14:07,699  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:14:07,700  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:14:07,703 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js
+08:14:07,703 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:14:11,555  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:14:11,555  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:14:11,555 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+08:14:11,555 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:14:12,681 ERROR ExceptionHandlingController:67 - 
+08:15:24,080  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:15:24,082  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:15:24,082 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+08:15:24,082 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:15:27,666  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:15:27,666  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:15:27,666 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:15:27,666 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+08:15:29,072 ERROR ExceptionHandlingController:67 - 
+08:15:40,672  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:15:40,672 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:15:40,672  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:15:40,673 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+08:16:27,793  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:16:27,793  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:16:27,794 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js
+08:16:27,794 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:16:47,022  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:16:47,025 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+08:16:47,024  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:16:47,029 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:24:37,651  WARN EntityManagerFactoryRegistry:63 - HHH000436: Entity manager factory name (default) is already registered.  If entity manager will be clustered or passivated, specify a unique value for property 'hibernate.ejb.entitymanager_factory_name'
+08:24:38,186  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+08:24:38,186  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+08:24:38,186  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+08:24:38,197  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+08:24:38,197  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+08:24:38,197  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+08:24:38,257  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+08:24:38,257  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+08:24:38,257  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+08:24:38,264  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+08:24:38,265  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+08:24:38,265  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+08:24:38,320  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+08:24:38,320  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+08:24:38,321  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+08:24:38,333  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+08:24:38,333  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+08:24:38,333  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+08:24:50,958  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:24:50,959  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:24:50,965 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:24:50,965 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+08:24:59,260  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:24:59,260  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:24:59,261 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:24:59,261 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js
+08:28:23,986  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:28:23,986  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:28:23,987 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:28:23,987 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js
+08:36:52,351 ERROR ErrorHandler:57 - [THYMELEAF][qtp1294361489-16] Fatal error during parsing
+org.xml.sax.SAXParseException; lineNumber: 178; columnNumber: 25; The element type "form" must be terminated by the matching end-tag "</form>".
+	at org.apache.xerces.util.ErrorHandlerWrapper.createSAXParseException(Unknown Source)
+	at org.apache.xerces.util.ErrorHandlerWrapper.fatalError(Unknown Source)
+	at org.apache.xerces.impl.XMLErrorReporter.reportError(Unknown Source)
+	at org.apache.xerces.impl.XMLErrorReporter.reportError(Unknown Source)
+	at org.apache.xerces.impl.XMLErrorReporter.reportError(Unknown Source)
+	at org.apache.xerces.impl.XMLScanner.reportFatalError(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanEndElement(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl$FragmentContentDispatcher.dispatch(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanDocument(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+	at org.apache.xerces.parsers.AbstractSAXParser.parse(Unknown Source)
+	at org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser.parse(Unknown Source)
+	at org.apache.xerces.jaxp.SAXParserImpl.parse(Unknown Source)
+	at org.thymeleaf.templateparser.xmlsax.AbstractNonValidatingSAXTemplateParser.doParse(AbstractNonValidatingSAXTemplateParser.java:209)
+	at org.thymeleaf.templateparser.xmlsax.AbstractNonValidatingSAXTemplateParser.parseTemplateUsingPool(AbstractNonValidatingSAXTemplateParser.java:134)
+	at org.thymeleaf.templateparser.xmlsax.AbstractNonValidatingSAXTemplateParser.parseTemplate(AbstractNonValidatingSAXTemplateParser.java:116)
+	at org.thymeleaf.TemplateRepository.getTemplate(TemplateRepository.java:278)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1104)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1060)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1011)
+	at org.thymeleaf.spring4.view.ThymeleafView.renderFragment(ThymeleafView.java:335)
+	at org.thymeleaf.spring4.view.ThymeleafView.render(ThymeleafView.java:190)
+	at org.springframework.web.servlet.DispatcherServlet.render(DispatcherServlet.java:1243)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1027)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:971)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:893)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:969)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:860)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:687)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:845)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:790)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:867)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1623)
+	at org.eclipse.jetty.websocket.server.WebSocketUpgradeFilter.doFilter(WebSocketUpgradeFilter.java:214)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1610)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:316)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:126)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:90)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:114)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:122)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:111)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:169)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:48)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:205)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:121)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:64)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:91)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:53)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:213)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:176)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:346)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:262)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1602)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:540)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:146)
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:548)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:257)
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:1588)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:255)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1345)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:203)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:480)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1557)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:201)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1247)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:144)
+	at org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:220)
+	at org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:126)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.Server.handle(Server.java:502)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:364)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:260)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:305)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:103)
+	at org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:118)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:765)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:683)
+	at java.lang.Thread.run(Thread.java:750)
+08:36:52,369 ERROR TemplateEngine:1085 - [THYMELEAF][qtp1294361489-16] Exception processing template "client/autorisationAbsenceList": Exception parsing document: template="client/autorisationAbsenceList", line 178 - column 25
+08:39:23,811 ERROR ErrorHandler:57 - [THYMELEAF][qtp1294361489-16] Fatal error during parsing
+org.xml.sax.SAXParseException; lineNumber: 178; columnNumber: 25; The element type "form" must be terminated by the matching end-tag "</form>".
+	at org.apache.xerces.util.ErrorHandlerWrapper.createSAXParseException(Unknown Source)
+	at org.apache.xerces.util.ErrorHandlerWrapper.fatalError(Unknown Source)
+	at org.apache.xerces.impl.XMLErrorReporter.reportError(Unknown Source)
+	at org.apache.xerces.impl.XMLErrorReporter.reportError(Unknown Source)
+	at org.apache.xerces.impl.XMLErrorReporter.reportError(Unknown Source)
+	at org.apache.xerces.impl.XMLScanner.reportFatalError(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanEndElement(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl$FragmentContentDispatcher.dispatch(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanDocument(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+	at org.apache.xerces.parsers.AbstractSAXParser.parse(Unknown Source)
+	at org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser.parse(Unknown Source)
+	at org.apache.xerces.jaxp.SAXParserImpl.parse(Unknown Source)
+	at org.thymeleaf.templateparser.xmlsax.AbstractNonValidatingSAXTemplateParser.doParse(AbstractNonValidatingSAXTemplateParser.java:209)
+	at org.thymeleaf.templateparser.xmlsax.AbstractNonValidatingSAXTemplateParser.parseTemplateUsingPool(AbstractNonValidatingSAXTemplateParser.java:134)
+	at org.thymeleaf.templateparser.xmlsax.AbstractNonValidatingSAXTemplateParser.parseTemplate(AbstractNonValidatingSAXTemplateParser.java:116)
+	at org.thymeleaf.TemplateRepository.getTemplate(TemplateRepository.java:278)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1104)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1060)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1011)
+	at org.thymeleaf.spring4.view.ThymeleafView.renderFragment(ThymeleafView.java:335)
+	at org.thymeleaf.spring4.view.ThymeleafView.render(ThymeleafView.java:190)
+	at org.springframework.web.servlet.DispatcherServlet.render(DispatcherServlet.java:1243)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1027)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:971)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:893)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:969)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:860)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:687)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:845)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:790)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:867)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1623)
+	at org.eclipse.jetty.websocket.server.WebSocketUpgradeFilter.doFilter(WebSocketUpgradeFilter.java:214)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1610)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:316)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:126)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:90)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:114)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:122)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:111)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:169)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:48)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:205)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:121)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:64)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:91)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:53)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:213)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:176)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:346)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:262)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1602)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:540)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:146)
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:548)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:257)
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:1588)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:255)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1345)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:203)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:480)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1557)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:201)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1247)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:144)
+	at org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:220)
+	at org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:126)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.Server.handle(Server.java:502)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:364)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:260)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:305)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:103)
+	at org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:118)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:765)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:683)
+	at java.lang.Thread.run(Thread.java:750)
+08:39:23,814 ERROR TemplateEngine:1085 - [THYMELEAF][qtp1294361489-16] Exception processing template "client/autorisationAbsenceList": Exception parsing document: template="client/autorisationAbsenceList", line 178 - column 25
+08:40:28,621 ERROR ErrorHandler:57 - [THYMELEAF][qtp1294361489-17] Fatal error during parsing
+org.xml.sax.SAXParseException; lineNumber: 178; columnNumber: 25; The element type "form" must be terminated by the matching end-tag "</form>".
+	at org.apache.xerces.util.ErrorHandlerWrapper.createSAXParseException(Unknown Source)
+	at org.apache.xerces.util.ErrorHandlerWrapper.fatalError(Unknown Source)
+	at org.apache.xerces.impl.XMLErrorReporter.reportError(Unknown Source)
+	at org.apache.xerces.impl.XMLErrorReporter.reportError(Unknown Source)
+	at org.apache.xerces.impl.XMLErrorReporter.reportError(Unknown Source)
+	at org.apache.xerces.impl.XMLScanner.reportFatalError(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanEndElement(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl$FragmentContentDispatcher.dispatch(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanDocument(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+	at org.apache.xerces.parsers.AbstractSAXParser.parse(Unknown Source)
+	at org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser.parse(Unknown Source)
+	at org.apache.xerces.jaxp.SAXParserImpl.parse(Unknown Source)
+	at org.thymeleaf.templateparser.xmlsax.AbstractNonValidatingSAXTemplateParser.doParse(AbstractNonValidatingSAXTemplateParser.java:209)
+	at org.thymeleaf.templateparser.xmlsax.AbstractNonValidatingSAXTemplateParser.parseTemplateUsingPool(AbstractNonValidatingSAXTemplateParser.java:134)
+	at org.thymeleaf.templateparser.xmlsax.AbstractNonValidatingSAXTemplateParser.parseTemplate(AbstractNonValidatingSAXTemplateParser.java:116)
+	at org.thymeleaf.TemplateRepository.getTemplate(TemplateRepository.java:278)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1104)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1060)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1011)
+	at org.thymeleaf.spring4.view.ThymeleafView.renderFragment(ThymeleafView.java:335)
+	at org.thymeleaf.spring4.view.ThymeleafView.render(ThymeleafView.java:190)
+	at org.springframework.web.servlet.DispatcherServlet.render(DispatcherServlet.java:1243)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1027)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:971)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:893)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:969)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:860)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:687)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:845)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:790)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:867)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1623)
+	at org.eclipse.jetty.websocket.server.WebSocketUpgradeFilter.doFilter(WebSocketUpgradeFilter.java:214)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1610)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:316)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:126)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:90)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:114)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:122)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:111)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:169)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:48)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:205)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:121)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:64)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:91)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:53)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:213)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:176)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:346)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:262)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1602)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:540)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:146)
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:548)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:257)
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:1588)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:255)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1345)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:203)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:480)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1557)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:201)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1247)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:144)
+	at org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:220)
+	at org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:126)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.Server.handle(Server.java:502)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:364)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:260)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:305)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:103)
+	at org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:118)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:333)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:310)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:168)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:126)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:366)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:765)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:683)
+	at java.lang.Thread.run(Thread.java:750)
+08:40:28,625 ERROR TemplateEngine:1085 - [THYMELEAF][qtp1294361489-17] Exception processing template "client/autorisationAbsenceList": Exception parsing document: template="client/autorisationAbsenceList", line 178 - column 25
+08:40:55,804  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:40:55,805  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:40:55,805 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js
+08:40:55,805 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:41:12,583  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:41:12,583  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:41:12,584 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js
+08:41:12,584 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:41:24,689  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:41:24,690 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js
+08:41:24,691  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:41:24,692 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:41:46,234 ERROR ErrorHandler:57 - [THYMELEAF][qtp1294361489-21] Fatal error during parsing
+org.xml.sax.SAXParseException; lineNumber: 178; columnNumber: 25; The element type "form" must be terminated by the matching end-tag "</form>".
+	at org.apache.xerces.util.ErrorHandlerWrapper.createSAXParseException(Unknown Source)
+	at org.apache.xerces.util.ErrorHandlerWrapper.fatalError(Unknown Source)
+	at org.apache.xerces.impl.XMLErrorReporter.reportError(Unknown Source)
+	at org.apache.xerces.impl.XMLErrorReporter.reportError(Unknown Source)
+	at org.apache.xerces.impl.XMLErrorReporter.reportError(Unknown Source)
+	at org.apache.xerces.impl.XMLScanner.reportFatalError(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanEndElement(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl$FragmentContentDispatcher.dispatch(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanDocument(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+	at org.apache.xerces.parsers.AbstractSAXParser.parse(Unknown Source)
+	at org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser.parse(Unknown Source)
+	at org.apache.xerces.jaxp.SAXParserImpl.parse(Unknown Source)
+	at org.thymeleaf.templateparser.xmlsax.AbstractNonValidatingSAXTemplateParser.doParse(AbstractNonValidatingSAXTemplateParser.java:209)
+	at org.thymeleaf.templateparser.xmlsax.AbstractNonValidatingSAXTemplateParser.parseTemplateUsingPool(AbstractNonValidatingSAXTemplateParser.java:134)
+	at org.thymeleaf.templateparser.xmlsax.AbstractNonValidatingSAXTemplateParser.parseTemplate(AbstractNonValidatingSAXTemplateParser.java:116)
+	at org.thymeleaf.TemplateRepository.getTemplate(TemplateRepository.java:278)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1104)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1060)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1011)
+	at org.thymeleaf.spring4.view.ThymeleafView.renderFragment(ThymeleafView.java:335)
+	at org.thymeleaf.spring4.view.ThymeleafView.render(ThymeleafView.java:190)
+	at org.springframework.web.servlet.DispatcherServlet.render(DispatcherServlet.java:1243)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1027)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:971)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:893)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:969)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:860)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:687)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:845)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:790)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:867)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1623)
+	at org.eclipse.jetty.websocket.server.WebSocketUpgradeFilter.doFilter(WebSocketUpgradeFilter.java:214)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1610)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:316)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:126)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:90)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:114)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:122)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:111)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:169)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:48)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:205)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:121)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:64)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:91)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:53)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:213)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:176)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:346)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:262)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1602)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:540)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:146)
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:548)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:257)
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:1588)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:255)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1345)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:203)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:480)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1557)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:201)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1247)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:144)
+	at org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:220)
+	at org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:126)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.Server.handle(Server.java:502)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:364)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:260)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:305)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:103)
+	at org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:118)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:333)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:310)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:168)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:126)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:366)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:765)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:683)
+	at java.lang.Thread.run(Thread.java:750)
+08:41:46,236 ERROR TemplateEngine:1085 - [THYMELEAF][qtp1294361489-21] Exception processing template "client/autorisationAbsenceList": Exception parsing document: template="client/autorisationAbsenceList", line 178 - column 25
+08:41:57,473 ERROR ErrorHandler:57 - [THYMELEAF][qtp1294361489-39] Fatal error during parsing
+org.xml.sax.SAXParseException; lineNumber: 178; columnNumber: 25; The element type "form" must be terminated by the matching end-tag "</form>".
+	at org.apache.xerces.util.ErrorHandlerWrapper.createSAXParseException(Unknown Source)
+	at org.apache.xerces.util.ErrorHandlerWrapper.fatalError(Unknown Source)
+	at org.apache.xerces.impl.XMLErrorReporter.reportError(Unknown Source)
+	at org.apache.xerces.impl.XMLErrorReporter.reportError(Unknown Source)
+	at org.apache.xerces.impl.XMLErrorReporter.reportError(Unknown Source)
+	at org.apache.xerces.impl.XMLScanner.reportFatalError(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanEndElement(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl$FragmentContentDispatcher.dispatch(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanDocument(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+	at org.apache.xerces.parsers.AbstractSAXParser.parse(Unknown Source)
+	at org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser.parse(Unknown Source)
+	at org.apache.xerces.jaxp.SAXParserImpl.parse(Unknown Source)
+	at org.thymeleaf.templateparser.xmlsax.AbstractNonValidatingSAXTemplateParser.doParse(AbstractNonValidatingSAXTemplateParser.java:209)
+	at org.thymeleaf.templateparser.xmlsax.AbstractNonValidatingSAXTemplateParser.parseTemplateUsingPool(AbstractNonValidatingSAXTemplateParser.java:134)
+	at org.thymeleaf.templateparser.xmlsax.AbstractNonValidatingSAXTemplateParser.parseTemplate(AbstractNonValidatingSAXTemplateParser.java:116)
+	at org.thymeleaf.TemplateRepository.getTemplate(TemplateRepository.java:278)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1104)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1060)
+	at org.thymeleaf.TemplateEngine.process(TemplateEngine.java:1011)
+	at org.thymeleaf.spring4.view.ThymeleafView.renderFragment(ThymeleafView.java:335)
+	at org.thymeleaf.spring4.view.ThymeleafView.render(ThymeleafView.java:190)
+	at org.springframework.web.servlet.DispatcherServlet.render(DispatcherServlet.java:1243)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1027)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:971)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:893)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:969)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:860)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:687)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:845)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:790)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:867)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1623)
+	at org.eclipse.jetty.websocket.server.WebSocketUpgradeFilter.doFilter(WebSocketUpgradeFilter.java:214)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1610)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:316)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:126)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:90)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:114)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:122)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:111)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:169)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:48)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:205)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:121)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:64)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:91)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:53)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:330)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:213)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:176)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:346)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:262)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1602)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:540)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:146)
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:548)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:257)
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:1588)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:255)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1345)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:203)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:480)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1557)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:201)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1247)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:144)
+	at org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:220)
+	at org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:126)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.Server.handle(Server.java:502)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:364)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:260)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:305)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:103)
+	at org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:118)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:333)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:310)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:168)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:126)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:366)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:765)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:683)
+	at java.lang.Thread.run(Thread.java:750)
+08:41:57,476 ERROR TemplateEngine:1085 - [THYMELEAF][qtp1294361489-39] Exception processing template "client/autorisationAbsenceList": Exception parsing document: template="client/autorisationAbsenceList", line 178 - column 25
+08:42:09,122  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:42:09,123 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:42:09,127  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:42:09,128 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js
+08:42:39,870  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:42:39,871 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:42:39,871  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:42:39,873 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js
+08:49:23,726  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:49:23,726  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:49:23,728 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js
+08:49:23,728 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:50:59,512  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:50:59,513  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:50:59,516 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:50:59,518 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js
+08:51:26,588  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:51:26,589 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:51:26,593  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:51:26,594 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js
+08:53:05,256  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:53:05,257 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:53:05,259  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:53:05,260 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js
+08:55:56,090  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:55:56,091  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:55:56,092 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js
+08:55:56,092 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:56:26,901  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:56:26,905 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js
+08:56:26,907  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+08:56:26,908 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js
+09:16:15,820  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+09:16:15,822 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/choices.js/public/assets/scripts/choices.min.js
+09:16:15,824  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+09:16:15,828 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/autorisation_absence/assets/libs/flatpickr/flatpickr.min.js
+09:16:35,819  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+09:16:35,819  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+09:16:35,819 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+09:16:35,819 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+09:43:43,458  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+09:43:43,465 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js
+09:43:43,477  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+09:43:43,478 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js
+09:46:28,291  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+09:46:28,292  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+09:46:28,292 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+09:46:28,292 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+09:56:22,102  WARN EntityManagerFactoryRegistry:63 - HHH000436: Entity manager factory name (default) is already registered.  If entity manager will be clustered or passivated, specify a unique value for property 'hibernate.ejb.entitymanager_factory_name'
+09:56:22,561  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+09:56:22,561  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+09:56:22,561  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+09:56:22,569  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+09:56:22,569  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+09:56:22,569  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+09:56:22,627  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+09:56:22,627  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+09:56:22,627  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+09:56:22,638  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+09:56:22,664  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+09:56:22,664  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+09:56:22,723  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+09:56:22,723  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+09:56:22,723  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+09:56:22,734  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+09:56:22,734  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+09:56:22,734  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+09:56:35,477  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+09:56:35,489  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+09:56:35,498 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+09:56:35,498 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+09:56:41,489  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+09:56:41,489  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+09:56:41,489 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js
+09:56:41,489 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js
+10:11:36,298  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:11:36,298  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:11:36,299 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js
+10:11:36,302 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js
+10:13:52,384  WARN EntityManagerFactoryRegistry:63 - HHH000436: Entity manager factory name (default) is already registered.  If entity manager will be clustered or passivated, specify a unique value for property 'hibernate.ejb.entitymanager_factory_name'
+10:13:52,894  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+10:13:52,894  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+10:13:52,894  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+10:13:52,903  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+10:13:52,903  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+10:13:52,903  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+10:13:52,963  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+10:13:52,963  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+10:13:52,963  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+10:13:52,974  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+10:13:52,999  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+10:13:53,000  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+10:13:53,058  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+10:13:53,059  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+10:13:53,059  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+10:13:53,071  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+10:13:53,071  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+10:13:53,072  WARN TemplateRenderer:104 - HHH000174: Function template anticipated 2 arguments, but 3 arguments encountered
+10:14:36,091  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:14:36,091  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:14:36,096 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js
+10:14:36,096 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js
+10:27:16,436  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:27:16,436  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:27:16,438 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js
+10:27:16,438 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js
+10:29:13,857  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:29:13,857  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:29:13,859 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js
+10:29:13,858 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js
+10:30:26,019  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:30:26,020  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:30:26,023 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js
+10:30:26,023 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js
+10:31:33,678  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:31:33,682 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+10:31:33,684  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:31:33,684 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+10:42:59,607  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:42:59,609  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:42:59,610 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js
+10:42:59,610 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js
+10:43:01,313  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:43:01,314  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:43:01,314 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+10:43:01,314 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+10:44:14,044  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:44:14,044  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:44:14,047 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/flatpickr/flatpickr.min.js
+10:44:14,049 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/correspondances/assets/libs/choices.js/public/assets/scripts/choices.min.js
+10:44:15,374  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:44:15,375  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:44:15,375 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+10:44:15,375 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+10:46:59,569 ERROR ExceptionHandlingController:46 - Erreur :Failed to access the WSDL at: http://saz-ged.zenatadev.local/cws/Authentication.svc?wsdl. It failed with: 
+	saz-ged.zenatadev.local.Failed to access the WSDL at: http://saz-ged.zenatadev.local/cws/Authentication.svc?wsdl. It failed with: 
+	saz-ged.zenatadev.local.
+10:49:47,334 ERROR ExceptionHandlingController:46 - Erreur :Failed to access the WSDL at: http://saz-ged.zenatadev.local/cws/Authentication.svc?wsdl. It failed with: 
+	saz-ged.zenatadev.local.Failed to access the WSDL at: http://saz-ged.zenatadev.local/cws/Authentication.svc?wsdl. It failed with: 
+	saz-ged.zenatadev.local.
+10:49:48,192 ERROR ExceptionHandlingController:46 - Erreur :Failed to access the WSDL at: http://saz-ged.zenatadev.local/cws/Authentication.svc?wsdl. It failed with: 
+	saz-ged.zenatadev.local.Failed to access the WSDL at: http://saz-ged.zenatadev.local/cws/Authentication.svc?wsdl. It failed with: 
+	saz-ged.zenatadev.local.
+10:50:47,457 ERROR ExceptionHandlingController:46 - Erreur :Failed to access the WSDL at: http://saz-ged.zenatadev.local/cws/Authentication.svc?wsdl. It failed with: 
+	saz-ged.zenatadev.local.Failed to access the WSDL at: http://saz-ged.zenatadev.local/cws/Authentication.svc?wsdl. It failed with: 
+	saz-ged.zenatadev.local.
+10:52:59,666  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:52:59,670 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js
+10:52:59,685  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:52:59,686 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js
+10:54:15,471  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:54:15,480 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+10:54:15,482  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:54:15,482 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+10:54:16,419  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:54:16,420 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+10:54:16,419  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:54:16,422 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+10:54:22,625  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:54:22,625  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:54:22,626 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js
+10:54:22,626 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js
+10:54:25,067  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:54:25,069  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:54:25,070 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+10:54:25,070 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+10:54:28,483 ERROR ExceptionHandlingController:67 - 
+10:57:28,239  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:57:28,240  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+10:57:28,245 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js
+10:57:28,245 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js
+11:15:22,272  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+11:15:22,272  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+11:15:22,274 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+11:15:22,275 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js
+11:15:25,830  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+11:15:25,830 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/choices.js/public/assets/scripts/choices.min.js
+11:15:25,830  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+11:15:25,835 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/demande_audience/assets/libs/flatpickr/flatpickr.min.js
+11:15:39,680  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js] in DispatcherServlet with name 'DispatcherServlet'
+11:15:39,681 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/choices.js/public/assets/scripts/choices.min.js
+11:15:39,680  WARN PageNotFound:1136 - No mapping found for HTTP request with URI [/zenata/courrier/assets/libs/flatpickr/flatpickr.min.js] in DispatcherServlet with name 'DispatcherServlet'
+11:15:39,683 ERROR ExceptionHandlingController:27 - No handler found for GET /zenata/courrier/assets/libs/flatpickr/flatpickr.min.js

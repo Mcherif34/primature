@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+</head>
+<body ng-controller="erreurController">
+<div layout:fragment="content">
+<div class="main-content">	
+	<div class="page-content">
+		<div class="container-fluid">
+			<div class="row">
+            	<div class="col-12">
+                	<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    	<h4 class="mb-sm-0">Page introuvable</h4>
+                    	<div class="page-title-right">
+                        	<ol class="breadcrumb m-0">
+                            	<li class="breadcrumb-item font-weight-bold"><a th:href="@{/}">Tableau de bord</a></li>
+                                <li class="breadcrumb-item active">Page introuvable</li>
+                            </ol>
+                        </div>
+					</div>
+                </div>
+        	</div>
+          <div class="row" style="margin-top: 20px">
+           				<div class="col-xl-12">
+                            <div class="card">
+                                <div class="card-body p-0 pb-2" style="text-align: center">
+                                    <img th:src="@{/resources/images/404.jpg}" height="400" alt="" /><br/>
+                                    <a th:href="@{/}" class="btn btn-warning btn-label waves-effect waves-light"><i class="mdi mdi-arrow-left label-icon align-middle fs-16"></i> Retour à la page d'accueil</a><br/><br/>
+                                </div><!-- end card body -->
+                            </div><!-- end card -->
+                        </div>
+           </div>
+		</div>
+		
+	</div>
+</div>
+</div>
+	<div layout:fragment="plugins" class="page-content">
+		<script>
+app.controller('erreurController', function($scope,$http) {
+	$scope.zoneRecheche = false;
+});
+
+</script>
+	</div>
+</body>
+</html>

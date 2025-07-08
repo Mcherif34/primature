@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+	<title></title>
+</head>
+<body ng-controller="profileController" th:attr="ng-init='init();'">
+<div layout:fragment="content">
+		<div class="main-content">	
+			<div class="page-content">
+				<div class="container-fluid">
+					<div class="row">
+		            	<div class="col-12">
+		                	<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+		                    	<h4 class="mb-sm-0">Utilisateurs et Groupes</h4>
+		                    	
+		                    	<div class="page-title-right">
+		                        	<ol class="breadcrumb m-0">
+		                            	<li class="breadcrumb-item font-weight-bold"><a th:href="@{/}">Tableau de bord</a></li>
+		                                <li class="breadcrumb-item active">Utilisateurs et Groupes</li>
+		                            </ol>
+		                        </div>
+							</div>
+		                </div>
+		        	</div>
+		        	<div class="col-xxl-12">
+		                            <div class="card">
+		                                <div class="card-body">
+		                                    <ul class="nav nav-pills nav-custom nav-custom-light nav-justified mb-3" role="tablist">
+		                                        <li class="nav-item">
+		                                            <a class="nav-link active" data-bs-toggle="tab" href="#portofolioTab" role="tab" aria-selected="false" style="font-weight: 600;">
+		                                                <i class="mdi mdi-view-grid-outline"></i> GROUPES
+		                                            </a>
+		                                        </li>
+		                                        <li class="nav-item">
+		                                            <a class="nav-link" data-bs-toggle="tab" href="#clientTab" role="tab" aria-selected="false" style="font-weight: 600;">
+		                                                <i class="mdi mdi-account-circle-outline"></i> UTILISATEURS
+		                                            </a>
+		                                        </li>
+		                                    </ul>
+		                                    <!-- Tab panes -->
+		                                    <div class="tab-content text-muted">
+		                                        <div class="tab-pane active" id="portofolioTab" role="tabpanel">
+		                                        	<div style="text-align: right; margin-bottom: 10px;">
+		                                        		<a href="#" ng-click="addProfile()" class="btn btn-primary btn-label waves-effect waves-light"><i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Nouveau</a>
+			                                        </div>
+		                                        	<div class="live-preview">
+			                                            <div class="table-responsive">
+															<table id="profileTable" ng-controller="profileTableController"
+																	th:attr="ng-init='init();'" class="table dt-responsive nowrap table-striped align-middle">
+														        <thead>
+														          <tr>
+														            <th>ID</th>
+														            <th>CODE</th>
+														            <th>INTITULE</th>
+														            <th>ACTIONS</th>
+														          </tr>
+														        </thead>
+														      </table>
+														</div>
+													</div>
+		                                        </div>
+		                                        <div class="tab-pane" id="clientTab" role="tabpanel">
+		                                        	<div style="text-align: right; margin-bottom: 10px;">
+		                                        		<a href="#" ng-if="dto.id" ng-click="addNewUser()" class="btn btn-primary btn-label waves-effect waves-light"><i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Nouveau</a>
+			                                        </div>
+			                                        <div class="live-preview">
+			                                            <div class="table-responsive">
+			                                            	<table id="userTable" ng-controller="userTableController"
+																th:attr="ng-init='init();'"
+																class="table dt-responsive nowrap table-striped align-middle">
+																<thead>
+																	<tr>
+																		<th>ID</th>
+																		<th>Dernière connexion</th>
+																		<th>Identifiant</th>
+																		<th>Nom</th>
+																		<th>Email</th>
+																		<th>Statut</th>
+																		<th>Actions</th>
+																	</tr>
+																</thead>
+															</table>
+														</div>
+													</div>  
+		                                        </div>
+		                                    </div>
+		                                </div><!-- end card-body -->
+		                            </div><!-- end card -->
+		                        </div>
+		        </div>
+		    </div>
+		</div>
+		<div id="profileModal" class="modal fade" data-backdrop="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+      	  <h5 class="modal-title" ng-if="addProfileForm">Enregistrement d'un groupe</h5>
+      	  <h5 class="modal-title" ng-if="editProfileForm">Modification d'un groupe</h5>
+      	  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="profileForm" name="profileForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+          <div class="modal-body p-lg">
+            <div class="row">
+			  <input type="hidden" ng-model="dto.id" />
+			  <div ng-class="'col-md-12'">
+			  	<p class="text-muted">Renseignez les champs obligatoires</p>
+			  	<div ng-if="profileRequiredError" class="alert alert-danger" role="alert">
+			  	  Veuillez remplir tous les champs obligatoires !
+			  	</div>
+			  	<div ng-if="profileTechnicalError" class="alert alert-danger" role="alert">
+			  	  Un problème est survenu ! Merci de contacter votre administrateur.
+			  	</div>
+			  	<div ng-if="profileSuccess" class="alert alert-success" role="alert">
+			  	  L'opération s'est effectuée avec succès !
+			  	</div>
+			  </div>
+			</div>
+			<div class="row" style="background: #eff8fc !important; border-radius: 3px !important; padding: 10px !important; margin-bottom: 10px !important">
+			  <div ng-class="'col-md-6'">
+            	<div class="form-group">
+              	  <label><span class="asterik"> * </span> CODE</label>
+                  <input type="text" class="form-control" name="code" ng-model="dto.code" required="required" />                        
+                </div>
+              </div>
+              <div ng-class="'col-md-6'">
+                <div class="form-group">
+              	  <label><span class="asterik"> * </span> INTITULE</label>
+                  <input type="text" class="form-control" name="intitule" ng-model="dto.intitule" required="required" />                        
+                </div>
+			  </div>
+			</div>
+          </div>
+          <div class="modal-footer">
+			<a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="saveProfile()">
+	        	<i class="mdi mdi-content-save label-icon align-middle fs-16 me-2"></i> Enregistrer
+	        </a>
+		  </div>
+        </form>
+      </div><!-- /.modal-content -->
+    </div>
+  </div>
+  <div id="contactModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Besoin d'assistance ?</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body p-lg">
+							<div class="row">
+								<div ng-class="'col-md-12'">
+									Vous rencontrez des difficultés et besoin d'assistance, merci de nous écrire sur <a href="mailto:techRNEC@interieur.gov.ma">techRNEC@interieur.gov.ma</a> ou sur <a href="mailto:hotline@medasys.ma">hotline@medasys.ma</a>.
+								</div>
+							</div>	
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+		</div>
+  <div id="userModal" class="modal fade" data-backdrop="true">
+		    <div class="modal-dialog">
+		      <div class="modal-content">
+		        <div class="modal-header">
+		      	  <h5 class="modal-title">Ajout d'un utilisateur</h5>
+		        </div>
+		        <form id="userForm" name="userForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+		          <div class="modal-body p-lg">
+		            <div class="row">
+					  <div ng-class="'col-md-12'">
+					  	<p class="text-muted">Renseignez les champs obligatoires</p>
+					  	<div ng-if="userRequiredError" class="alert alert-danger" role="alert">
+					  	  Veuillez remplir tous les champs obligatoires !
+					  	</div>
+					  	<div ng-if="userTechnicalError" class="alert alert-danger" role="alert">
+					  	  Un problème est survenu ! Merci de contacter votre administrateur.
+					  	</div>
+					  	<div ng-if="userSuccess" class="alert alert-success" role="alert">
+					  	  L'opération s'est effectuée avec succès !
+					  	</div>
+					  </div>
+					  <div ng-class="'col-md-12'">
+		            	<div class="form-group">
+		                  <label><span class="asterik"> * </span> Nom de l'utilisateur</label>
+		                  <select id="user" class="form-control select2" style="width: 100%;" name="user" ng-model="dto.userId" ng-options="u.id as (u.prenom + ' ' + u.nom) for u in users"></select>
+		                </div>
+					  </div>
+					</div>
+		          </div>
+		          <div class="modal-footer">
+		            <a href="#" class="btn warn p-x-md" data-dismiss="modal">Annuler</a>
+		            <a href="#" ng-click="saveUser()" class="btn success p-x-md">Enregistrer</a>
+		          </div>
+		        </form>
+		      </div><!-- /.modal-content -->
+		    </div>
+		  </div>
+  		  <div id="authorityModal" class="modal fade" data-backdrop="true">
+		    <div class="modal-dialog">
+		      <div class="modal-content">
+		        <div class="modal-header">
+		      	  <h5 class="modal-title">Ajout d'une autorisation</h5>
+		        </div>
+		        <form id="authorityForm" name="authorityForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+		          <div class="modal-body p-lg">
+		            <div class="row">
+					  <div ng-class="'col-md-12'">
+					  	<p class="text-muted">Renseignez les champs obligatoires</p>
+					  	<div ng-if="authorityRequiredError" class="alert alert-danger" role="alert">
+					  	  Veuillez remplir tous les champs obligatoires !
+					  	</div>
+					  	<div ng-if="authorityTechnicalError" class="alert alert-danger" role="alert">
+					  	  Un problème est survenu ! Merci de contacter votre administrateur.
+					  	</div>
+					  	<div ng-if="authoritySuccess" class="alert alert-success" role="alert">
+					  	  L'opération s'est effectuée avec succès !
+					  	</div>
+					  </div>
+					  <div ng-class="'col-md-12'">
+		            	<div class="form-group">
+		                  <label><span class="asterik"> * </span> Module</label>
+		                  <select id="module" class="form-control" name="module" ng-model="dto.moduleId" ng-options="m.id as m.libelle for m in modules" ng-change="loadByModule()">
+					      	<option value="">Choisir une option</option>
+					      </select>
+		                </div>
+		                <div class="form-group">
+		                  <label><span class="asterik"> * </span> Interface</label>
+		                  <select id="screen" class="form-control" name="screen" ng-model="dto.screenId" ng-options="s.id as s.libelle for s in screens" ng-change="loadByScreen()">
+					      	<option value="">Choisir une option</option>
+					      </select>
+		                </div>
+		                <div class="form-group">
+		                  <label><span class="asterik"> * </span> Autorisation</label>
+		                  <select id="authority" class="form-control" name="authority" ng-model="dto.authorityId" ng-options="a.id as a.intitule for a in authorities">
+					      	<option value="">Choisir une option</option>
+					      </select>
+		                </div>
+					  </div>
+					</div>
+		          </div>
+		          <div class="modal-footer">
+		            <a href="#" class="btn warn p-x-md" data-dismiss="modal">Annuler</a>
+		            <a href="#" ng-click="saveAuthority()" class="btn success p-x-md">Enregistrer</a>
+		          </div>
+		        </form>
+		      </div><!-- /.modal-content -->
+		    </div>
+		  </div>
+		  <div id="userNewModal" class="modal fade" data-backdrop="true">
+		    <div class="modal-dialog modal-lg">
+		      <div class="modal-content">
+		        <div class="modal-header">
+		      	  <h5 class="modal-title">Ajout d'un nouvel utilisateur</h5>
+		        </div>
+		        <form id="userNewForm" name="userNewForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+		          <div class="modal-body p-lg">
+		            <div class="row" style="background: #eff8fc !important; border-radius: 3px !important; padding: 10px !important; margin-bottom: 10px !important">
+					  <div ng-class="'col-md-12'">
+					  	<p class="text-muted">Renseignez les champs obligatoires</p>
+					  	<div ng-if="userRequiredError" class="alert alert-danger" role="alert">
+					  	  Veuillez remplir tous les champs obligatoires !
+					  	</div>
+					  	<div ng-if="userTechnicalError" class="alert alert-danger" role="alert">
+					  	  Un problème est survenu ! Merci de contacter votre administrateur.
+					  	</div>
+					  	<div ng-if="userSuccess" class="alert alert-success" role="alert">
+					  	  L'opération s'est effectuée avec succès !
+					  	</div>
+					  </div>
+					  <div ng-class="'col-md-6'">
+		            	<div class="form-group">
+		                  <label><span class="asterik"> * </span> IDENTIFIANT</label>
+		                  <input type="text" class="form-control" name="login" ng-model="dto.user.login" required="required" /> 
+		                </div>
+					  </div>
+					  <div ng-class="'col-md-6'">
+		            	<div class="form-group">
+		                  <label><span class="asterik"> * </span> MOT DE PASSE</label>
+		                  <input type="password" class="form-control" name="password" ng-model="dto.user.password" required="required" /> 
+		                </div>
+					  </div>
+					  <div ng-class="'col-md-6'">
+		            	<div class="form-group">
+		                  <label><span class="asterik"> * </span> NOM</label>
+		                  <input type="text" class="form-control" name="nom" ng-model="dto.user.nom" required="required" /> 
+		                </div>
+					  </div>
+					  <div ng-class="'col-md-6'">
+		            	<div class="form-group">
+		                  <label><span class="asterik"> * </span> E-MAIL</label>
+		                  <input type="text" class="form-control" name="email" ng-model="dto.user.email" required="required" /> 
+		                </div>
+					  </div>
+					</div>
+		          </div>
+		          <div class="modal-footer">
+					<a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="saveNewUser()">
+			        	<i class="mdi mdi-content-save label-icon align-middle fs-16 me-2"></i> Enregistrer
+			        </a>
+				  </div>
+		        </form>
+		      </div><!-- /.modal-content -->
+		    </div>
+		  </div>
+		  <div id="userEditModal" class="modal fade" data-backdrop="true">
+		    <div class="modal-dialog modal-lg">
+		      <div class="modal-content">
+		        <div class="modal-header">
+		      	  <h5 class="modal-title">Modification d'un utilisateur</h5>
+		        </div>
+		        <form id="userEditForm" name="userEditForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+		          <div class="modal-body p-lg">
+		            <div class="row">
+					  <div ng-class="'col-md-12'">
+					  	<p class="text-muted">Renseignez les champs obligatoires</p>
+					  	<div ng-if="userRequiredError" class="alert alert-danger" role="alert">
+					  	  Veuillez remplir tous les champs obligatoires !
+					  	</div>
+					  	<div ng-if="userTechnicalError" class="alert alert-danger" role="alert">
+					  	  Un problème est survenu ! Merci de contacter votre administrateur.
+					  	</div>
+					  	<div ng-if="userSuccess" class="alert alert-success" role="alert">
+					  	  L'opération s'est effectuée avec succès !
+					  	</div>
+					  </div>
+					  <div ng-class="'col-md-12'">
+		            	<div class="form-group">
+		                  <label><span class="asterik"> * </span> IDENTIFIANT</label>
+		                  <input type="text" class="form-control" name="login" ng-model="dto.user.login" required="required" disabled="disabled" /> 
+		                </div>
+					  </div>
+					  <div ng-class="'col-md-6'">
+		            	<div class="form-group">
+		                  <label><span class="asterik"> * </span> NOM</label>
+		                  <input type="text" class="form-control" name="nom" ng-model="dto.user.nom" required="required" /> 
+		                </div>
+					  </div>
+					  <div ng-class="'col-md-6'">
+		            	<div class="form-group">
+		                  <label><span class="asterik"> * </span> TELEPHONE</label>
+		                  <input type="text" class="form-control" name="phone" ng-model="dto.user.phone" required="required" /> 
+		                </div>
+					  </div>
+					  <div ng-class="'col-md-6'">
+		            	<div class="form-group">
+		                  <label><span class="asterik"> * </span> E-MAIL</label>
+		                  <input type="text" class="form-control" name="email" ng-model="dto.user.email" required="required" /> 
+		                </div>
+					  </div>
+					</div>
+		          </div>
+		          <div class="modal-footer">
+					<a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="saveNewUser()">
+			        	<i class="mdi mdi-content-save label-icon align-middle fs-16 me-2"></i> Modifier
+			        </a>
+				  </div>
+		        </form>
+		      </div><!-- /.modal-content -->
+		    </div>
+		  </div>	
+	</div>
+<div layout:fragment="plugins" class="page-content">
+	<script th:src='@{/resources/js/administration/profile.js}'></script>
+</div>
+</body>
+</html>

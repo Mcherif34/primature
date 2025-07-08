@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<title></title>
+</head>
+<body>
+	<div th:fragment="zoneRecherche-panel">
+		<div class="panel panel-inverse zoneRecherche-panel" ng-controller="zoneRechercheController" ng-if="zoneRecheche == null || zoneRecheche == true">
+			<div class="panel-heading">
+				<div class="panel-heading-btn">
+					<a href="javascript:;" title="Réduire" 
+						class="btn btn-xs btn-icon btn-circle btn-warning"
+						data-click="panel-collapse"><i class="fa fa-plus"></i></a>
+				</div>
+				<h4 class="panel-title">
+					<th:block th:text="#{zoneRecherche.list}"></th:block>
+				</h4>
+			</div>
+			<div class="panel-body">
+				<div class="row">	
+					<div class="col-md-3"></div>
+					<div class="col-md-6 center-block">
+						<div class="form-group ">
+							<label class="col-md-4 control-label"><th:block
+									th:text="#{zoneRecherche.list.champ}"></th:block></label>
+							<div class="col-md-5">
+							    <div class="input-group">
+									<select id="zoneRechercheList" name="selectedColumn" ng-model="::selectedColumn"
+										ng-options="column.columnName for column in columns|orderBy:'columnName'"
+										class="form-control">
+										<option value=""></option>
+									</select>
+									<span class="input-group-addon" style="cursor:pointer;" ng-if="selectedColumn &amp;&amp; columns.length > 0" ng-click="add()"><i class="fa fa-plus"></i></span>
+							    </div><!-- /input-group -->
+							</div>
+						</div>
+					</div>			
+				</div>
+				<form id="formZoneRecherche" name="formZoneRecherche" class="formZoneRecherche form-horizontal">
+					<ul id="zoneRecherche">
+					</ul>
+					<div class="row pull-right">
+						<button type="button" class="btn btn-default" ng-click="reset()">Vider</button>
+						<button type="button" class="btn btn-primary" ng-click="rechercher()">Rechercher</button>
+					</div>
+				</form>
+				<div class="loading" ng-if="loading" ><i class="fa fa-spinner fa-spin fa-5x"></i></div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

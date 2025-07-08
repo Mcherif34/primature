@@ -1,0 +1,285 @@
+package ma.brainit.aman.client.service.impl;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.opentext.livelink.service.docman.Node;
+
+import ma.brainit.aman.administration.actions.SearchParam;
+import ma.brainit.aman.client.dao.CourrierClassiqueDao;
+import ma.brainit.aman.client.dao.DTreeDao;
+import ma.brainit.aman.client.dao.WSubWorkTaskDao;
+import ma.brainit.aman.client.dto.CourrierClassiqueDTO;
+import ma.brainit.aman.client.dto.DocumentDTO;
+import ma.brainit.aman.client.dto.converters.CourrierClassiqueDTOConverter;
+import ma.brainit.aman.client.model.CourrierClassique;
+import ma.brainit.aman.client.model.WSubWorkTask;
+import ma.brainit.aman.client.service.CorrespondanceService;
+import ma.brainit.aman.client.service.CourrierClassiqueService;
+import ma.brainit.aman.webservice.GedService;
+import ma.brainit.base.BasePaginatorDao;
+import ma.brainit.base.BaseTable;
+import ma.brainit.base.utils.Util;
+
+
+@Service
+@Transactional
+public class CorrespondanceServiceImpl implements CorrespondanceService {
+
+	@Value("${opentext.url}")
+	private String opentextUrl;
+	
+	@Value("${opentext.login}")
+	private String opentextLogin;
+
+	@Value("${opentext.password}")
+	private String opentextPassword;
+	
+	private GedService ged = new GedService();
+	
+	@Autowired
+	private CourrierClassiqueDTOConverter CourrierClassiqueDTOConverter;
+
+	@Autowired
+	private BasePaginatorDao<CourrierClassique, Long> paginatorDao;
+
+	@Autowired
+	private CourrierClassiqueDao CourrierClassiqueDao;
+	
+	@Autowired
+	private WSubWorkTaskDao wSubWorkTaskDao;
+
+	@Autowired
+	private DTreeDao dtreeDao;
+
+	@Override
+	public String getPage(Integer page, Integer limit, String sort, String direction, String search) {
+		StringBuilder condition = new StringBuilder("");
+		List<SearchParam> searchParams = Util.fromSearchParamsJSON(search);
+		searchParams  = CourrierClassiqueDTOConverter.convertSearchParamToEntity(search);
+		this.paginatorDao.setEntityClass(CourrierClassique.class);
+		List<CourrierClassique> list = paginatorDao.getPaginator(page, limit,sort,direction,searchParams, condition.toString());
+		Long totalCount = paginatorDao.count(searchParams, condition.toString());
+		List<CourrierClassiqueDTO> dtos = CourrierClassiqueDTOConverter.convertFromDataBeanList(list);
+		for(CourrierClassiqueDTO CourrierClassiqueDTO : dtos) {
+			WSubWorkTask wSubWorkTask = wSubWorkTaskDao.getByWWork(CourrierClassiqueDTO.getwSubWorkId());
+			if(wSubWorkTask != null) {
+				CourrierClassiqueDTO.setTaskTitle(wSubWorkTask.getSubWorkTaskTitle());
+				CourrierClassiqueDTO.setPerformer(wSubWorkTask.getPerformer().getName());
+			}
+		}
+		return Util.toJson(new BaseTable<CourrierClassiqueDTO>(dtos,totalCount));
+	}
+	
+	@Override
+	public String getCurrentPage(Integer page, Integer limit, String sort, String direction, String search) {
+		StringBuilder condition = new StringBuilder("WHERE e.wSubWork.subWorkDateCompleted IS NULL");
+		List<SearchParam> searchParams = Util.fromSearchParamsJSON(search);
+		searchParams  = CourrierClassiqueDTOConverter.convertSearchParamToEntity(search);
+		this.paginatorDao.setEntityClass(CourrierClassique.class);
+		List<CourrierClassique> list = paginatorDao.getPaginator(page, limit,sort,direction,searchParams, condition.toString());
+		Long totalCount = paginatorDao.count(searchParams, condition.toString());
+		List<CourrierClassiqueDTO> dtos = CourrierClassiqueDTOConverter.convertFromDataBeanList(list);
+		for(CourrierClassiqueDTO CourrierClassiqueDTO : dtos) {
+			WSubWorkTask wSubWorkTask = wSubWorkTaskDao.getByWWork(CourrierClassiqueDTO.getwSubWorkId());
+			if(wSubWorkTask != null) {
+				CourrierClassiqueDTO.setTaskTitle(wSubWorkTask.getSubWorkTaskTitle());
+				CourrierClassiqueDTO.setPerformer(wSubWorkTask.getPerformer().getName());
+			}
+		}
+		return Util.toJson(new BaseTable<CourrierClassiqueDTO>(dtos,totalCount));
+	}
+	
+	@Override
+	public String advancedSearch(Integer page, Integer limit, String sort, String direction, String search, String refArriveeBoc, String receptionDateStart, String receptionDateEnd, String refExpediteur, String enregistrementDateStart, String enregistrementDateEnd, String expediteur, String status, String echeanceDateStart, String echeanceDateEnd, String typeCourrier, String typeInstructionDg, String objet, String urgence) {
+		StringBuilder condition = new StringBuilder("WHERE e.id IS NOT NULL");
+		if(refArriveeBoc != null && !refArriveeBoc.equals("NAN")) {
+			condition.append(" AND e.refArriveeBoc LIKE '%").append(refArriveeBoc.toUpperCase().replaceAll("-", "/")).append("%'");
+		}
+		if(receptionDateStart != null && !receptionDateStart.equals("NAN") && receptionDateEnd != null && !receptionDateEnd.equals("NAN")) {
+			condition.append(" AND e.dateReception BETWEEN '").append(receptionDateStart).append("' AND '").append(receptionDateEnd).append("'");
+		}
+		if(refExpediteur != null && !refExpediteur.equals("NAN")) {
+			condition.append(" AND e.refExpediteur LIKE '%").append(refExpediteur.toUpperCase().replaceAll("-", "/")).append("%'");
+		}
+		if(enregistrementDateStart != null && !enregistrementDateStart.equals("NAN") && enregistrementDateEnd != null && !enregistrementDateEnd.equals("NAN")) {
+			condition.append(" AND e.dateEnregistrement BETWEEN '").append(enregistrementDateStart).append("' AND '").append(enregistrementDateEnd).append("'");
+		}
+		if(expediteur != null && !expediteur.equals("NAN") && !expediteur.equals("Choisir une option")) {
+			condition.append(" AND e.expediteur LIKE '%").append(expediteur.toUpperCase()).append("%'");
+		}
+		if(status != null && !status.equals("NAN")) {
+			if(status.equals("current")) {
+				condition.append(" AND e.wSubWork.subWorkDateCompleted IS NULL");
+			}
+			if(status.equals("completed")) {
+				condition.append(" AND e.wSubWork.subWorkDateCompleted IS NOT NULL");
+			}
+		}
+		if(echeanceDateStart != null && !echeanceDateStart.equals("NAN") && echeanceDateEnd != null && !echeanceDateEnd.equals("NAN")) {
+			condition.append(" AND e.echeance BETWEEN '").append(echeanceDateStart).append("' AND '").append(echeanceDateEnd).append("'");
+		}
+		if(typeCourrier != null && !typeCourrier.equals("NAN")) {
+			condition.append(" AND e.typeCourrier LIKE '%").append(typeCourrier.toUpperCase()).append("%'");
+		}
+		if(typeInstructionDg != null && !typeInstructionDg.equals("NAN")) {
+			condition.append(" AND e.typeInstructionDg LIKE '%").append(typeInstructionDg.toUpperCase().replaceAll("'", "''").replaceAll("@", "/")).append("%'");
+		}
+		if(objet != null && !objet.equals("NAN")) {
+			condition.append(" AND e.objet LIKE '%").append(objet.toUpperCase()).append("%'");
+		}
+		if(urgence != null && !urgence.equals("NAN")) {
+			condition.append(" AND e.urgence = '").append(urgence).append("'");
+		}
+		List<SearchParam> searchParams = Util.fromSearchParamsJSON(search);
+		searchParams  = CourrierClassiqueDTOConverter.convertSearchParamToEntity(search);
+		this.paginatorDao.setEntityClass(CourrierClassique.class);
+		List<CourrierClassique> list = paginatorDao.getPaginator(page, limit,sort,direction,searchParams, condition.toString());
+		Long totalCount = paginatorDao.count(searchParams, condition.toString());
+		List<CourrierClassiqueDTO> dtos = CourrierClassiqueDTOConverter.convertFromDataBeanList(list);
+		for(CourrierClassiqueDTO CourrierClassiqueDTO : dtos) {
+			WSubWorkTask wSubWorkTask = wSubWorkTaskDao.getByWWork(CourrierClassiqueDTO.getwSubWorkId());
+			if(wSubWorkTask != null) {
+				CourrierClassiqueDTO.setTaskTitle(wSubWorkTask.getSubWorkTaskTitle());
+				CourrierClassiqueDTO.setPerformer(wSubWorkTask.getPerformer().getName());
+			}
+		}
+		return Util.toJson(new BaseTable<CourrierClassiqueDTO>(dtos,totalCount));
+	}
+
+	@Override
+	@Transactional
+	public CourrierClassiqueDTO save(CourrierClassiqueDTO dto) {
+		CourrierClassique entity = CourrierClassiqueDTOConverter.convertFromDTO(dto);
+		entity = CourrierClassiqueDao.save(entity);
+
+		return CourrierClassiqueDTOConverter.convertFromDataBean(entity);
+	}
+
+	@Override
+	@Transactional
+	public CourrierClassiqueDTO load(Long id) {
+		CourrierClassique entity = CourrierClassiqueDao.findOne(id);
+		CourrierClassiqueDTO dto = CourrierClassiqueDTOConverter.convertFromDataBean(entity);
+		List<DocumentDTO> documents = new ArrayList<DocumentDTO>();
+		String authToken = ged.authentication(opentextUrl, opentextLogin, opentextPassword);
+		try {
+			if(entity != null && entity.getwSubWork() != null) {
+				List<Node> attachments = ged.getAttachments(opentextUrl, entity.getwSubWork().getId(), authToken);
+				if(attachments != null) {
+					for(int i = 0; i < attachments.size(); i++) {
+						DocumentDTO document = new DocumentDTO();
+						document.setDataId(attachments.get(i).getID());
+						document.setName(attachments.get(i).getName());
+						documents.add(document);
+					}
+					dto.setDocuments(documents);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return dto;
+	}
+	
+	@Override
+	@Transactional
+	public CourrierClassiqueDTO loadByReference(String reference) {
+		CourrierClassiqueDTO dto = CourrierClassiqueDTOConverter.convertFromDataBean(CourrierClassiqueDao.getByReference(reference.replaceAll("-", "/")));
+		return dto;
+	}
+	
+	@Override
+	@Transactional
+	public List<DocumentDTO> loadDocumentsByReference(String reference) {
+		CourrierClassique entity = CourrierClassiqueDao.getByReference(reference.replaceAll("-", "/"));
+		List<DocumentDTO> documents = new ArrayList<DocumentDTO>();
+		String authToken = ged.authentication(opentextUrl, opentextLogin, opentextPassword);
+		try {
+			if(entity != null && entity.getwSubWork() != null) {
+				Long attachmentParentNode = dtreeDao.getAttachmentParentNode(entity.getwSubWork().getId().toString());
+				List<Node> attachments = ged.getAttachments(opentextUrl, attachmentParentNode, authToken);
+				if(attachments != null) {
+					for(int i = 0; i < attachments.size(); i++) {
+						DocumentDTO document = new DocumentDTO();
+						document.setDataId(attachments.get(i).getID());
+						document.setName(attachments.get(i).getName());
+						documents.add(document);
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return documents;
+	}
+
+	@Override
+	@Transactional
+	public void delete(Long id) {
+		CourrierClassiqueDao.delete(id);
+	}
+
+	@Override
+	@Transactional
+	public List<CourrierClassiqueDTO> getAll() {
+		List<CourrierClassique> list = CourrierClassiqueDao.findAll();
+		List<CourrierClassiqueDTO> dtos = CourrierClassiqueDTOConverter.convertFromDataBeanList(list);
+
+		return dtos;
+	}
+	
+	@Override
+	@Transactional
+	public int getCurrentClassiqueCount() {
+		return CourrierClassiqueDao.getCurrentClassiqueCount();
+	}
+	
+	@Override
+	@Transactional
+	public List<Object> getCurrentClassiqueCountByYear(int year) {
+		return CourrierClassiqueDao.getCurrentClassiqueCountByYear(year);
+	}
+	
+	@Override
+	@Transactional
+	public List<Object> getCompletedClassiqueCountByYear(int year) {
+		return CourrierClassiqueDao.getCompletedClassiqueCountByYear(year);
+	}
+	
+	@Override
+	@Transactional
+	public int getCurrentNotOverdueClassiqueCount() {
+		return CourrierClassiqueDao.getCurrentNotOverdueClassiqueCount();
+	}
+	
+	@Override
+	@Transactional
+	public int getCurrentOverdueClassiqueCount() {
+		return CourrierClassiqueDao.getCurrentOverdueClassiqueCount();
+	}
+	
+	@Override
+	@Transactional
+	public int getCompletedClassiqueCount() {
+		return CourrierClassiqueDao.getCompletedClassiqueCount();
+	}
+
+	@Override
+	public void downloadAttachment(long dataId, HttpServletResponse response) throws ParserConfigurationException {
+		String authToken = ged.authentication(opentextUrl, opentextLogin, opentextPassword);
+		ged.downloadFile(response, opentextUrl, dataId, authToken);
+	}
+}

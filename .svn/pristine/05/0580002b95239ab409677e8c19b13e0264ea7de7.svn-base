@@ -1,0 +1,99 @@
+package ma.brainit.aman.administration.model;
+
+import java.io.Serializable;
+import javax.persistence.*;
+
+import java.util.List;
+
+/**
+ * The persistent class for the SEC_PROFILE database table.
+ * 
+ */
+@Entity
+@Table(name = "SEC_PROFILE")
+@NamedQuery(name = "SecProfile.findAll", query = "SELECT s FROM SecProfile s")
+public class SecProfile implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(name = "code", columnDefinition = "NVARCHAR")
+	private String code;
+
+	@Column(name = "intitule", columnDefinition = "NVARCHAR")
+	private String intitule;
+	
+	@Column(name = "module", columnDefinition = "NVARCHAR")
+	private String module;
+	
+	// bi-directional many-to-many association to SecAuthorite
+	@ManyToMany
+	@JoinTable(name = "SEC_PROFIL_AUTORITE", joinColumns = {
+			@JoinColumn(name = "SEC_PROFILE_ID") }, inverseJoinColumns = { @JoinColumn(name = "SEC_AUTHORITE_ID") })
+	private List<SecAuthorite> secAuthorites;
+
+	// bi-directional many-to-many association to SecUtilisateur
+	//@ManyToMany(mappedBy = "secProfiles")
+	@ManyToMany
+	@JoinTable(name = "SEC_UTILISATEUR_PROFIL", joinColumns = {
+			@JoinColumn(name = "SEC_PROFILE_ID") }, inverseJoinColumns = { @JoinColumn(name = "SEC_UTILISATEUR_ID") })
+	private List<SecUtilisateur> secUtilisateurs;
+
+	public SecProfile() {
+	}
+
+	public SecProfile(Long id) {
+		this.id = id;
+	}
+
+	public Long getId() {
+		return this.id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getCode() {
+		return this.code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getIntitule() {
+		return this.intitule;
+	}
+
+	public void setIntitule(String intitule) {
+		this.intitule = intitule;
+	}
+	
+	public String getModule() {
+		return this.module;
+	}
+
+	public void setModule(String module) {
+		this.module = module;
+	}
+
+	public List<SecAuthorite> getSecAuthorites() {
+		return this.secAuthorites;
+	}
+
+	public void setSecAuthorites(List<SecAuthorite> secAuthorites) {
+		this.secAuthorites = secAuthorites;
+	}
+
+	public List<SecUtilisateur> getSecUtilisateurs() {
+		return this.secUtilisateurs;
+	}
+
+	public void setSecUtilisateurs(List<SecUtilisateur> secUtilisateurs) {
+		this.secUtilisateurs = secUtilisateurs;
+	}
+
+}

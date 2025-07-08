@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+	<title></title>
+</head>
+<body ng-controller="referentielController" th:attr="ng-init='init();'">
+	<div layout:fragment="content" class="page-content">
+		<div class="panel panel-inverse">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<th:block th:text="#{administration.referentiel.list}"></th:block>
+				</h4>
+			</div>
+			<div class="panel-body">
+				<div class="row ">
+					<div class="col-md-6">
+						<div class="form-group ">
+							<label class="col-md-4 control-label"><th:block
+									th:text="#{administration.referentiel.filtre.entite}"></th:block></label>
+							<div class="col-md-5">
+								<select name="version" ng-model="filtre.entite"
+									ng-options="o.id as o.libelle for o in entites"
+									class="form-control">
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group ">
+							<label class="col-md-4 control-label"><th:block
+									th:text="#{administration.referentiel.filtre.colonne}"></th:block></label>
+							<div class="col-md-5">
+								<select name="version" ng-model="filtre.colonne"
+									class="form-control">
+									<option ng-repeat="o in colonnes" data-parent="{{o.parentId}}"
+										value="{{o.id}}">{{o.colonne}}</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row" ng-show="table!=null">
+					<div class="col-md-12">
+						<table id="referentielTable"
+							class="table table-striped table-bordered"
+							ng-controller="referentielTableController"
+							th:attr="ng-init='getListEntite('+${idEntite}+');'">
+							<thead>
+								<tr>
+									<th>Identifiant</th>
+									<th><th:block th:text="#{administration.referentiel.colonne}"></th:block></th>
+									<th><th:block th:text="#{administration.referentiel.designation}"></th:block></th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<th:block th:include="commun/referentiel/referentielForm::form"></th:block>
+
+		<!-- <div class="modal fade" id="modalReferentielFils" tabindex="-1"
+			role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						<button type="button" class="bootbox-close-button close"
+							data-dismiss="modal" aria-hidden="true"
+							style="margin-top: -10px;">×</button>
+						<div class="bootbox-body">
+							<div class="panel panel-inverse" data-sortable-id="ui-widget-10">
+								<div class="panel-body">
+									<form id="valeurForm" name="valeurForm" method="post"
+										action="#" class="form-horizontal">
+										<div class="row">
+											<div ng-class="'col-md-12'">
+												<form-select th:attr="title='Valeur'" name="sousValeur"
+													ng-model="dtoFils.id" options="listSousValeurs"
+													options-label="valeur"></form-select>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default"
+							ng-click="closeModal()">Annuler</button>
+						<button type="button" class="btn btn-primary"
+							ng-click="saveFils()">Enregistrer</button>
+					</div>
+				</div>
+			</div>
+		</div> -->
+		
+	</div>
+	<div layout:fragment="plugins" class="page-content">
+		<script th:src='@{/resources/js/commun/referentiel/referentiel.js}'></script>
+	</div>
+</body>
+</html>

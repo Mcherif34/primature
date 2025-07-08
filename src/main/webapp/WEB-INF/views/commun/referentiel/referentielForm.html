@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<title></title>
+</head>
+<body>
+	<th:block th:fragment="form">
+		<form id="form" name="form" method="post" action="#"
+			class="form-horizontal">
+			
+			<div class="sidemenu">
+				<ul>
+					<li><a class="blue" ng-click="add()"><span>Ajouter</span><img height="17px"
+						src="/aman/resources/images/btn-add.png"/></a></li>
+					<li><a class="blue" ng-click="edit()"><span>Modifier</span><i
+							class="fa fa-pencil"></i></a></li>
+					<li><a class="blue" ng-click="save()"><span>Enregistrer</span><i
+							class="fa fa-save"></i></a></li>
+					<li><a class="blue" ng-click="remove()"><span>Supprimer</span><img height="17px"
+						src="/aman/resources/images/btn-delete.png"/></a></li>
+				</ul>
+			</div>
+			
+			<div class="panel panel-inverse" data-sortable-id="ui-widget-10">
+				<div class="panel-heading">
+					<div class="panel-heading-btn"></div>
+					<h4 class="panel-title semi-bold">
+						<th:block th:text="#{administration.referentiel.form}"></th:block>
+					</h4>
+				</div>
+				<div class="panel-body">
+					<fieldset ng-disabled="mode =='read'">
+						<!-- Block 1 -->
+						<div class="row">
+							<input type="hidden" ng-model="dto.id" />
+							<div ng-class="'col-md-4'">
+								<form-input
+									th:attr="title=''+#{administration.referentiel.designation}+''"
+									name="designation" ng-model="dto.designation" obligatoire="true"></form-input>
+							</div>
+							<div ng-class="'col-md-4'"></div>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+		</form>
+
+		<!-- <div class="panel panel-inverse">
+			<div class="panel-heading">
+				<div class="panel-heading-btn">
+					<a href="javascript:;" title="Réduire" id="lotCollapse"
+						class="btn btn-xs btn-icon btn-circle btn-warning"
+						data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+				</div>
+				<h4 class="panel-title">
+					<th:block th:text="#{commun.referentiel.fils.list}"></th:block>
+				</h4>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12">
+						<table id="sousValeursTable"
+							class="table table-striped table-bordered"
+							ng-controller="sousValeursTableController"
+							th:attr="ng-init='init();'">
+							<thead>
+								<tr>
+									<th>Identifiant</th>
+									<th><th:block th:text="#{commun.referentiel.fils.valeur}"></th:block></th>
+									<th class="actions noVis"></th>
+								</tr>
+							</thead>
+						</table>
+						<a ng-class="'btn btn-info btn-icon btn-circle btn-sm'" 
+						ng-show="mode=='edit'"
+							ng-click="addFilsReferentiel()" ng-attr-title="Ajouter une valeur" 
+							title="Ajouter une valeur"><i class="fa fa-plus"></i></a>
+					</div>
+				</div>
+			</div>
+		</div> -->
+		
+		
+	</th:block>
+</body>
+</html>

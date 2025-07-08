@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/simple-layout">
+<head>
+<title th:text="#{home.change.passeword.success.title}"></title>
+</head>
+<body>
+	<div layout:fragment="content" class="page-content">
+		<div class="row">
+			<div class="col-md-6 col-xs-offset-3">
+				<!-- PAGE CONTENT BEGINS -->
+				<div class="success-container">
+						<h3 class="text-center">
+							<i class="glyphicon glyphicon-ok"></i> 
+							<span th:text="#{home.change.passeword.success.message}" ></span>
+						</h3>
+						<hr />
+						<div class="space"></div>
+						<div class="text-center">
+							<a class="btn btn-success" th:href="@{/}"> 
+								<i class="fa fa-home"></i> 
+								<span class="menu-text" th:text="#{button.connexion}"></span>
+							</a>
+						</div>
+				</div>
+				<!-- PAGE CONTENT ENDS -->
+			</div>
+			<!-- /.col -->
+		</div>
+	</div>
+	<!-- /.page-content -->
+</body>
+</html>

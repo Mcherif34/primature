@@ -1,0 +1,37 @@
+database.dialect = 	org.hibernate.dialect.SQLServer2012Dialect
+database.driver = com.microsoft.sqlserver.jdbc.SQLServerDriver
+database.url = jdbc:sqlserver://65.108.2.210;DataBaseName=prod
+database.user = sa
+#database.password = Sherriffot87
+database.password = Primature@2024
+
+thymeleaf.cache = false
+
+uploadHome = C:/GED
+
+opentext.login = Admin
+opentext.password = Zen@t@29
+opentext.url = http://saz-ged.zenatadev.local
+opentext.otdsUrl = http://saz-ged.zenatadev.local:8181
+opentext.courrierFactureID = 2453275
+
+mail.host = mail.medasys.ma
+mail.port = 587
+mail.username = noreplyfixmanager@medasys.ma
+mail.password = Medasys@2023!#
+mail.login = noreplayfixmanager@medasys.ma
+
+#mail.hotline = hotline@medasys.ma
+#mail.central01 = hamnay@interieur.gov.ma
+#mail.central02 = oelouazkiti@interieur.gov.ma
+#mail.central03 = techRNEC@interieur.gov.ma
+
+mail.hotline = aicha.mahamatoumar@gmail.com
+mail.central01 = mtijanicherif@gmail.com
+mail.central02 = ousmane.tc@gmail.com
+mail.central03 = ousmane.tc@gmail.com
+
+exchange.server = 
+exchange.domain = 
+exchange.user = 
+exchange.password = 

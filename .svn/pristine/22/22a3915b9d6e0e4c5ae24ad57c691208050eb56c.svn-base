@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+	<title></title>
+</head>
+<body ng-controller="dossierSubvhcController" th:attr="ng-init='init();'">
+	<div layout:fragment="content" class="page-content">
+		<div ng-view="ng-view"></div>
+		<div class="panel panel-inverse" >
+			<div class="panel-heading">
+				<h4 class="panel-title semi-bold" th:text="#{investissement.dossierSubv.list}"></h4>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12">
+						<div style="float: right;">
+							<a class="btn cancel aman-blue-color" style="font-size: 12px;" ng-click="edit()" title="Modifier"><i class="fa fa-pencil"></i> Modifier</a>
+							<a class="btn cancel aman-red-color" style="font-size: 12px;" ng-click="remove()" title="Supprimer"><i class="fa fa-trash-o"></i> Supprimer</a>
+						</div>
+						<table id="dossierSubvTable"
+							class="table table-striped table-bordered"
+							ng-controller="dossierSubvTableController"
+							th:attr="ng-init='init('+${dossierApprobId}+','+${parcelleId}+');'">
+							<thead>
+								<tr>
+									<th th:text="#{investissement.dossierSubv.id}"></th>
+									<th th:text="#{investissement.dossierSubv.numeroDossier}"></th>
+									<th th:text="#{investissement.dossierSubv.dateDepot}"></th>
+									<th th:text="#{investissement.dossierSubv.supSubv}"></th>
+									<th>Statut</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<th:block th:include="investissement/dossierSubvhc/dossierSubvhcForm::form"></th:block>
+	</div>
+	<div layout:fragment="plugins" class="page-content">
+		<script th:src='@{/resources/js/investissement/dossierSubvhc/dossierSubvhc.js}'></script>
+	</div>
+</body>
+</html>

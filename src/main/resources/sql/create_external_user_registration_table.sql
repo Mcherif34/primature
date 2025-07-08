@@ -1,0 +1,64 @@
+-- Script de création de la table EXTERNAL_USER_REGISTRATION
+-- Pour les demandes d'inscription des utilisateurs extérieurs
+
+CREATE TABLE EXTERNAL_USER_REGISTRATION (
+    ID BIGINT IDENTITY(1,1) PRIMARY KEY,
+    NOM NVARCHAR(100) NOT NULL,
+    PRENOM NVARCHAR(100) NOT NULL,
+    FONCTION NVARCHAR(200) NOT NULL,
+    EMAIL NVARCHAR(255) NOT NULL UNIQUE,
+    TELEPHONE NVARCHAR(20),
+    INSTITUTION NVARCHAR(200) NOT NULL,
+    TYPE_INSTITUTION NVARCHAR(50) NOT NULL,
+    ADRESSE NVARCHAR(500),
+    VILLE NVARCHAR(100),
+    MOTIF_DEMANDE NVARCHAR(1000) NOT NULL,
+    STATUT NVARCHAR(20) NOT NULL DEFAULT 'EN_ATTENTE',
+    DATE_DEMANDE DATETIME NOT NULL DEFAULT GETDATE(),
+    DATE_TRAITEMENT DATETIME,
+    TRAITE_PAR NVARCHAR(100),
+    LOGIN_GENERATED NVARCHAR(100),
+    PASSWORD_TEMPORAIRE NVARCHAR(100),
+    UTILISATEUR_ID BIGINT,
+    MOTIF_REJET NVARCHAR(500),
+    -- Colonnes héritées de BaseEntity
+    CREATION_TIME DATETIME DEFAULT GETDATE(),
+    DATE_MODIFIED DATETIME DEFAULT GETDATE(),
+    MODIFIER NVARCHAR(100)
+);
+
+-- Index pour améliorer les performances
+CREATE INDEX IX_EXTERNAL_USER_REGISTRATION_EMAIL ON EXTERNAL_USER_REGISTRATION(EMAIL);
+CREATE INDEX IX_EXTERNAL_USER_REGISTRATION_STATUT ON EXTERNAL_USER_REGISTRATION(STATUT);
+CREATE INDEX IX_EXTERNAL_USER_REGISTRATION_DATE_DEMANDE ON EXTERNAL_USER_REGISTRATION(DATE_DEMANDE);
+
+-- Contrainte pour vérifier les valeurs du statut
+ALTER TABLE EXTERNAL_USER_REGISTRATION 
+ADD CONSTRAINT CK_EXTERNAL_USER_REGISTRATION_STATUT 
+CHECK (STATUT IN ('EN_ATTENTE', 'ACCEPTEE', 'REJETEE'));
+
+-- Contrainte pour vérifier les valeurs du type d'institution
+ALTER TABLE EXTERNAL_USER_REGISTRATION 
+ADD CONSTRAINT CK_EXTERNAL_USER_REGISTRATION_TYPE_INSTITUTION 
+CHECK (TYPE_INSTITUTION IN ('MINISTERE', 'ETABLISSEMENT_PUBLIC', 'AUTRE'));
+
+-- Commentaires sur la table et les colonnes
+EXEC sp_addextendedproperty 
+    @name = N'MS_Description', 
+    @value = N'Table pour gérer les demandes d''inscription des utilisateurs extérieurs', 
+    @level0type = N'SCHEMA', @level0name = N'dbo', 
+    @level1type = N'TABLE', @level1name = N'EXTERNAL_USER_REGISTRATION';
+
+EXEC sp_addextendedproperty 
+    @name = N'MS_Description', 
+    @value = N'Statut de la demande : EN_ATTENTE, ACCEPTEE, REJETEE', 
+    @level0type = N'SCHEMA', @level0name = N'dbo', 
+    @level1type = N'TABLE', @level1name = N'EXTERNAL_USER_REGISTRATION', 
+    @level2type = N'COLUMN', @level2name = N'STATUT';
+
+EXEC sp_addextendedproperty 
+    @name = N'MS_Description', 
+    @value = N'Type d''institution : MINISTERE, ETABLISSEMENT_PUBLIC, AUTRE', 
+    @level0type = N'SCHEMA', @level0name = N'dbo', 
+    @level1type = N'TABLE', @level1name = N'EXTERNAL_USER_REGISTRATION', 
+    @level2type = N'COLUMN', @level2name = N'TYPE_INSTITUTION'; 

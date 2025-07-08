@@ -1,0 +1,546 @@
+app.controller('profileController', function($scope, $http, $ngBootbox, $location, CRUDService, NotificationService, constants) {
+	$scope.dto = {};
+	$scope.filtre = {};
+	$scope.profileTable = null;
+	$scope.dto.idSecAuthorites = [];
+	$scope.selected = null;
+	$scope.mode = null;
+	$scope.profileRequiredError = false;
+	$scope.profileTechnicalError = false;
+	$scope.profileSuccess = false;
+	$scope.userRequiredError = false;
+	$scope.userTechnicalError = false;
+	$scope.userSuccess = false;
+	$scope.authorityRequiredError = false;
+	$scope.authorityTechnicalError = false;
+	$scope.authoritySuccess = false;
+	
+	$scope.baseUrl = "/administration/profile/rest/";
+	$scope.userBaseUrl = "/administration/user/rest/";
+	$scope.authorityBaseUrl = "/administration/authority/rest/";
+	$scope.clientBaseUrl = "/client/client/rest/";
+	$scope.contactBaseUrl = "/client/contact/rest/";
+	$scope.cityBaseUrl = "/client/city/rest/";
+	
+	$scope.zoneRecheche = false;
+	
+	$scope.idAuthorites = [];
+	
+	$scope.init = function() {
+		$scope.mode="read";
+		$scope.addProfileForm = false;
+		$scope.editProfileForm = false;
+		CRUDService.init($scope);
+		$scope.initListCities();
+	};
+	
+	$scope.initListUsers = function() {
+		$http.get(context+"/administration/user/rest/getAllWithoutProfile").success(function(data, status) {   
+			$scope.users = data;
+		});
+	};
+	
+	$scope.initListModules = function() {
+		$http.get(context+"/administration/module/rest/getAll").success(function(data, status) {   
+			$scope.modules = data;
+		});
+	};
+	
+	$scope.initListScreens = function(id) {
+		if(id != null) {
+			$http.get(context+"/administration/screen/rest/getByModule/"+id).success(function(data, status) {   
+				$scope.screens = data;
+			});
+		}
+	};
+	
+	$scope.initListAuthorities = function(id) {
+		if(id != null) {
+			$http.get(context+"/administration/authority/rest/getByScreen/"+id).success(function(data, status) {   
+				$scope.authorities = data;
+			});
+		}
+	};
+	
+	$scope.contactForm = function() {
+		$('#contactModal').modal("show");
+	};
+	
+	$scope.addProfile = function() {
+		CRUDService.add($scope);
+		$scope.dto.idSecAuthorites = [];
+		$scope.editProfileForm = false;
+		$scope.addProfileForm = true;
+		$scope.profileSuccess = false;
+		$scope.profileTechnicalError = false;
+		$scope.profileRequiredError = false;
+		$('#profileModal').modal("show");
+	};
+	
+	$scope.addUser = function() {
+		$scope.userSuccess = false;
+		$scope.userTechnicalError = false;
+		$scope.userRequiredError = false;
+		$scope.initListUsers();
+		$('#user').select2({placeholder: 'Choisir une option'}).select2('val', '');
+		$('#userModal').modal("show");
+	};
+	
+	$scope.addAuthority = function() {
+		$scope.authoritySuccess = false;
+		$scope.authorityTechnicalError = false;
+		$scope.authorityRequiredError = false;
+		$scope.initListModules();
+		$('#authorityModal').modal("show");
+	};
+	
+	$scope.addNewUser = function() {
+		$scope.dto.user = {};
+		$scope.userSuccess = false;
+		$scope.userTechnicalError = false;
+		$scope.userRequiredError = false;
+		$('#userNewModal').modal("show");
+	};
+	
+	editProfile = function() {
+		CRUDService.edit($scope);
+		$scope.addProfileForm = false;
+		$scope.editProfileForm = true;
+		$scope.profileSuccess = false;
+		$scope.profileTechnicalError = false;
+		$scope.profileRequiredError = false;
+		$('#profileModal').modal("show");
+	};
+
+	editUser = function(id) {
+		$http.get(context+$scope.userBaseUrl+"load/"+id).success(function(data, status) { 
+			$scope.dto.user = data;
+			$scope.addUserForm = false;
+			$scope.editUserForm = true;
+			$scope.userSuccess = false;
+			$scope.userTechnicalError = false;
+			$scope.userRequiredError = false;
+			$('#userNewModal').modal("show");
+		});
+	};
+	
+	$scope.load = function(id) {
+		CRUDService.get(id).success(function(data, status) {  
+			$('.panel-collapse.in').collapse('hide');
+			CRUDService.setEntityLoaded($scope,data);
+		}).error(function(data, status, headers, config) {
+			NotificationService.showTechnicalError();
+		});
+	};
+	
+	$scope.initListCities = function() {
+		$http.get(context+$scope.cityBaseUrl+"getAll").success(function(data, status) {   
+			$scope.cities = data;
+		});
+	};
+	
+	$scope.loadUser = function(id) {
+		$http.get(context+$scope.userBaseUrl+"load/"+id).success(function(data, status) {
+			$scope.dto.user = data;
+		});
+	};
+	
+	$scope.loadByModule = function() {
+		$scope.initListScreens($scope.dto.moduleId);
+	};
+	
+	$scope.loadByScreen = function() {
+		$scope.initListAuthorities($scope.dto.screenId);
+	};
+	
+	$scope.saveProfile = function() {
+		if($scope.profileForm.$valid) {
+			console.log($scope.dto);
+			CRUDService.save($scope,$scope.dto).success(function(data, status) {   
+				CRUDService.setEntityLoaded($scope,data);
+				$scope.refreshList();
+				$scope.profileTechnicalError = false;
+				$scope.profileRequiredError = false;
+				$scope.profileSuccess = true;
+				$('#profileModal').modal("hide");
+			}).error(function(data, status, headers, config) {
+				$scope.profileTechnicalError = true;
+			});
+		} else {
+			$scope.profileRequiredError = true;
+		}
+	};
+	
+//	$scope.saveProfile = function() {
+//		if($scope.profileForm.$valid) {
+//			$scope.dto.client = {};
+//			$scope.dto.client.name = $scope.dto.intitule;
+//			$scope.dto.client.type = "Entreprise";
+//			$scope.dto.client.phone = $scope.dto.clientPhone;
+//			$scope.dto.client.fax = $scope.dto.clientFax;
+//			$scope.dto.client.email = $scope.dto.clientEmail;
+//			$scope.dto.client.wilaya = $scope.dto.clientWilaya;
+//			$scope.dto.client.address = $scope.dto.clientAddress;
+//			$scope.dto.client.archive = false;
+//			$http.post(context+$scope.clientBaseUrl+"save", angular.toJson($scope.dto.client)).success(function(data, status) {
+//				$scope.dto.clientId = data.id;
+//				CRUDService.save($scope,$scope.dto).success(function(data, status) {   
+//					CRUDService.setEntityLoaded($scope,data);
+//					$scope.refreshList();
+//					$scope.profileTechnicalError = false;
+//					$scope.profileRequiredError = false;
+//					$scope.profileSuccess = true;
+//					$('#profileModal').modal("hide");
+//				}).error(function(data, status, headers, config) {
+//					$scope.profileTechnicalError = true;
+//				});
+//			}).error(function(data, status, headers, config) {
+//				$scope.sheetTechnicalError = true;
+//			});
+//		} else {
+//			$scope.profileRequiredError = true;
+//		}
+//	};
+	
+	$scope.saveUser = function() {
+		if($scope.userForm.$valid) {
+			$scope.userId = ($("#user").val().split(':'))[1];
+			$http.get(context+$scope.userBaseUrl+"load/"+$scope.userId).success(function(data, status) {
+				$scope.dto.user = data;
+				if($scope.dto.user != null) {
+					if($scope.dto.user.secProfileId == null) {
+						$scope.dto.user.secProfileId = $scope.dto.id;
+					}
+					$http.post(context+$scope.userBaseUrl+"save", angular.toJson($scope.dto.user)).success(function(data, status) {
+						$scope.dto.secUtilisateurDTOs.push(data);
+						CRUDService.save($scope,$scope.dto).success(function(data, status) {
+							$scope.refreshList();
+							$scope.userTechnicalError = false;
+							$scope.userRequiredError = false;
+							$scope.userSuccess = true;
+							$('#userModal').modal("hide");
+						});
+					}).error(function(data, status, headers, config) {
+						$scope.userTechnicalError = true;
+					});
+				}
+			});
+		} else {
+			$scope.userRequiredError = true;
+		}
+	};
+	
+	$scope.saveNewUser = function() {
+		if($scope.userNewForm.$valid) {
+			$scope.dto.user.secProfileId = $scope.dto.id;
+			$scope.dto.user.actif = 1;
+			$http.post(context+$scope.userBaseUrl+"save", angular.toJson($scope.dto.user)).success(function(data, status) {
+				$scope.dto.secUtilisateurDTOs.push(data);
+				CRUDService.save($scope,$scope.dto).success(function(data, status) {
+					$scope.dto = {};
+					$scope.load($scope.selected.id);
+					$scope.userTechnicalError = false;
+					$scope.userRequiredError = false;
+					$scope.userSuccess = true;
+					$('#userNewModal').modal("hide");
+				});
+			}).error(function(data, status, headers, config) {
+				$scope.userTechnicalError = true;
+			});
+		} else {
+			$scope.userRequiredError = true;
+		}
+	};
+	
+	$scope.saveContact = function() {
+		if($scope.userEditForm.$valid) {
+			$http.post(context+$scope.contactBaseUrl+"save", angular.toJson($scope.dto.contact)).success(function(data, status) {
+				$scope.dto = {};
+				$scope.load($scope.selected.id);
+				$scope.userTechnicalError = false;
+				$scope.userRequiredError = false;
+				$scope.userSuccess = true;
+				$('#userEditModal').modal("hide");
+			}).error(function(data, status, headers, config) {
+				$scope.userTechnicalError = true;
+			});
+		} else {
+			$scope.userRequiredError = true;
+		}
+	};
+	
+	resetUser = function(id) {
+		if(confirm("Voulez-vous réinitialiser le mot de passe de ce compte ?") == true) {
+			$http.get(context+$scope.userBaseUrl+"load/"+id).success(function(data, status) {
+				$http.post(context+$scope.userBaseUrl+"reset", angular.toJson(data)).success(function(data, status) {
+					CRUDService.save($scope,$scope.dto).success(function(data, status) {
+						$scope.dto = {};
+						$scope.load($scope.selected.id);
+					});
+				}).error(function(data, status, headers, config) {
+					
+				});
+			});
+		}
+	};
+	
+	$scope.saveAuthority = function() {
+		if($scope.authorityForm.$valid) {
+			$http.get(context+$scope.authorityBaseUrl+"load/"+$scope.dto.authorityId).success(function(data, status) {
+				$scope.dto.secAuthoriteDTOs.push(data);
+				CRUDService.save($scope,$scope.dto).success(function(data, status) {
+					$scope.refreshList();
+					$scope.authorityTechnicalError = false;
+					$scope.authorityRequiredError = false;
+					$scope.authoritySuccess = true;
+					$('#authorityModal').modal("hide");
+				}).error(function(data, status, headers, config) {
+					$scope.userTechnicalError = true;
+				});
+			});
+		} else {
+			$scope.userRequiredError = true;
+		}
+	};
+
+	$scope.refreshList = function() {
+		$scope.profileTable.ajax.reload();
+		$scope.dto = {};
+	};
+	
+	removeProfile = function(id) {
+		$scope.dto = {};
+		if(confirm("Voulez-vous vraiment supprimer cet enregistrement ?") == true) {
+			$scope.confirmDeleteProfile(id);
+		};
+	};
+
+	$scope.confirmDeleteProfile = function(id) {
+		CRUDService.remove(id).success(function(data, status) {   
+			$scope.refreshList();
+		}).error(function(data, status, headers, config) {
+			console.log("error");
+		});
+	};
+	
+	disableUser = function(id) {
+		if(confirm("Voulez-vous vraiment désactiver cet utilisateur ?") == true) {
+			$scope.confirmDisableUser(id);
+		};
+	};
+	
+	$scope.confirmDisableUser = function(id) {
+		$http.get(context+$scope.userBaseUrl+"load/"+id).success(function(data, status) {
+			$scope.dto.user = data;
+			$scope.dto.user.actif = false;
+			$scope.dto.user.secProfileId = $scope.dto.id;
+			$http.post(context+$scope.userBaseUrl+"save", angular.toJson($scope.dto.user)).success(function(data, status) {
+				$scope.dto.secUtilisateurDTOs.push(data);
+				CRUDService.save($scope,$scope.dto).success(function(data, status) {
+					$scope.dto = {};
+					$scope.load($scope.selected.id);
+					$scope.userTechnicalError = false;
+					$scope.userRequiredError = false;
+					$scope.userSuccess = true;
+					$('#userNewModal').modal("hide");
+				});
+			}).error(function(data, status, headers, config) {
+				$scope.userTechnicalError = true;
+			});
+		});
+	};
+	
+	$scope.saveNewUser = function() {
+		if($scope.userNewForm.$valid) {
+			$scope.dto.user.secProfileId = $scope.dto.id;
+			$scope.dto.user.actif = 1;
+			$http.post(context+$scope.userBaseUrl+"save", angular.toJson($scope.dto.user)).success(function(data, status) {
+				$scope.dto.secUtilisateurDTOs.push(data);
+				CRUDService.save($scope,$scope.dto).success(function(data, status) {
+					$scope.dto = {};
+					$scope.load($scope.selected.id);
+					$scope.userTechnicalError = false;
+					$scope.userRequiredError = false;
+					$scope.userSuccess = true;
+					$('#userNewModal').modal("hide");
+				});
+			}).error(function(data, status, headers, config) {
+				$scope.userTechnicalError = true;
+			});
+		} else {
+			$scope.userRequiredError = true;
+		}
+	};
+	
+	
+	
+	$scope.removeUser = function(id) {
+		if(confirm("Voulez-vous vraiment supprimer cet utilisateur du groupe ?") == true) {
+			$scope.confirmDeleteUser(id);
+		};
+	};
+	
+	removeUser = function(id) {
+		$scope.dto = {};
+		if(confirm("Voulez-vous vraiment supprimer cet utilisateur du groupe ?") == true) {
+			$scope.confirmDeleteUser(id);
+		};
+	};
+
+	$scope.confirmDeleteUser = function(id) {
+		$http.get(context+$scope.userBaseUrl+"load/"+id).success(function(data, status) {
+			$scope.dto.user = data;
+			$scope.dto.user.secProfileId = null;
+			$http.post(context+$scope.userBaseUrl+"save", angular.toJson($scope.dto.user)).success(function(data, status) {
+				$scope.dto.secUtilisateurDTOs.forEach(function(item, index) {
+					if(item.id == $scope.dto.user.id)
+						$scope.dto.secUtilisateurDTOs.splice(index, 1);
+				});
+				CRUDService.save($scope,$scope.dto).success(function(data, status) {
+					$scope.dto = {};
+					$scope.load($scope.selected.id);
+					$scope.profileTable.ajax.reload();
+				});
+			}).error(function(data, status, headers, config) {
+				$scope.userTechnicalError = true;
+			});
+		});
+	};
+	
+	$scope.checked = function (idAuthorite) {
+		return $scope.dto.idSecAuthorites.indexOf(idAuthorite) > -1;
+	};
+
+	$scope.toggleChecked = function (idAuthorite) {
+		var index = $scope.dto.idSecAuthorites.indexOf(idAuthorite);
+		if (index > -1) {
+			$scope.dto.idSecAuthorites.splice(index, 1);
+		} else {
+			$scope.dto.idSecAuthorites.push(idAuthorite);
+		}
+	};
+});
+
+app.controller('profileTableController', function($scope,$http) {
+	$scope.init = function(){
+		var columns = [ 
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'code'},
+			{mDataProp: 'intitule'},
+			{mDataProp: 'id', "mRender": function(data, type, full) {
+				return '<a href="#" onclick="editProfile();" class="edit-item-btn"><i style="font-size: 17px" class="ri-pencil-fill align-bottom me-2"></i></a> <a href="#" onclick="removeProfile('+full.id+');" class="remove-item-btn"><i style="font-size: 17px" class="ri-delete-bin-fill align-bottom me-2 text-danger"></i></a>';
+			}}
+		];
+		$scope.$parent.profileTable = TableManager.init("profileTable", $scope.$parent.baseUrl +"list", columns);
+		
+		$scope.$parent.profileTable.on('select', function (e, dt, type, indexes) {
+			var rowData = $scope.$parent.profileTable.rows(indexes).data().toArray();
+			var id = null;
+			if(rowData.length > 0) {
+				$scope.$parent.selected = rowData[0];
+				id = rowData[0].id;
+				$scope.$parent.load(id);
+			}
+		});
+	};
+});
+
+app.controller('userTableController', function($scope,$http,$compile) {
+	$scope.$watch('$parent.dto.id', function(newValue, oldValue) {
+		if(!angular.isUndefined(newValue) && newValue != null) {
+			$scope.$parent.userTable.rows().clear();
+			$scope.$parent.userTable.rows.add($scope.$parent.dto.secUtilisateurDTOs).draw();
+			$compile($scope.$parent.userTable.rows())($scope);
+		}
+		else {
+			$scope.$parent.userTable.rows().clear();
+			$scope.$parent.userTable.rows.add([]).draw();
+			$compile($scope.$parent.userTable.rows())($scope);
+		}
+	});
+	
+	$scope.init = function() {
+		$scope.$parent.userTable =  $("#userTable").mytable({
+			name:"userTable",
+			compile:$compile,
+			scope:$scope,
+			local:true,
+			columnsVis:false,
+			pagination:false,
+			search:false,
+			columns:[ 
+				{id: 'id', "visible": false},
+				{id: 'lastConnection'},
+				{id: 'login'},
+				{id: 'nom'},
+				{id: 'email'},
+				{id: 'actif', "mRender": function(data, type, full) {
+					if(full.actif)
+						return '<span class="badge text-bg-success">Actif</span>';
+					else
+						return '<span class="badge text-bg-success">Inactif</span>';
+				}},
+				{mDataProp: 'id', "mRender": function(data, type, full) {
+					if(full.actif == 1)
+						return '<center><a href="#" onclick="editUser('+full.id+');" class="edit-item-btn"><i style="font-size: 17px" class="ri-pencil-fill align-bottom me-2 text-info"></i></a>&nbsp;<a href="#" onclick="disableUser('+full.id+');" class="edit-item-btn"><i style="font-size: 17px" class="ri-lock-fill align-bottom me-2 text-danger"></i></a></center>';
+					if(full.actif == 0)
+						return '<center><a href="#" onclick="editUser('+full.id+');" class="edit-item-btn"><i style="font-size: 17px" class="ri-pencil-fill align-bottom me-2 text-info"></i></a>&nbsp;<a href="#" onclick="enableUser('+full.id+');" class="edit-item-btn"><i style="font-size: 17px" class="ri-lock-unlock-fill align-bottom me-2 text-success"></i></a></center>';
+				}}
+//				,
+//				{mDataProp: 'id', "mRender": function(data, type, full) {
+//					return '<a href="#" onclick="editUser('+full.id+');" class="edit-item-btn"><i style="font-size: 17px" class="ri-pencil-fill align-bottom me-2"></i></a>';
+//				}}
+			]
+		});
+		
+		$scope.$parent.userTable.on('select', function (e, dt, type, indexes) {
+			var rowData = $scope.$parent.userTable.rows(indexes).data().toArray();
+			var id = null;
+			if(rowData.length > 0) {
+				id = rowData[0].id;
+				$scope.$parent.loadUser(id);
+			}
+		});
+	};
+});
+
+app.controller('authorityTableController', function($scope,$http,$compile) {
+	$scope.$watch('$parent.dto.id', function(newValue, oldValue) {
+		if(!angular.isUndefined(newValue) && newValue != null) {
+			$scope.$parent.authorityTable.rows().clear();
+			$scope.$parent.authorityTable.rows.add($scope.$parent.dto.secAuthoriteDTOs).draw();
+			$compile($scope.$parent.authorityTable.rows())($scope);
+		}
+		else {
+			$scope.$parent.authorityTable.rows().clear();
+			$scope.$parent.authorityTable.rows.add([]).draw();
+			$compile($scope.$parent.authorityTable.rows())($scope);
+		}
+	});
+	
+	$scope.init = function() {
+		$scope.$parent.authorityTable =  $("#authorityTable").mytable({
+			name:"authorityTable",
+			compile:$compile,
+			scope:$scope,
+			local:true,
+			columnsVis:false,
+			pagination:false,
+			search:false,
+			columns:[ 
+				{id: 'id', "visible": false},
+				{id: 'code'},
+				{id: 'intitule'}
+			]
+		});
+		
+		$scope.$parent.authorityTable.on('select', function (e, dt, type, indexes) {
+			var rowData = $scope.$parent.authorityTable.rows(indexes).data().toArray();
+			var id = null;
+			if(rowData.length > 0) {
+				id = rowData[0].id;
+				$scope.$parent.loadAuthority(id);
+			}
+		});
+	};
+});

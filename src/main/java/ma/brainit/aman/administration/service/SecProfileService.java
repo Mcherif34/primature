@@ -1,0 +1,25 @@
+package ma.brainit.aman.administration.service;
+
+import java.util.List;
+
+import ma.brainit.aman.administration.dto.SecProfileDTO;
+
+public interface SecProfileService {
+
+	SecProfileDTO save(SecProfileDTO secProfileDTO);
+
+	SecProfileDTO load(Long id);
+	
+	SecProfileDTO loadByPerformer(Long id);
+
+	void delete(Long id);
+
+	List<SecProfileDTO> findAll();
+	
+	List<SecProfileDTO> getAllConseillers();
+
+	String getPaginator(Integer page, Integer limit, String sort, String direction, String search);
+	
+	List<String> getModulesByUser(Long userId);
+
+}

@@ -1,0 +1,64 @@
+package ma.brainit.aman.client.dto;
+
+import ma.brainit.aman.client.model.Expediteur;
+import ma.brainit.base.annotations.View;
+
+public class ExpediteurDTO extends Expediteur {
+
+private static final long serialVersionUID = 1L;
+	
+	@Override
+    @View(attribut="code")
+    public String getCode() {
+        return super.getCode();
+    }
+
+    @Override
+    @View(attribut="raisonSociale")
+    public String getRaisonSociale() {
+        return super.getRaisonSociale();
+    }
+    
+    @Override
+    @View(attribut="email")
+    public String getEmail() {
+        return super.getEmail();
+    }
+    
+    @Override
+    @View(attribut="type")
+    public String getType() {
+        return super.getType();
+    }
+    
+    @Override
+    @View(attribut="telephone")
+    public String getTelephone() {
+        return super.getTelephone();
+    }
+    
+    @Override
+    @View(attribut="adresse")
+    public String getAdresse() {
+        return super.getAdresse();
+    }
+    
+    @Override
+    @View(attribut="nomPrenom")
+    public String getNomPrenom() {
+        return super.getNomPrenom();
+    }
+    
+    @Override
+    @View(attribut="ville")
+    public String getVille() {
+        return super.getVille();
+    }
+    
+    @Override
+    @View(attribut="devise")
+    public String getDevise() {
+        return super.getDevise();
+    }
+    
+}

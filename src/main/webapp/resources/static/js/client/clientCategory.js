@@ -1,0 +1,1332 @@
+app.controller('clientCategoryController', function($scope, $http, $ngBootbox, $location, CRUDService, NotificationService, constants) {
+	$scope.dto = {};
+	$scope.filtre = {};
+	$scope.clientCategoryTable = null;
+	$scope.clientTable = null;
+	$scope.contactTable = null;
+	$scope.reminderTable = null;
+	$scope.litigationCurrentTable = null;
+	$scope.outstandingStatusTable = null;
+	$scope.outstandingTable = null;
+	$scope.creditLimitTable = null;
+	$scope.reminderInvoiceTable = null;
+	$scope.litigationInvoiceTable = null;
+	$scope.promiseInvoiceTable = null;
+	$scope.contenceInvoiceTable = null;
+	$scope.invoiceTotalTable = null;
+	$scope.invoiceNotOverdueTable = null;
+	$scope.invoiceOverdueTable = null;
+	$scope.invoiceOverdue30Table = null;
+	$scope.invoiceOverdue60Table = null;
+	$scope.invoiceOverdue90Table = null;
+	$scope.selected = null;
+	$scope.mode = null;
+	$scope.clientCategoryRequiredError = false;
+	$scope.clientCategoryTechnicalError = false;
+	$scope.clientCategorySuccess = false;
+	$scope.clientRequiredError = false;
+	$scope.clientTechnicalError = false;
+	$scope.clientSuccess = false;
+	$scope.notifications = null;
+	$scope.notificationsCount = 0;
+	
+	$scope.baseUrl = "/client/category/rest/";
+	$scope.clientBaseUrl = "/client/client/rest/";
+	$scope.contactBaseUrl = "/client/contact/rest/";
+	$scope.invoiceBaseUrl = "/credit/invoice/rest/";
+	$scope.reminderBaseUrl = "/reminder/reminder/rest/";
+	$scope.litigationBaseUrl = "/reminder/litigation/rest/";
+	$scope.outstandingBaseUrl = "/credit/outstanding/rest/";
+	$scope.promiseBaseUrl = "/reminder/promise/rest/";
+	$scope.contenceBaseUrl = "/reminder/contence/rest/";
+	$scope.notificationBaseUrl = "/notification/rest/";
+	$scope.zoneRecheche = false;
+
+	$scope.init = function() {
+		$scope.mode="read";
+		$scope.addClientCategoryForm = false;
+		$scope.editClientCategoryForm = false;
+		CRUDService.init($scope);
+		
+		$scope.initListUsers();
+		$scope.initListContenceSteps();
+		$scope.initListCommercialCourts();
+		$scope.initListNotifications();
+		
+		$scope.operators = [{
+			  id: '>=',
+			  name: '>='
+			}, {
+			  id: '>',
+			  name: '>'
+		    }, {
+		      id: '=',
+			  name: '='
+		    }, {
+			  id: '<',
+			  name: '<'
+			}, {
+			  id: '<=',
+			  name: '<='
+		}];
+	};
+	
+	$scope.initListNotifications = function(){
+		$http.get(context+$scope.notificationBaseUrl+"getNotificationsByUser").success(function(data, status) {
+			$scope.notificationsInverse = data.slice(0,5);
+			$scope.notifications = $scope.notificationsInverse.slice(0,5);
+			if(data != null)
+				$scope.notificationsCount = data.length;
+		});
+	};
+	
+	$scope.showAllNotification = function(){
+		$http.get(context+$scope.notificationBaseUrl+"getNotificationsByUser").success(function(data, status) {
+			$scope.notificationList = data
+			$('#notificationListModal').modal("show");
+		}).error(function(data, status, headers, config){
+			console.log("erreur de la recupération!!!!");
+		});
+	}
+	
+	$scope.loadNotification = function(id){
+		$http.get(context+$scope.notificationBaseUrl+"load/"+id).success(function(data, status) {
+			$scope.notificationInvoice = data;
+			document.getElementById("notifDescription").innerHTML = $scope.notificationInvoice.description;
+
+		});
+	}
+	
+	openNotificationModal = function(id){
+		$scope.loadNotification(id);
+		$('#notificationModal').modal("show");
+	}
+	
+	$scope.openNotificationModal = function(id){
+		$scope.loadNotification(id);
+		$('#notificationModal').modal("show");
+	}
+	
+	$scope.initListClients = function() {
+		$http.get(context+"/client/client/rest/getAllUncategorized").success(function(data, status) {   
+			$scope.clients = data;
+		});
+	};
+	
+	$scope.initListUsers = function() {
+		$http.get(context+"/administration/user/rest/getAll").success(function(data, status) {   
+			$scope.users = data;
+		});
+	};
+	
+	$scope.initListContenceSteps = function() {
+		$http.get(context+"/administration/referentiel/contenceStep/rest/getAll").success(function(data, status) {   
+			$scope.contenceSteps = data;
+		});
+	};
+	
+	$scope.initListCommercialCourts = function() {
+		$http.get(context+"/administration/referentiel/commercialCourt/rest/getAll").success(function(data, status) {   
+			$scope.commercialCourts = data;
+		});
+	};
+	
+	$scope.addClientCategory = function() {
+		CRUDService.add($scope);
+		$scope.editClientCategoryForm = false;
+		$scope.addClientCategoryForm = true;
+		$scope.clientCategorySuccess = false;
+		$scope.clientCategoryTechnicalError = false;
+		$scope.clientCategoryRequiredError = false;
+		$('#clientCategoryModal').modal("show");
+	};
+	
+	addClient = function(id) {
+		$scope.clientSuccess = false;
+		$scope.clientTechnicalError = false;
+		$scope.clientRequiredError = false;
+		console.log(id);
+		$('#clientModal').modal("show");
+	};
+	
+	editClientCategory = function(id) {
+		$http.get(context+$scope.baseUrl+"load/"+id).success(function(data, status) {
+			$scope.dto = data;
+			$scope.addClientCategoryForm = false;
+			$scope.editClientCategoryForm = true;
+			$scope.clientCategorySuccess = false;
+			$scope.clientCategoryTechnicalError = false;
+			$scope.clientCategoryRequiredError = false;
+			$('#clientCategoryModal').modal("show");
+		});
+	};
+	
+	$scope.load = function(id) {
+		CRUDService.get(id).success(function(data, status) {   
+			CRUDService.setEntityLoaded($scope,data);
+		}).error(function(data, status, headers, config) {
+			NotificationService.showTechnicalError();
+		});
+	};
+	
+	$scope.loadInvoice = function(id) {
+		$http.get(context+$scope.invoiceBaseUrl+"load/"+id).success(function(data, status) {
+			$scope.dto.invoice = data;
+		});
+	}
+	
+	showClientDetail = function(id) {
+		$http.get(context+$scope.clientBaseUrl+"load/"+id).success(function(data, status) { 
+			$scope.dto.clientDetail = data;
+			
+			$scope.reminderTable.ajax.url($scope.reminderBaseUrl+'list/'+id).load();
+			$scope.litigationCurrentTable.ajax.url($scope.litigationBaseUrl+'list/current/'+id).load();
+			$scope.outstandingStatusTable.ajax.url($scope.outstandingBaseUrl+'list/validated/'+id).load();
+			$scope.outstandingTable.ajax.url($scope.outstandingBaseUrl+'list/'+id).load();
+//			$http.get(context+$scope.outstandingBaseUrl+"load/"+id).success(function(data, status) {
+//				$scope.creditLimitTable.ajax.url('/credit/creditLimit/rest/list/'+data.id).load();
+//			});
+			$scope.contactTable.ajax.url($scope.contactBaseUrl+'list/'+id).load();
+			
+			$scope.invoiceTotalTable.ajax.url('/credit/invoice/rest/list/unpaidByClient/'+id).load();
+			$scope.invoiceNotOverdueTable.ajax.url('/credit/invoice/rest/list/unpaidNotOverdueByClient/'+id).load();
+			$scope.invoiceOverdueTable.ajax.url('/credit/invoice/rest/list/unpaidOverdueByClient/'+id).load();
+			$scope.invoiceOverdue30Table.ajax.url('/credit/invoice/rest/list/unpaidOverdue30ByClient/'+id).load();
+			$scope.invoiceOverdue60Table.ajax.url('/credit/invoice/rest/list/unpaidOverdue60ByClient/'+id).load();
+			$scope.invoiceOverdue90Table.ajax.url('/credit/invoice/rest/list/unpaidOverdue90ByClient/'+id).load();
+			
+			$http.get(context+"/reminder/scenario/rest/getByClient/"+id).success(function(data, status) {   
+				$scope.dto.scenario = data;
+				console.log($scope.dto.scenario);
+				if($scope.dto.scenario != null) {
+					var position = 0;
+					for(var scenarioStage of $scope.dto.scenario.scenarioStagesDTO) {
+						position += 100/($scope.dto.scenario.scenarioStagesDTO.length+1);
+						scenarioStage.position = position+'%';
+						if(scenarioStage.daysNum != 0) {
+							if(scenarioStage.deadline == 0)
+								scenarioStage.daysNum = '-'+scenarioStage.daysNum+' j';
+							else if(scenarioStage.deadline == 1)
+								scenarioStage.daysNum = '+'+scenarioStage.daysNum+' j';
+							else if(scenarioStage.deadline == 2)
+								scenarioStage.daysNum = 'Journalière';
+							else if(scenarioStage.deadline == 3)
+								scenarioStage.daysNum = 'Hebdomadaire';
+							else if(scenarioStage.deadline == 4)
+								scenarioStage.daysNum = 'Mensuelle';
+							else
+								scenarioStage.daysNum = 'N/A';
+						}
+					}
+				}
+			});
+			$('#clientDetailModal').modal("show");
+		});
+	};
+	
+	$scope.addPromise = function() {
+		$scope.dto.promise = {};
+		if(!angular.isUndefined($scope.dto.invoiceDetail)) {
+			$scope.dto.promise.invoiceId = $scope.dto.invoiceDetail.id;
+			$http.get(context+"/credit/invoice/rest/load/"+$scope.dto.invoiceDetail.id).success(function(data, status) {
+				$scope.dto.promise.amount = data.remainingAmount;
+				$scope.dto.promise.dueDate = data.dueDate;
+				$scope.dto.promise.currencyId = data.currencyId;
+				$scope.dto.promise.clientId = data.clientId;
+				$scope.dto.promise.clientCompanyName = data.clientCompanyName;
+				
+				$scope.editPromiseForm = false;
+				$scope.addPromiseForm = true;
+				$scope.promiseSuccess = false;
+				$scope.promiseTechnicalError = false;
+				$scope.promiseRequiredError = false;
+				$('#promiseModal').modal("show");
+			});
+		}
+	};
+	
+	$scope.loadByInvoice = function(id) {
+		$http.get(context+"/credit/invoice/rest/load/"+id).success(function(data, status) {
+			if(!angular.isUndefined($scope.dto) && $scope.dto != null) {
+				$scope.dto.litigation.amount = data.remainingAmount;
+				$scope.dto.litigation.dueDate = data.dueDate;
+				$scope.dto.litigation.currencyId = data.currencyId;
+				$scope.dto.litigation.clientId = data.clientId;
+				$scope.dto.litigation.clientCompanyName = data.clientCompanyName;
+			}
+		});
+	};
+	
+	$scope.addLitigation = function(invoiceId) {
+		$scope.dto.litigation = {};
+		if(!angular.isUndefined(invoiceId) && invoiceId != -1) {
+			$scope.dto.litigation.invoiceId = $scope.dto.invoiceDetail.id;
+			$http.get(context+"/credit/invoice/rest/load/"+$scope.dto.invoiceDetail.id).success(function(data, status) {
+				$scope.dto.litigation.amount = data.remainingAmount;
+				$scope.dto.litigation.dueDate = data.dueDate;
+				$scope.dto.litigation.currencyId = data.currencyId;
+				$scope.dto.litigation.clientId = data.clientId;
+				$scope.dto.litigation.clientCompanyName = data.clientCompanyName;
+				
+				$scope.editLitigationForm = false;
+				$scope.addLitigationForm = true;
+				$scope.litigationSuccess = false;
+				$scope.litigationTechnicalError = false;
+				$scope.litigationRequiredError = false;
+				$('#litigationModal').modal("show");
+			});
+		} else {
+			$scope.dto.litigation = {};
+			$scope.dto.litigation.litigationStatusId = 1;
+			
+			$scope.editLitigationForm = false;
+			$scope.addLitigationForm = true;
+			$scope.litigationSuccess = false;
+			$scope.litigationTechnicalError = false;
+			$scope.litigationRequiredError = false;
+			$('#litigationModal').modal("show");
+		}
+	};
+	
+	$scope.addContence = function() {
+		$scope.dto.contence = {};
+		if(!angular.isUndefined($scope.dto.invoiceDetail)) {
+			$scope.dto.contence.invoiceId = $scope.dto.invoiceDetail.id;
+			$http.get(context+"/credit/invoice/rest/load/"+$scope.dto.invoiceDetail.id).success(function(data, status) {
+				$scope.dto.contence.amount = data.remainingAmount;
+				$scope.dto.contence.dueDate = data.dueDate;
+				$scope.dto.contence.currencyId = data.currencyId;
+				$scope.dto.contence.clientId = data.clientId;
+				$scope.dto.contence.clientCompanyName = data.clientCompanyName;
+				
+				$scope.editContenceForm = false;
+				$scope.addContenceForm = true;
+				$scope.contenceSuccess = false;
+				$scope.contenceTechnicalError = false;
+				$scope.contenceRequiredError = false;
+				$('#contenceModal').modal("show");
+			});
+		}
+	};
+	
+	showInvoice = function() {
+		$('#invoiceTotalModal').modal("show");
+	};
+	
+	showNotOverdueInvoice = function() {
+		$('#invoiceNotOverdueModal').modal("show");
+	};
+	
+	showOverdueInvoice = function() {
+		$('#invoiceOverdueModal').modal("show");
+	};
+	
+	showOverdueInvoice30 = function() {
+		$('#invoiceOverdue30Modal').modal("show");
+	};
+	
+	showOverdueInvoice60 = function() {
+		$('#invoiceOverdue60Modal').modal("show");
+	};
+	
+	showOverdueInvoice90 = function() {
+		$('#invoiceOverdue90Modal').modal("show");
+	};
+	
+	showInvoiceDetail = function(id) {
+		$http.get(context+$scope.invoiceBaseUrl+"load/"+id).success(function(data, status) { 
+			$scope.dto.invoiceDetail = data;
+			$scope.dto.invoiceDetail.amountTtc = new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format($scope.dto.invoiceDetail.amountTtc);
+			$scope.dto.invoiceDetail.remainingAmount = new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format($scope.dto.invoiceDetail.remainingAmount);
+			if($scope.dto.invoiceDetail.invoiceStatusId == 1) {
+				var date = $scope.dto.invoiceDetail.dueDate.split('/');
+				if(new Date(date[2]+'-'+date[1]+'-'+date[0]) > new Date()) {
+					$scope.dto.invoiceDetail.invoiceStatusColor = 'info';
+					$scope.dto.invoiceDetail.invoiceStatusText = 'Non échue en attente de règlement';
+				}
+				else {
+					$scope.dto.invoiceDetail.invoiceStatusColor = 'danger';
+					$scope.dto.invoiceDetail.invoiceStatusText = 'Echue en attente de règlement';
+				}
+			} else {
+				$scope.dto.invoiceDetail.invoiceStatusColor = 'success';
+				$scope.dto.invoiceDetail.invoiceStatusText = 'Payée';
+			}
+			$http.get(context+$scope.reminderBaseUrl+"getCountByInvoice/"+id).success(function(data, status) {
+				$scope.invoiceReminderNum = data;
+			});
+			$http.get(context+$scope.litigationBaseUrl+"getCountByInvoice/"+id).success(function(data, status) {
+				$scope.invoiceLitigationNum = data;
+			});
+			$http.get(context+$scope.promiseBaseUrl+"getCountByInvoice/"+id).success(function(data, status) {
+				$scope.invoicePromiseNum = data;
+			});
+			$http.get(context+$scope.contenceBaseUrl+"getCountByInvoice/"+id).success(function(data, status) {
+				$scope.invoiceContenceNum = data;
+			});
+			$http.get(context+"/credit/invoice/rest/getAllUnpaidByClient/"+$scope.dto.invoiceDetail.clientId).success(function(data, status) {   
+				$scope.invoices = data;
+			});
+			$scope.reminderInvoiceTable.ajax.url('/reminder/reminder/rest/listByInvoice/'+id).load();
+			$scope.litigationInvoiceTable.ajax.url('/reminder/litigation/rest/listByInvoice/'+id).load();
+			$scope.promiseInvoiceTable.ajax.url('/reminder/promise/rest/listByInvoice/'+id).load();
+			$scope.contenceInvoiceTable.ajax.url('/reminder/contence/rest/listByInvoice/'+id).load();
+			$('#invoiceDetailModal').modal("show");
+		});
+	};
+	
+	$scope.saveClientCategory = function() {
+		if($scope.clientCategoryForm.$valid) {
+			CRUDService.save($scope,$scope.dto).success(function(data, status) {   
+				CRUDService.setEntityLoaded($scope,data);
+				$scope.refreshList();
+				$scope.clientCategoryTechnicalError = false;
+				$scope.clientCategoryRequiredError = false;
+				$scope.clientCategorySuccess = true;
+				$('#clientCategoryModal').modal("hide");
+			}).error(function(data, status, headers, config) {
+				$scope.clientCategoryTechnicalError = true;
+			});
+		} else {
+			$scope.clientCategoryRequiredError = true;
+		}
+	};
+	
+	$scope.saveClient = function() {
+		if($scope.clientForm.$valid) {
+			$scope.clientId = ($("#client").val().split(':'))[1];
+			$http.get(context+$scope.clientBaseUrl+"load/"+$scope.clientId).success(function(data, status) {
+				$scope.dto.client = data;
+				$scope.dto.client.clientCategoryId = $scope.dto.id;
+				$http.post(context+$scope.clientBaseUrl+"save", angular.toJson($scope.dto.client)).success(function(data, status) {   
+					$scope.refreshList();
+					$scope.clientTechnicalError = false;
+					$scope.clientRequiredError = false;
+					$scope.clientSuccess = true;
+					$('#clientModal').modal("hide");
+				}).error(function(data, status, headers, config) {
+					$scope.clientPortofolioTechnicalError = true;
+				});
+			});
+		} else {
+			$scope.clientRequiredError = true;
+		}
+	};
+	
+	$scope.saveClient = function(name) {
+		$scope.clientTabId = [];
+		var inputs = document.getElementsByClassName(name);
+		for(var i = 0, l = inputs.length; i < l; ++i) {
+			if(inputs[i].checked) {
+				$scope.clientTabId.push(inputs[i].value);
+	    	}
+	    }
+		$http.post(context+$scope.clientBaseUrl+"saveClientCategory/"+$scope.dto.id, angular.toJson($scope.clientTabId)).success(function(data, status) {
+			$scope.refreshList();
+			$scope.clientTechnicalError = false;
+			$scope.clientRequiredError = false;
+			$scope.clientSuccess = true;
+			$('#clientModal').modal("hide");
+		}).error(function(data, status, headers, config) {
+			$scope.clientTechnicalError = true;
+		});
+	};
+	
+	$scope.savePromise = function() {
+		if($scope.promiseForm.$valid) {
+			$scope.dto.promise.promiseStatusId = 1;
+			if($scope.dto.promise.code == null) {
+				var currentDate = new Date();
+				$http.get(context+"/reminder/promise/rest/getAll").success(function(data, status) {   
+					var seqNum = data.length + 1;
+					$scope.dto.promise.code = "PR" + currentDate.getFullYear() + (currentDate.getMonth()+1).toString().padStart(2, '0') + seqNum.toString().padStart(3, '0');
+					
+					$http.post(context+$scope.promiseBaseUrl+"save", angular.toJson($scope.dto.promise)).success(function(data, status) {
+						$scope.promiseInvoiceTable.ajax.url('/reminder/promise/rest/listByInvoice/'+data.invoiceId).load();
+						$http.get(context+$scope.promiseBaseUrl+"getCountByInvoice/"+data.invoiceId).success(function(data, status) {
+							$scope.invoicePromiseNum = data;
+						});
+						$scope.dto.promise = {};
+						$scope.promiseTechnicalError = false;
+						$scope.promiseRequiredError = false;
+						$scope.promiseSuccess = true;
+						$('#promiseModal').modal("hide");
+					}).error(function(data, status, headers, config) {
+						$scope.promiseTechnicalError = true;
+					});
+				});
+			}
+			else {
+				$http.post(context+$scope.promiseBaseUrl+"save", angular.toJson($scope.dto.promise)).success(function(data, status) {
+					$scope.promiseInvoiceTable.ajax.url('/reminder/promise/rest/listByInvoice/'+data.invoiceId).load();
+					$http.get(context+$scope.promiseBaseUrl+"getCountByInvoice/"+data.invoiceId).success(function(data, status) {
+						$scope.invoicePromiseNum = data;
+					});
+					$scope.dto.promise = {};
+					$scope.promiseTechnicalError = false;
+					$scope.promiseRequiredError = false;
+					$scope.promiseSuccess = true;
+					$('#promiseModal').modal("hide");
+				}).error(function(data, status, headers, config) {
+					$scope.promiseTechnicalError = true;
+				});
+			}
+		} else {
+			$scope.promiseRequiredError = true;
+		}
+	};
+	
+	$scope.saveLitigation = function() {
+		if($scope.litigationForm.$valid) {
+			$scope.dto.litigation.clientId = $scope.dto.id;
+			if($scope.dto.litigation.code == null) {
+				var currentDate = new Date();
+				$http.get(context+"/reminder/litigation/rest/getAll").success(function(data, status) {   
+					var seqNum = data.length + 1;
+					$scope.dto.litigation.code = "LT" + currentDate.getFullYear() + (currentDate.getMonth()+1).toString().padStart(2, '0') + seqNum.toString().padStart(3, '0');
+					$http.post(context+$scope.litigationBaseUrl+"save", angular.toJson($scope.dto.litigation)).success(function(data, status) {
+						$scope.litigationInvoiceTable.ajax.url('/reminder/litigation/rest/listByInvoice/'+data.invoiceId).load();
+						$http.get(context+$scope.litigationBaseUrl+"getCountByInvoice/"+data.invoiceId).success(function(data, status) {
+							$scope.invoiceLitigationNum = data;
+						});
+						$scope.dto.litigation = {};
+						$scope.litigationTechnicalError = false;
+						$scope.litigationRequiredError = false;
+						$scope.litigationSuccess = true;
+						$('#litigationModal').modal("hide");
+					}).error(function(data, status, headers, config) {
+						$scope.litigationTechnicalError = true;
+					});
+				});
+			}
+			else {
+				$http.post(context+$scope.litigationBaseUrl+"save", angular.toJson($scope.dto.litigation)).success(function(data, status) {
+					$scope.litigationInvoiceTable.ajax.url('/reminder/litigation/rest/listByInvoice/'+data.invoiceId).load();
+					$http.get(context+$scope.litigationBaseUrl+"getCountByInvoice/"+data.invoiceId).success(function(data, status) {
+						$scope.invoiceLitigationNum = data;
+					});
+					$scope.dto.litigation = {};
+					$scope.litigationTechnicalError = false;
+					$scope.litigationRequiredError = false;
+					$scope.litigationSuccess = true;
+					$('#litigationModal').modal("hide");
+				}).error(function(data, status, headers, config) {
+					$scope.litigationTechnicalError = true;
+				});
+			}
+		} else {
+			$scope.litigationRequiredError = true;
+		}
+	};
+	
+	$scope.saveContence = function() {
+		if($scope.contenceForm.$valid) {
+			$scope.dto.contence.contenceStatusId = 1;
+			$scope.dto.contence.clientId = $scope.dto.id;
+			if($scope.dto.contence.code == null) {
+				var currentDate = new Date();
+				$http.get(context+"/reminder/contence/rest/getAll").success(function(data, status) {   
+					var seqNum = data.length + 1;
+					$scope.dto.contence.code = "CT" + currentDate.getFullYear() + (currentDate.getMonth()+1).toString().padStart(2, '0') + seqNum.toString().padStart(3, '0');
+					$http.post(context+$scope.contenceBaseUrl+"save", angular.toJson($scope.dto.contence)).success(function(data, status) {
+						$scope.contenceInvoiceTable.ajax.url('/reminder/contence/rest/listByInvoice/'+data.invoiceId).load();
+						$http.get(context+$scope.contenceBaseUrl+"getCountByInvoice/"+data.invoiceId).success(function(data, status) {
+							$scope.invoiceContenceNum = data;
+						});
+						$scope.dto.contence = {};
+						$scope.contenceTechnicalError = false;
+						$scope.contenceRequiredError = false;
+						$scope.contenceSuccess = true;
+						$('#contenceModal').modal("hide");
+					}).error(function(data, status, headers, config) {
+						$scope.contenceTechnicalError = true;
+					});
+				});
+			}
+			else {
+				$http.post(context+$scope.contenceBaseUrl+"save", angular.toJson($scope.dto.contence)).success(function(data, status) {
+					$scope.contenceInvoiceTable.ajax.url('/reminder/contence/rest/listByInvoice/'+data.invoiceId).load();
+					$http.get(context+$scope.contenceBaseUrl+"getCountByInvoice/"+data.invoiceId).success(function(data, status) {
+						$scope.invoiceContenceNum = data;
+					});
+					$scope.dto.contence = {};
+					$scope.contenceTechnicalError = false;
+					$scope.contenceRequiredError = false;
+					$scope.contenceSuccess = true;
+					$('#contenceModal').modal("hide");
+				}).error(function(data, status, headers, config) {
+					$scope.contenceTechnicalError = true;
+				});
+			}
+		} else {
+			$scope.contenceRequiredError = true;
+		}
+	};
+	
+	$scope.refreshList = function() {
+		$scope.clientCategoryTable.ajax.reload();
+		$scope.dto = {};
+	};
+
+	removeClientCategory = function(id) {
+		$scope.dto = {};
+		if(confirm("Voulez-vous vraiment supprimer cet enregistrement ?") == true) {
+			$scope.confirmDeleteClientCategory(id);
+		};
+	};
+
+	$scope.confirmDeleteClientCategory = function(id) {
+		CRUDService.remove(id).success(function(data, status) {   
+			$scope.refreshList();
+		}).error(function(data, status, headers, config) {
+			console.log("error");
+		});
+	};
+	
+	removeClient = function(id) {
+		$scope.dto = {};
+		if(confirm("Voulez-vous vraiment supprimer ce client de la catégorie ?") == true) {
+			$scope.confirmDeleteClient(id);
+		};
+	};
+
+	$scope.confirmDeleteClient = function(id) {
+		$http.get(context+$scope.clientBaseUrl+"load/"+id).success(function(data, status) {
+			$scope.dto.client = data;
+			$scope.dto.client.clientCategoryId = null;
+			$http.post(context+$scope.clientBaseUrl+"save", angular.toJson($scope.dto.client)).success(function(data, status) {
+				$scope.dto = {};
+				$scope.load($scope.selected.id);
+				$scope.clientCategoryTable.ajax.reload();
+			}).error(function(data, status, headers, config) {
+				$scope.clientTechnicalError = true;
+			});
+		});
+	};
+	
+	check = function(name) {
+		var inputs = document.getElementsByClassName(name);
+		var checked = false;
+		for(var i = 0, l = inputs.length; i < l; ++i) {
+	    	if(inputs[i].checked == true)
+	    		checked = true;
+	    }
+		if(checked)
+		    $scope.checked = true;
+	    else
+	    	$scope.checked = false;
+	}
+	
+	$scope.checkAll = function(name) {
+	    var inputs = document.getElementsByClassName(name);
+	    for(var i = 0, l = inputs.length; i < l; ++i) {
+	    	inputs[i].checked = true;
+	    }
+	    $scope.checked = true;
+	}
+
+	$scope.uncheckAll = function(name) {
+		var inputs = document.getElementsByClassName(name);
+	    for(var i = 0, l = inputs.length; i < l; ++i) {
+	    	inputs[i].checked = false;
+	    }
+	    $scope.checked = false;
+	}
+});
+
+app.controller('clientCategoryTableController', function($scope,$http) {
+	$scope.$watch('$parent.dto.id', function(newValue, oldValue) {
+		if(!angular.isUndefined(newValue) && newValue != null) {
+			$scope.$parent.clientTable.ajax.url('/client/client/rest/listByCategory/'+newValue).load();
+		}
+		else {
+			$scope.$parent.clientTable.ajax.url('/client/client/rest/listByCategory/-1').load();
+		}
+	});
+	
+	$scope.init = function() {
+		var columns = [ 
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'id', "mRender": function(data, type, full) {
+				return '<div class="form-check"><input class="form-check-input clientCategoryId" type="checkbox" value="'+full.id+'" onclick="check(\'clientCategoryId\')" /></div>';
+			}},
+			{mDataProp: 'color', "mRender": function(data, type, full) {
+				if(full.color == null)
+					return null;
+				else {
+					return '<button type="button" style="width: 20px; height: 20px; border-radius: 10px; border: none; background-color: '+full.color+' !important" data-bs-toggle="tooltip" data-bs-placement="top" title="'+full.name+'"></button>';
+				}
+			}},
+			{mDataProp: 'name'},
+			{mDataProp: 'description'},
+			{mDataProp: 'clientNum'},
+			{mDataProp: 'id', "mRender": function(data, type, full) {
+				result = '<a href="#" onclick="addClient('+full.id+');" class="edit-item-btn"><i style="font-size: 17px" class="ri-user-add-fill align-bottom me-2 text-success"></i></a> <a href="#" onclick="editClientCategory('+full.id+');" class="edit-item-btn"><i style="font-size: 17px" class="ri-pencil-fill align-bottom me-2"></i></a> <a href="#" onclick="removeClientCategory('+full.id+');" class="remove-item-btn"><i style="font-size: 17px" class="ri-delete-bin-fill align-bottom me-2 text-danger"></i></a>';
+				return result;
+			}}
+		];
+		$scope.$parent.clientCategoryTable = TableManager.init("clientCategoryTable", $scope.$parent.baseUrl+"list", columns);
+		
+		$scope.$parent.clientCategoryTable.on('select', function (e, dt, type, indexes) {
+			var rowData = 	$scope.$parent.clientCategoryTable.rows(indexes).data().toArray();
+			var id = null;
+			if(rowData.length > 0) {
+				$scope.$parent.selected = rowData[0];
+				id = rowData[0].id;
+				$scope.$parent.load(id);
+			}
+		});
+	};
+});
+
+app.controller('clientWithoutCategoryTableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [ 
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'id', "mRender": function(data, type, full) {
+				return '<div class="checkbox"><label class="ui-check"><input class="clientId" type="checkbox" value="'+full.id+'" onclick="check(\'clientId\')"><i class="dark-white"></i></label></div>';
+			}},
+			{mDataProp: 'codeClient'},
+			{mDataProp: 'companyName'},
+			{mDataProp: 'siege'},
+			{mDataProp: 'cityDesignation'}
+		];
+		$scope.$parent.clientWithoutCategoryTable = TableManager.init("clientWithoutCategoryTable", $scope.$parent.clientBaseUrl+"listWithoutClientCategory", columns);
+	};
+});
+
+app.controller('clientTableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [ 
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'id', "mRender": function(data, type, full) {
+				return '<div class="form-check"><input class="form-check-input catClientId" type="checkbox" value="'+full.id+'" onclick="check(\'catClientId\')" /></div>';
+			}},
+			{mDataProp: 'codeClient', "mRender": function(data, type, full) {
+				return '<a href="#" onclick="showClientDetail('+full.id+');" class="amount-link link-underline">'+full.codeClient+'</a>';
+			}},
+			{mDataProp: 'companyName', "mRender": function(data, type, full) {
+				return '<a href="#" onclick="showClientDetail('+full.id+');" class="amount-link link-underline">'+full.companyName+'</a>';
+			}},
+			{mDataProp: 'siege'},
+			{mDataProp: 'cityDesignation'},
+			{mDataProp: 'iceNum'},
+			{mDataProp: 'paymentMethodName'},
+			{mDataProp: 'id', "mRender": function(data, type, full) {
+				result = '<a href="#" onclick="removeClient('+full.id+');" class="remove-item-btn"><i style="font-size: 17px" class="ri-delete-bin-fill align-bottom me-2 text-danger"></i></a>';
+				return result;
+			}}
+		];
+		$scope.$parent.clientTable = TableManager.init("clientTable", $scope.$parent.clientBaseUrl+"listByCategory/-1", columns);
+	};
+});
+
+app.controller('reminderTableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [ 
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'actionDate'},
+			{mDataProp: 'actionName', "mRender": function(data, type, full) {
+				result = '<span class="badge text-bg-success" style="background-color: '+full.actionColor+'"><i class="'+full.actionIcon+'" style="position: relative; top: 2px;"></i> '+full.actionName+'</span>';
+				return result;
+			}},
+			{mDataProp: 'actionTypeName'},
+			{mDataProp: 'scenarioStageName'},
+			{mDataProp: 'invoiceCode', "mRender": function(data, type, full) {
+				if(full.invoiceId != null)
+					return '<a href="#" onclick="showInvoiceDetail('+full.invoiceId+');" class="amount-link">'+full.invoiceCode+'</a>';
+				else
+					return full.invoices;
+			}},
+			{mDataProp: 'remainingAmount', "mRender": function(data, type, full) {
+				return new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.remainingAmount);
+			}},
+			{mDataProp: 'id', "mRender": function(data, type, full) {
+				result = '<a href="#" onclick="removeReminder('+full.id+');" class="remove-item-btn"><i style="font-size: 17px" class="ri-delete-bin-fill align-bottom me-2 text-danger"></i></a>';
+				return result;
+			}}
+		];
+		$scope.$parent.reminderTable = TableManager.init("reminderTable", $scope.$parent.reminderBaseUrl+"list/current/-1", columns);
+		
+		$scope.$parent.reminderTable.on('select', function (e, dt, type, indexes) {
+			var rowData = 	$scope.$parent.reminderTable.rows(indexes).data().toArray();
+			var id = null;
+			if(rowData.length > 0) {
+				id = rowData[0].id;
+				$scope.$parent.loadReminder(id);
+			}
+		});
+	};
+});
+
+app.controller('litigationCurrentTableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [ 
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'date'},
+			{mDataProp: 'code'},
+			{mDataProp: 'invoiceCode', "mRender": function(data, type, full) {
+				return '<a href="#" onclick="showInvoiceDetail('+full.invoiceId+');" class="amount-link">'+full.invoiceCode+'</a>';
+			}},
+			{mDataProp: 'amount', "mRender": function(data, type, full) {
+				if(full.amount != null)
+					return new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.amount)+' '+full.currencySymbol;
+				return 0;
+			}}
+		];
+		$scope.$parent.litigationCurrentTable = TableManager.init("litigationCurrentTable", $scope.$parent.litigationBaseUrl+"list/current/-1", columns);
+	};
+});
+
+app.controller('outstandingStatusTableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'status', "mRender": function(data, type, full) {
+				var result = '';
+				if(full.validatedAmountTotal != null) {
+					if(full.realAmount/full.validatedAmountTotal*100 > 100) {
+						result = '<span class="badge text-bg-danger">'+Math.round(full.realAmount/full.validatedAmountTotal*100)+'%</span>';
+					}
+					else if(full.realAmount/full.validatedAmountTotal*100 > 50 && full.realAmount/full.validatedAmountTotal*100 <= 100) {
+						result = '<span class="badge text-bg-warning">'+Math.round(full.realAmount/full.validatedAmountTotal*100)+'%</span>';
+					}
+					else {
+						result = '<span class="badge text-bg-success">'+Math.round(full.realAmount/full.validatedAmountTotal*100)+'%</span>';
+					}
+				} else {
+					result = '<span class="badge text-bg-dark">N/A</span>';
+				}
+				return result;
+			}},
+			{mDataProp: 'validatedAmountTotal', "mRender": function(data, type, full) {
+				if(full.validatedAmountTotal != null)
+					return new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.validatedAmountTotal);
+				return 0;
+			}},
+			{mDataProp: 'realAmount', "mRender": function(data, type, full) {
+				if(full.realAmount != null)
+					return '<a href="#" onclick="showInvoice()" class="amount-link">'+new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.realAmount)+'</a>';
+				return 0;
+			}},
+			{mDataProp: 'amountNotOverdueInvoices', "mRender": function(data, type, full) {
+				if(full.amountNotOverdueInvoices != 0 && full.amountNotOverdueInvoices != null)
+					return '<a href="#" onclick="showNotOverdueInvoice()" class="amount-link">'+new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.amountNotOverdueInvoices)+'</a>';
+				return 0;
+			}},
+			{mDataProp: 'validatedAmount', "mRender": function(data, type, full) {
+				if(full.realAmount != null && full.validatedAmount != null) {
+					if(full.realAmount >= full.validatedAmount)
+						return new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format((full.realAmount - full.validatedAmount));
+				}
+				return 0;
+			}},
+			{mDataProp: 'amountOverdueInvoices', "mRender": function(data, type, full) {
+				if(full.amountOverdueInvoices != 0 && full.amountOverdueInvoices != null)
+					return '<a href="#" onclick="showOverdueInvoice()" class="amount-link">'+new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.amountOverdueInvoices)+'</a>';
+				return 0;
+			}},
+			{mDataProp: 'amountOverdueInvoicesDays30', "mRender": function(data, type, full) {
+				if(full.amountOverdueInvoicesDays30 != 0 && full.amountOverdueInvoicesDays30 != null)
+					return '<a href="#" onclick="showOverdueInvoice30()" class="amount-link">'+new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.amountOverdueInvoicesDays30)+'</a>';
+				return 0;
+			}},
+			{mDataProp: 'amountOverdueInvoicesDays60', "mRender": function(data, type, full) {
+				if(full.amountOverdueInvoicesDays60 != 0 && full.amountOverdueInvoicesDays60 != null)
+					return '<a href="#" onclick="showOverdueInvoice60()" class="amount-link">'+new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.amountOverdueInvoicesDays60)+'</a>';
+				return 0;
+			}},
+			{mDataProp: 'amountOverdueInvoicesDays90', "mRender": function(data, type, full) {
+				if(full.amountOverdueInvoicesDays90 != 0 && full.amountOverdueInvoicesDays90 != null)
+					return '<a href="#" onclick="showOverdueInvoice90()" class="amount-link">'+new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.amountOverdueInvoicesDays90)+'</a>';
+				return 0;
+			}}
+		];
+		$scope.$parent.outstandingStatusTable = TableManager.init("outstandingStatusTable", $scope.$parent.outstandingBaseUrl+"list/validated/-1", columns);
+	};
+});
+
+app.controller('outstandingTableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'creditStatusName', "mRender": function(data, type, full) {
+				var result = '';
+				if(full.creditStatusId == 1) {
+					result = '<span class="badge text-bg-info">'+full.creditStatusName+'</span>';
+				}
+				else if(full.creditStatusId == 2) {
+					result = '<span class="badge text-bg-danger">'+full.creditStatusName+'</span>';
+				}
+				else if(full.creditStatusId == 3) {
+					result = '<span class="badge text-bg-success">'+full.creditStatusName+'</span>';
+				}
+				else if(full.creditStatusId == 4) {
+					result = '<span class="badge text-bg-warning">'+full.creditStatusName+'</span>';
+				}
+				else {
+					result = '<span class="badge text-bg-dark">N/A</span>';
+				}
+				return result;
+			}},
+			{mDataProp: 'requestedAmount', "mRender": function(data, type, full) {
+				if(full.requestedAmount != null)
+					return new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.requestedAmount);
+				return 0;
+			}},
+			{mDataProp: 'validatedAmount', "mRender": function(data, type, full) {
+				if(full.validatedAmount != null)
+					return new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.validatedAmount);
+				return 0;
+			}},
+			{mDataProp: 'creditInsuranceDTO', "mRender": function(data, type, full) {
+				if(full.creditInsuranceDTO != null)
+					if(full.creditInsuranceDTO.eligibility == true)
+						return "Oui";
+					else
+						return "Non";
+				else
+					return "";
+			}},
+			{mDataProp: 'creditInsuranceDTO', "mRender": function(data, type, full) {
+				if(full.creditInsuranceDTO != null)
+					return full.creditInsuranceDTO.insuranceName;
+				else
+					return "";
+			}},
+			{mDataProp: 'creditInsuranceDTO', "mRender": function(data, type, full) {
+				if(full.creditInsuranceDTO != null)
+					return new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.creditInsuranceDTO.amount);
+				else
+					return "";
+			}}
+		];
+		$scope.$parent.outstandingTable = TableManager.init("outstandingTable", $scope.$parent.outstandingBaseUrl+"list/-1", columns);
+	};
+});
+
+app.controller('creditLimitTableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'creditStatusName', "mRender": function(data, type, full) {
+				var result = '';
+				if(full.creditStatusId == 1) {
+					result = '<span class="badge text-bg-info">'+full.creditStatusName+'</span>';
+				}
+				else if(full.creditStatusId == 2) {
+					result = '<span class="badge text-bg-danger">'+full.creditStatusName+'</span>';
+				}
+				else if(full.creditStatusId == 3) {
+					if(moment(full.dueDate, "DD/MM/YYYY").toDate() > addDays(7, dateToEpoch2(new Date()))) {
+						result = '<span class="badge text-bg-success">'+full.creditStatusName+'</span>';
+					} else {
+						if(moment(full.dueDate, "DD/MM/YYYY").toDate() < dateToEpoch2(new Date()))
+							result = '<span class="badge text-bg-danger">Expiré</span>';
+						else
+							result = '<span class="badge text-bg-warning">Expire bientôt</span>';
+					}	
+				}
+				else {
+					result = '<span class="badge text-bg-dark">'+full.creditStatusName+'</span>';
+				}
+				return result;
+			}},
+			{mDataProp: 'dueDate'},
+			{mDataProp: 'requestedAmount', "mRender": function(data, type, full) {
+				if(full.requestedAmount != null)
+					return new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.requestedAmount);
+				return 0;
+			}},
+			{mDataProp: 'validatedAmount', "mRender": function(data, type, full) {
+				if(full.validatedAmount != null)
+					return new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.validatedAmount);
+				return 0;
+			}}
+		];
+		$scope.$parent.creditLimitTable = TableManager.init("creditLimitTable", "/credit/creditLimit/rest/list/-1", columns);
+	};
+});
+
+app.controller('contactTableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'lastname'},
+			{mDataProp: 'firstname'},
+			{mDataProp: 'title'},
+			{mDataProp: 'phone'},
+			{mDataProp: 'mail'}
+		];
+		$scope.$parent.contactTable = TableManager.init("contactTable", $scope.$parent.contactBaseUrl+"list/-1", columns);
+	};
+});
+
+app.controller('reminderInvoiceTableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [ 
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'actionDate'},
+			{mDataProp: 'actionName', "mRender": function(data, type, full) {
+				result = '<span class="label" style="background-color: '+full.actionColor+'"><i class="'+full.actionIcon+'"></i> '+full.actionName+'</span>';
+				return result;
+			}},
+			{mDataProp: 'actionTypeName'},
+			{mDataProp: 'scenarioStageName'}
+		];
+		$scope.$parent.reminderInvoiceTable = TableManager.init("reminderInvoiceTable", $scope.$parent.reminderBaseUrl+"listByInvoice/-1", columns);
+	};
+});
+
+app.controller('litigationInvoiceTableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [ 
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'litigationStatusId', "mRender": function(data, type, full) {
+				if(full.litigationStatusId == 1)
+					result = '<span class="label blue">'+full.litigationStatusName+'</span>';
+				if(full.litigationStatusId == 2)
+					result = '<span class="label green">'+full.litigationStatusName+'</span>';
+				return result;
+			}},
+			{mDataProp: 'date'},
+			{mDataProp: 'code'},
+			{mDataProp: 'comment'}
+		];
+		$scope.$parent.litigationInvoiceTable = TableManager.init("litigationInvoiceTable", $scope.$parent.litigationBaseUrl+"listByInvoice/-1", columns);
+	};
+});
+
+app.controller('promiseInvoiceTableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [ 
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'promiseStatusId', "mRender": function(data, type, full) {
+				if(full.promiseStatusId == 1)
+					result = '<span class="label blue">'+full.promiseStatusName+'</span>';
+				if(full.promiseStatusId == 2)
+					result = '<span class="label green">'+full.promiseStatusName+'</span>';
+				return result;
+			}},
+			{mDataProp: 'date'},
+			{mDataProp: 'predictedDate'},
+			{mDataProp: 'code'},
+			{mDataProp: 'comment'}
+		];
+		$scope.$parent.promiseInvoiceTable = TableManager.init("promiseInvoiceTable", $scope.$parent.promiseBaseUrl+"listByInvoice/-1", columns);
+	};
+});
+
+app.controller('contenceInvoiceTableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [ 
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'contenceStepId', "mRender": function(data, type, full) {
+				result = '<span class="label blue">'+full.contenceStepName+'</span>';
+				return result;
+			}},
+			{mDataProp: 'date'},
+			{mDataProp: 'code'},
+			{mDataProp: 'lawyerId', "mRender": function(data, type, full) {
+				return full.lawyerFirstname+' '+full.lawyerLastname;
+			}},
+			{mDataProp: 'commercialCourtName'}
+		];
+		$scope.$parent.contenceInvoiceTable = TableManager.init("contenceInvoiceTable", $scope.$parent.contenceBaseUrl+"listByInvoice/-1", columns);
+	};
+});
+
+app.controller('invoiceTotalTableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'id', "mRender": function(data, type, full) {
+				result = '<div class="checkbox"><label class="ui-check"><input class="invoiceId" type="checkbox" value="'+full.id+'" onclick="check(\'invoiceId\')"><i class="dark-white"></i></label></div>';
+				return result;
+			}},
+			{mDataProp: 'invoiceDate'},
+			{mDataProp: 'dueDate'},
+			{mDataProp: 'dueDate', "mRender": function(data, type, full) {
+				var result = '';
+				var date = full.dueDate.split('/');
+				if(new Date(date[2]+'-'+date[1]+'-'+date[0]) < new Date()) {
+					result = '<span class="badge text-bg-danger">'+Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24))+' j</span>';
+				}
+				else {
+					result = '<span class="badge text-bg-info">'+Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24))+' j</span>';
+				}
+				return result;
+			}},
+			{mDataProp: 'code', "mRender": function(data, type, full) {
+				return '<a href="#" onclick="showInvoiceDetail('+full.id+');" class="amount-link">'+full.code+'</a>';
+			}},
+			{mDataProp: 'remainingAmount', "mRender": function(data, type, full) {
+				if(full.remainingAmount != null)
+					return new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.remainingAmount);
+				return 0;
+			}},
+			{mDataProp: 'paymentMethodDescription'},
+			{mDataProp: 'invoiceActionStatusName', "mRender": function(data, type, full) {
+				var result = '<span class="badge text-bg-dark">N/A</span>';
+				if(full.invoiceActionStatusColor != null)
+					result = '<span class="badge text-bg-'+full.invoiceActionStatusColor+'">'+full.invoiceActionStatusName+'</span>';
+				return result;
+			}}
+		];
+		$scope.$parent.invoiceTotalTable = TableManager.init("invoiceTotalTable", $scope.$parent.invoiceBaseUrl+"list/unpaidByClient/-1", columns, 3, "ASC");
+		
+		$scope.$parent.invoiceTotalTable.on('select', function (e, dt, type, indexes) {
+			var rowData = $scope.$parent.invoiceTotalTable.rows(indexes).data().toArray();
+			var id = null;
+			if(rowData.length > 0) {
+				id = rowData[0].id;
+				$scope.$parent.loadInvoice(id);
+			}
+		});
+	};
+});
+
+app.controller('invoiceNotOverdueTableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'id', "mRender": function(data, type, full) {
+				result = '<div class="checkbox"><label class="ui-check"><input class="invoiceNotOverdueId" type="checkbox" value="'+full.id+'" onclick="check(\'invoiceNotOverdueId\')"><i class="dark-white"></i></label></div>';
+				return result;
+			}},
+			{mDataProp: 'invoiceDate'},
+			{mDataProp: 'dueDate'},
+			{mDataProp: 'dueDate', "mRender": function(data, type, full) {
+				var result = '';
+				var date = full.dueDate.split('/');
+				if(new Date(date[2]+'-'+date[1]+'-'+date[0]) < new Date()) {
+					result = '<span class="badge text-bg-danger">'+Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24))+' j</span>';
+				}
+				else {
+					result = '<span class="badge text-bg-info">'+Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24))+' j</span>';
+				}
+				return result;
+			}},
+			{mDataProp: 'code', "mRender": function(data, type, full) {
+				return '<a href="#" onclick="showInvoiceDetail('+full.id+');" class="amount-link">'+full.code+'</a>';
+			}},
+			{mDataProp: 'remainingAmount', "mRender": function(data, type, full) {
+				if(full.remainingAmount != null)
+					return new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.remainingAmount);
+				return 0;
+			}},
+			{mDataProp: 'paymentMethodDescription'},
+			{mDataProp: 'reminderCount'}
+		];
+		$scope.$parent.invoiceNotOverdueTable = TableManager.init("invoiceNotOverdueTable", $scope.$parent.invoiceBaseUrl+"list/unpaidNotOverdueByClient/-1", columns, 2, "ASC");
+		//$scope.$parent.invoiceNotOverdueTable = TableManager.init("invoiceNotOverdueTable", $scope.$parent.invoiceBaseUrl+"list/unpaidNotOverdueByClient/-1", columns, 0, "DESC", false);
+		
+		$scope.$parent.invoiceNotOverdueTable.on('select', function (e, dt, type, indexes) {
+			var rowData = $scope.$parent.invoiceNotOverdueTable.rows(indexes).data().toArray();
+			var id = null;
+			if(rowData.length > 0) {
+				id = rowData[0].id;
+				$scope.$parent.loadInvoice(id);
+			}
+		});
+	};
+});
+
+app.controller('invoiceOverdueTableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'id', "mRender": function(data, type, full) {
+				result = '<div class="checkbox"><label class="ui-check"><input class="invoiceOverdueId" type="checkbox" value="'+full.id+'" onclick="check(\'invoiceOverdueId\')"><i class="dark-white"></i></label></div>';
+				return result;
+			}},
+			{mDataProp: 'invoiceDate'},
+			{mDataProp: 'dueDate'},
+			{mDataProp: 'dueDate', "mRender": function(data, type, full) {
+				var result = '';
+				var date = full.dueDate.split('/');
+				if(new Date(date[2]+'-'+date[1]+'-'+date[0]) < new Date()) {
+					result = '<span class="badge text-bg-danger">'+Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24))+' j</span>';
+				}
+				else {
+					result = '<span class="badge text-bg-info">'+Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24))+' j</span>';
+				}
+				return result;
+			}},
+			{mDataProp: 'code', "mRender": function(data, type, full) {
+				return '<a href="#" onclick="showInvoiceDetail('+full.id+');" class="amount-link">'+full.code+'</a>';
+			}},
+			{mDataProp: 'remainingAmount', "mRender": function(data, type, full) {
+				if(full.remainingAmount != null)
+					return new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.remainingAmount);
+				return 0;
+			}},
+			{mDataProp: 'paymentMethodDescription'},
+			{mDataProp: 'reminderCount'}
+		];
+		$scope.$parent.invoiceOverdueTable = TableManager.init("invoiceOverdueTable", $scope.$parent.invoiceBaseUrl+"list/unpaidOverdueByClient/-1", columns, 2, "ASC");
+		//$scope.$parent.invoiceOverdueTable = TableManager.init("invoiceOverdueTable", $scope.$parent.invoiceBaseUrl+"list/unpaidOverdueByClient/-1", columns, 0, "DESC", false);
+		
+		$scope.$parent.invoiceOverdueTable.on('select', function (e, dt, type, indexes) {
+			var rowData = $scope.$parent.invoiceOverdueTable.rows(indexes).data().toArray();
+			var id = null;
+			if(rowData.length > 0) {
+				id = rowData[0].id;
+				$scope.$parent.loadInvoice(id);
+			}
+		});
+	};
+});
+
+app.controller('invoiceOverdue30TableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'id', "mRender": function(data, type, full) {
+				result = '<div class="checkbox"><label class="ui-check"><input class="invoiceOverdue30Id" type="checkbox" value="'+full.id+'" onclick="check(\'invoiceOverdue30Id\')"><i class="dark-white"></i></label></div>';
+				return result;
+			}},
+			{mDataProp: 'invoiceDate'},
+			{mDataProp: 'dueDate'},
+			{mDataProp: 'dueDate', "mRender": function(data, type, full) {
+				var result = '';
+				var date = full.dueDate.split('/');
+				if(new Date(date[2]+'-'+date[1]+'-'+date[0]) < new Date()) {
+					result = '<span class="badge text-bg-danger">'+Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24))+' j</span>';
+				}
+				else {
+					result = '<span class="badge text-bg-info">'+Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24))+' j</span>';
+				}
+				return result;
+			}},
+			{mDataProp: 'code', "mRender": function(data, type, full) {
+				return '<a href="#" onclick="showInvoiceDetail('+full.id+');" class="amount-link">'+full.code+'</a>';
+			}},
+			{mDataProp: 'remainingAmount', "mRender": function(data, type, full) {
+				if(full.remainingAmount != null)
+					return new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.remainingAmount);
+				return 0;
+			}},
+			{mDataProp: 'paymentMethodDescription'},
+			{mDataProp: 'reminderCount'}
+		];
+		$scope.$parent.invoiceOverdue30Table = TableManager.init("invoiceOverdue30Table", $scope.$parent.invoiceBaseUrl+"list/unpaidOverdue30ByClient/-1", columns, 2, "ASC");
+		//$scope.$parent.invoiceOverdue30Table = TableManager.init("invoiceOverdue30Table", $scope.$parent.invoiceBaseUrl+"list/unpaidOverdue30ByClient/-1", columns, 0, "DESC", false);
+		
+		$scope.$parent.invoiceOverdue30Table.on('select', function (e, dt, type, indexes) {
+			var rowData = $scope.$parent.invoiceOverdue30Table.rows(indexes).data().toArray();
+			var id = null;
+			if(rowData.length > 0) {
+				id = rowData[0].id;
+				$scope.$parent.loadInvoice(id);
+			}
+		});
+	};
+});
+
+app.controller('invoiceOverdue60TableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'id', "mRender": function(data, type, full) {
+				result = '<div class="checkbox"><label class="ui-check"><input class="invoiceOverdue60Id" type="checkbox" value="'+full.id+'" onclick="check(\'invoiceOverdue60Id\')"><i class="dark-white"></i></label></div>';
+				return result;
+			}},
+			{mDataProp: 'invoiceDate'},
+			{mDataProp: 'dueDate'},
+			{mDataProp: 'dueDate', "mRender": function(data, type, full) {
+				var result = '';
+				var date = full.dueDate.split('/');
+				if(new Date(date[2]+'-'+date[1]+'-'+date[0]) < new Date()) {
+					result = '<span class="badge text-bg-danger">'+Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24))+' j</span>';
+				}
+				else {
+					result = '<span class="badge text-bg-info">'+Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24))+' j</span>';
+				}
+				return result;
+			}},
+			{mDataProp: 'code', "mRender": function(data, type, full) {
+				return '<a href="#" onclick="showInvoiceDetail('+full.id+');" class="amount-link">'+full.code+'</a>';
+			}},
+			{mDataProp: 'remainingAmount', "mRender": function(data, type, full) {
+				if(full.remainingAmount != null)
+					return new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.remainingAmount);
+				return 0;
+			}},
+			{mDataProp: 'paymentMethodDescription'},
+			{mDataProp: 'reminderCount'}
+		];
+		$scope.$parent.invoiceOverdue60Table = TableManager.init("invoiceOverdue60Table", $scope.$parent.invoiceBaseUrl+"list/unpaidOverdue60ByClient/-1", columns, 2, "ASC");
+		//$scope.$parent.invoiceOverdue60Table = TableManager.init("invoiceOverdue60Table", $scope.$parent.invoiceBaseUrl+"list/unpaidOverdue60ByClient/-1", columns, 0, "DESC", false);
+		
+		$scope.$parent.invoiceOverdue60Table.on('select', function (e, dt, type, indexes) {
+			var rowData = $scope.$parent.invoiceOverdue60Table.rows(indexes).data().toArray();
+			var id = null;
+			if(rowData.length > 0) {
+				id = rowData[0].id;
+				$scope.$parent.loadInvoice(id);
+			}
+		});
+	};
+});
+
+app.controller('invoiceOverdue90TableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'id', "mRender": function(data, type, full) {
+				result = '<div class="checkbox"><label class="ui-check"><input class="invoiceOverdue90Id" type="checkbox" value="'+full.id+'" onclick="check(\'invoiceOverdue90Id\')"><i class="dark-white"></i></label></div>';
+				return result;
+			}},
+			{mDataProp: 'invoiceDate'},
+			{mDataProp: 'dueDate'},
+			{mDataProp: 'dueDate', "mRender": function(data, type, full) {
+				var result = '';
+				var date = full.dueDate.split('/');
+				if(new Date(date[2]+'-'+date[1]+'-'+date[0]) < new Date()) {
+					result = '<span class="badge text-bg-danger">'+Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24))+' j</span>';
+				}
+				else {
+					result = '<span class="badge text-bg-info">'+Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24))+' j</span>';
+				}
+				return result;
+			}},
+			{mDataProp: 'code', "mRender": function(data, type, full) {
+				return '<a href="#" onclick="showInvoiceDetail('+full.id+');" class="amount-link">'+full.code+'</a>';
+			}},
+			{mDataProp: 'remainingAmount', "mRender": function(data, type, full) {
+				if(full.remainingAmount != null)
+					return new Intl.NumberFormat('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(full.remainingAmount);
+				return 0;
+			}},
+			{mDataProp: 'paymentMethodDescription'},
+			{mDataProp: 'reminderCount'}
+		];
+		$scope.$parent.invoiceOverdue90Table = TableManager.init("invoiceOverdue90Table", $scope.$parent.invoiceBaseUrl+"list/unpaidOverdue90ByClient/-1", columns, 2, "ASC");
+		//$scope.$parent.invoiceOverdue90Table = TableManager.init("invoiceOverdue90Table", $scope.$parent.invoiceBaseUrl+"list/unpaidOverdue90ByClient/-1", columns, 0, "DESC", false);
+		
+		$scope.$parent.invoiceOverdue90Table.on('select', function (e, dt, type, indexes) {
+			var rowData = $scope.$parent.invoiceOverdue90Table.rows(indexes).data().toArray();
+			var id = null;
+			if(rowData.length > 0) {
+				id = rowData[0].id;
+				$scope.$parent.loadInvoice(id);
+			}
+		});
+	};
+});
+
+app.controller('notificationTableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [ 
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'designation'},
+			{mDataProp: 'date'},
+			{mDataProp: 'id', "mRender": function(data, type, full) {
+				result = '<a href="#" onclick="openNotificationModal('+full.id+');" class="btn btn-fw orange" style="min-width: 1rem; padding-left: 8px; padding-right: 8px; padding-top: 3px; padding-bottom: 3px;"><i class="fa fa-desktop"></i></a>';
+				return result;
+			}}
+		];
+		$scope.$parent.clientTable = TableManager.init("notificationListTable", $scope.$parent.notificationBaseUrl+"list", columns);
+	};
+});

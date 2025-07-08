@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+<title></title>
+</head>
+<body ng-controller="secUtilisateurController"
+	th:attr="ng-init='init();'">
+	<div layout:fragment="content" class="page-content">
+
+		<form id="form" name="form" method="post" action="#"
+			class="form-horizontal">
+
+			<div class="sidemenu">
+				<ul>
+					<li><a class="blue" ng-click="edit()"><span>Modifier</span><i
+							class="fa fa-pencil"></i></a></li>
+					<li><a class="blue" ng-click="save()"><span>Enregistrer</span><i
+							class="fa fa-save"></i></a></li>
+				</ul>
+			</div>
+			
+			<div class="panel panel-inverse">
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+						
+					</div>
+					<h4 class="panel-title">
+						<th:block th:text="#{administration.user.list}"></th:block>
+					</h4>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-12">
+							<table id="secUtilisateurTable"
+								class="table table-striped table-bordered"
+								ng-controller="secUtilisateurTableController"
+								th:attr="ng-init='init('+${idEntite}+');'">
+								<thead>
+									<tr>
+										<th class="noVis"></th>
+										<th><th:block th:text="#{administration.user.login}"></th:block></th>
+										<th><th:block th:text="#{administration.user.nom}"></th:block></th>
+										<th><th:block th:text="#{administration.user.prenom}"></th:block></th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel panel-inverse">
+				<div class="panel-heading">
+					<div class="panel-heading-btn"></div>
+					<h4 class="panel-title">
+						<th:block th:text="#{administration.user.authorite.list}"></th:block>
+					</h4>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-12">
+							<table id="secUtilisateurAuthoriteTable"
+								class="table table-striped table-bordered"
+								ng-controller="secUtilisateurAuthoriteTableController"
+								th:attr="ng-init='init();'">
+								<thead>
+									<tr>
+										<th class="noVis"></th>
+										<th class="actions noVis"><th:block th:text="#{administration.user.authorite.onNotif}"></th:block></th>
+										<th class="actions noVis"><th:block th:text="#{administration.user.authorite.onMail}"></th:block></th>
+										<th><th:block th:text="#{administration.user.authorite.authorite}"></th:block></th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</form>
+	</div>
+
+
+	<div layout:fragment="plugins" class="page-content">
+		<script
+			th:src='@{/resources/js/administration/secUtilisateurAuthorite/secUtilisateurAuthorite.js}'></script>
+	</div>
+</body>
+</html>

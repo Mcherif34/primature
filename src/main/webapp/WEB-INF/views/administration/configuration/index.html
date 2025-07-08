@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/configurationLayout">
+<head>
+</head>
+<body ng-controller="referentielController" th:attr="ng-init='init();'">
+<div layout:fragment="content">
+<div class="main-content">	
+	<div class="page-content">
+		<div class="container-fluid">
+			<div class="row">
+            	<div class="col-12">
+                	<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    	<h4 class="mb-sm-0">Gestion du référentiel</h4>
+					</div>
+                </div>
+        	</div>
+        			<div class="row">
+                        <div class="col-xl-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <!-- Nav tabs -->
+                                    <ul class="nav nav-pills nav-custom nav-custom-light mb-3" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" data-bs-toggle="tab" href="#insurance" role="tab">
+                                                Assurances
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#nav-light-profile" role="tab">
+                                                Formes juridiques
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#nav-light-messages" role="tab">
+                                                Pièes jointes
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#nav-light-messages" role="tab">
+                                                Régions
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#nav-light-messages" role="tab">
+                                                Status
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#nav-light-messages" role="tab">
+                                                Types
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#nav-light-messages" role="tab">
+                                                Tribunal de commerce
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#nav-light-messages" role="tab">
+                                                Etapes de contentieux
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#nav-light-messages" role="tab">
+                                                Statuts du crédit
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#nav-light-messages" role="tab">
+                                                Devises
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div><!-- end card-body -->
+                            </div>
+                            <div class="card">
+                              <div class="card-body">
+                              	     <div class="tab-content text-muted">
+                                        <div class="tab-pane active" id="insurance" role="tabpanel">
+                                        <div class="d-flex flex-row align-items-center justify-content-between mb-3">
+                                        
+	                                        	<h5 class="mb-sm-0">Liste des assurances</h5>
+	                                   
+                                         <div>
+	                                        	<a id="btnNew" href="#" class="btn btn-primary btn-label waves-effect waves-light">
+	                                            	<i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Nouveau
+	                                            </a>
+	                                        </div>
+	                                        </div>
+	                                        <div class="live-preview">
+	                                            <div class="table-responsive">
+													<table id="insuranceTable" ng-controller="insuranceTableController"
+														th:attr="ng-init='init();'"
+														class="table table-hover align-middle table-nowrap mb-0">
+														<thead>
+															<tr>
+													            <th>ID</th>
+													            <th>Nom</th>
+													            <th>Description</th>
+													            <th>Actions</th>
+													          </tr>
+														</thead>
+													</table>
+												</div>
+											</div>
+                                        </div>
+                                        <div class="tab-pane" id="nav-light-profile" role="tabpanel">
+                                            <div class="d-flex mb-1">
+                                                <div class="flex-grow-1 me-3">
+                                                    Just like in the image where we talked about using multiple fonts, you can see that the background in this graphic design is blurred. Whenever you put text on top of an image, it’s important that your viewers can understand the text, and sometimes that means applying a gaussian readable Any bypasser will stop to see what you have to see, even if your design has nothing to do with them.
+                                                </div>
+                                                <div class="flex-shrink-0">
+                                                    <img src="assets/images/small/img-5.jpg" alt="" width="150" class="rounded" />
+                                                </div>
+                                            </div>
+                                            <p class="mb-0">It makes a statement, it’s impressive graphic design. Increase or decrease the letter spacing depending on the situation and try, try again until it looks right, and each letter has the perfect spot of its own. commodo enim craft beer mlkshk aliquip jean shorts ullamco.</p>
+                                        </div>
+                                        <div class="tab-pane" id="nav-light-messages" role="tabpanel">
+                                            <div class="d-flex mb-1">
+                                                <div class="flex-grow-1 me-3">
+                                                    Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin On the note of consistency, color consistency is a MUST. If you’re not trying to create crazy contrast in your design.
+                                                </div>
+                                                <div class="flex-shrink-0">
+                                                    <img src="assets/images/small/img-5.jpg" alt="" width="150" class="rounded" />
+                                                </div>
+                                            </div>
+                                            <p class="mb-0">Big July earthquakes confound zany experimental vow. My girl wove six dozen plaid jackets before she quit. Six big devils from Japan quickly forgot how to waltz. try again until it looks right, and each assumenda labore aes Homo nostrud organic, assumenda labore aesthetic magna elements, buttons, everything.</p>
+                                        </div>
+                                    </div>
+                              </div>
+                            </div>
+                        </div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ############ PAGE START-->
+
+<!-- ############ PAGE END-->
+</div>
+<div layout:fragment="plugins" class="page-content">
+	<script th:src='@{/resources/js/home/index.js}'></script>
+	<script th:src='@{/resources/js/administration/referentiel/referentiel.js}'></script>
+</div>
+</body>
+</html>

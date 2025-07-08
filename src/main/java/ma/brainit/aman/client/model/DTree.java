@@ -1,0 +1,46 @@
+package ma.brainit.aman.client.model;
+
+import java.util.Date;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "GED.DTree")
+public class DTree {
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @Column(name = "DataID")
+    private Long id;
+    
+	@Column(name = "ParentID")
+    private Long parentID;
+    
+	@Column(name = "Name", columnDefinition = "NVARCHAR")
+    private String name;
+    
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getParentID() {
+		return parentID;
+	}
+
+	public void setParentID(Long parentID) {
+		this.parentID = parentID;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+    
+}

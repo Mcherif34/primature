@@ -1,0 +1,264 @@
+package ma.brainit.aman.client.dto;
+
+import java.io.File;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import ma.brainit.aman.client.model.CourrierClassique;
+import ma.brainit.aman.commun.dto.JsonDateDeserializer;
+import ma.brainit.aman.commun.dto.JsonDateSerializer;
+import ma.brainit.aman.commun.dto.JsonShortDateSerializer;
+import ma.brainit.base.annotations.View;
+
+public class CorrespondanceDTO extends CourrierClassique {
+
+	private static final long serialVersionUID = 1L;
+	private Long wSubWorkId;
+	private Date wSubWorkDateInitiated;
+	private Date wSubWorkDateCompleted;
+	private String poleDestinataireName;
+	private String departementDestinataireName;
+	private String collaborateurDestinataireName;
+	private String taskTitle;
+	private String performer;
+	
+	private List<DocumentDTO> documents;
+	
+	@Override
+    @View(attribut="id")
+    public Long getId() {
+        return super.getId();
+    }
+    
+    @Override
+    @View(attribut="versionNum")
+    public Long getVersionNum() {
+        return super.getVersionNum();
+    }
+    
+    @Override
+    @View(attribut="seq")
+    public Long getSeq() {
+        return super.getSeq();
+    }
+    
+    @Override
+    @View(attribut="rowSeqNum")
+    public Integer getRowSeqNum() {
+        return super.getRowSeqNum();
+    }
+    
+    @Override
+    @View(attribut="iterationNum")
+    public Integer getIterationNum() {
+        return super.getIterationNum();
+    }
+    
+    @Override
+    @View(attribut="refExpediteur")
+    public String getRefExpediteur() {
+        return super.getRefExpediteur();
+    }
+    
+    @Override
+    @View(attribut="recuPar")
+    public Long getRecuPar() {
+        return super.getRecuPar();
+    }
+    
+    @Override
+    @View(attribut="expediteur")
+    public String getExpediteur() {
+        return super.getExpediteur();
+    }
+
+    @Override
+	@JsonSerialize(using=JsonShortDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)
+	@View(attribut = "dateReception")
+	public Date getDateReception() {
+		return super.getDateReception();
+	}
+    
+    @Override
+	@JsonSerialize(using=JsonShortDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)
+	@View(attribut = "dateEnregistrement")
+	public Date getDateEnregistrement() {
+		return super.getDateEnregistrement();
+	}
+    
+	@Override
+    @View(attribut="typeCourrier")
+    public String getTypeCourrier() {
+        return super.getTypeCourrier();
+    }
+    
+    @Override
+    @View(attribut="objet")
+    public String getObjet() {
+        return super.getObjet();
+    }
+    
+    @Override
+    @View(attribut="refArriveeBoc")
+    public String getRefArriveeBoc() {
+        return super.getRefArriveeBoc();
+    }
+    
+    @Override
+    @View(attribut="nombrePj")
+    public String getNombrePj() {
+        return super.getNombrePj();
+    }
+    
+    
+    @View(entity = "wSubWork", attribut = "id")
+	public Long getwSubWorkId() {
+		return wSubWorkId;
+	}
+
+	public void setwSubWorkId(Long wSubWorkId) {
+		this.wSubWorkId = wSubWorkId;
+	}
+
+	@JsonSerialize(using=JsonShortDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)
+	@View(entity = "wSubWork", attribut = "subWorkDateInitiated")
+    public Date getwSubWorkDateInitiated() {
+		return wSubWorkDateInitiated;
+	}
+
+	public void setwSubWorkDateInitiated(Date wSubWorkDateInitiated) {
+		this.wSubWorkDateInitiated = wSubWorkDateInitiated;
+	}
+
+	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)
+	@View(entity = "wSubWork", attribut = "subWorkDateCompleted")
+    public Date getwSubWorkDateCompleted() {
+		return wSubWorkDateCompleted;
+	}
+
+	public void setwSubWorkDateCompleted(Date wSubWorkDateCompleted) {
+		this.wSubWorkDateCompleted = wSubWorkDateCompleted;
+	}
+	
+	@View(entity = "poleDestinataire", attribut = "name")
+	public String getPoleDestinataireName() {
+		return poleDestinataireName;
+	}
+
+	public void setPoleDestinataireName(String poleDestinataireName) {
+		this.poleDestinataireName = poleDestinataireName;
+	}
+	
+	@View(entity = "departementDestinataire", attribut = "name")
+	public String getDepartementDestinataireName() {
+		return departementDestinataireName;
+	}
+
+	public void setDepartementDestinataireName(String departementDestinataireName) {
+		this.departementDestinataireName = departementDestinataireName;
+	}
+    
+	@Override
+    @View(attribut="confidentiel")
+    public Integer getConfidentiel() {
+        return super.getConfidentiel();
+    }
+	
+	@Override
+    @View(attribut="typeInstructionDg")
+    public String getTypeInstructionDg() {
+        return super.getTypeInstructionDg();
+    }
+	
+	@Override
+    @View(attribut="urgence")
+    public String getUrgence() {
+        return super.getUrgence();
+    }
+	
+	@Override
+	@JsonSerialize(using=JsonShortDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)
+	@View(attribut = "echeance")
+	public Date getEcheance() {
+		return super.getEcheance();
+	}
+	
+	@Override
+    @View(attribut="texteInstructionDg")
+    public String getTexteInstructionDg() {
+        return super.getTexteInstructionDg();
+    }
+	
+	@Override
+    @View(attribut="texteInstructionPole")
+    public String getTexteInstructionPole() {
+        return super.getTexteInstructionPole();
+    }
+	
+	@Override
+    @View(attribut="texteInstructionDepartement")
+    public String getTexteInstructionDepartement() {
+        return super.getTexteInstructionDepartement();
+    }
+	
+	@Override
+	@JsonSerialize(using=JsonShortDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)
+	@View(attribut = "recuParDg")
+	public Date getRecuParDg() {
+		return super.getRecuParDg();
+	}
+	
+	@Override
+	@JsonSerialize(using=JsonShortDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)
+	@View(attribut = "recuLe")
+	public Date getRecuLe() {
+		return super.getRecuLe();
+	}
+
+	@View(entity = "collaborateurDestinataire", attribut = "name")
+	public String getCollaborateurDestinataireName() {
+		return collaborateurDestinataireName;
+	}
+
+	public void setCollaborateurDestinataireName(String collaborateurDestinataireName) {
+		this.collaborateurDestinataireName = collaborateurDestinataireName;
+	}
+
+	public String getTaskTitle() {
+		return taskTitle;
+	}
+
+	public void setTaskTitle(String taskTitle) {
+		this.taskTitle = taskTitle;
+	}
+
+	public String getPerformer() {
+		return performer;
+	}
+
+	public void setPerformer(String performer) {
+		this.performer = performer;
+	}
+
+	public List<DocumentDTO> getDocuments() {
+		return documents;
+	}
+
+	public void setDocuments(List<DocumentDTO> documents) {
+		this.documents = documents;
+	}
+	
+}

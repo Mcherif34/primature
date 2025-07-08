@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+<title>Demandes de congés | Gestion des procédures administratives - Primature du Tchad</title>
+<style>
+.accordion-button {background-color: #009DCA; color: #FFFFFF}
+.accordion-fill-info .accordion-item .accordion-button:not(.collapsed) {background-color: #009DCA !important; color: #FFFFFF}
+.notification {list-style-type: none; padding-left: 0}
+.notification li {padding-top: 7px; padding-bottom: 7px; border-bottom: 1px dotted #CCCCCC;}
+.document-viewer-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.viewer-header {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+}
+
+.viewer-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.document-controls {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.document-controls button {
+  padding: 6px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.document-controls button:hover {
+  background-color: #076faf;
+}
+
+.document-controls button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.loading-indicator {
+  margin-left: 10px;
+  color: #666;
+}
+
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  gap: 8px;
+}
+
+.zoom-controls button {
+  padding: 3px 8px;
+  font-weight: bold;
+}
+
+.document-display {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  min-height: 300px;
+  overflow: auto;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  overflow: auto;
+  max-height: 70vh;
+  position: relative;
+}
+
+.image-container img {
+  max-width: 100%;
+  transition: transform 0.2s ease;
+  transform-origin: center center;
+}
+
+.text-container {
+  padding: 15px;
+  max-height: 70vh;
+  overflow: auto;
+}
+
+.text-document {
+  white-space: pre-wrap;
+  font-family: 'Courier New', monospace;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.pdf-container {
+  height: 70vh;
+  min-height: 500px;
+}
+
+.pdf-fallback {
+  padding: 20px;
+  text-align: center;
+}
+
+.error-message {
+  margin-bottom: 15px;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px 15px;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+}
+
+.thumbnails-container {
+    background-color: #f8f9fa;
+}
+
+.active-thumbnail {
+    box-shadow: 0 0 5px rgba(0,157,202,0.5);
+}
+
+.image-container img, #pdf-canvas {
+    transition: transform 0.3s ease-in-out;
+}
+
+.btn-outline-primary {
+	font-size: 13px;
+}
+</style>
+</head>
+<body ng-controller="courrierController" th:attr="ng-init='init();'">
+	<div layout:fragment="search">
+		<form class="form-inline" role="search">
+			<input type="text"
+				class="form-control b-a rounded px-3 form-control-sm"
+				style="min-width: 350px;" ng-model="dto.search.key"
+				placeholder="Rechercher courrier par code ou raison sociale" /> <a
+				href="#" ng-click="searchCourrier()" class="btn success p-x-md"
+				style="border-radius: 20px; padding-top: 3px; padding-bottom: 5px; margin-left: 10px; margin-right: 20px;"><i
+				class="fa fa-search"></i></a>
+		</form>
+	</div>
+
+	<div layout:fragment="content">
+	<div class="main-content">	
+	<div class="page-content">
+		<div class="container-fluid">
+			<div class="row">
+            	<div class="col-12">
+                	<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    	<h4 class="mb-sm-0">Gestion de demandes de congés</h4>
+                    	<div class="page-title-right">
+                        	<ol class="breadcrumb m-0">
+                            	<li class="breadcrumb-item font-weight-bold"><a th:href="@{/}">Tableau de bord</a></li>
+                                <li class="breadcrumb-item active">Gestion de demandes de congés</li>
+                            </ol>
+                        </div>
+					</div>
+                </div>
+        	</div>
+        	
+        	<div class="col-xxl-12">
+                            <div class="card">
+                                <div class="card-body">
+                                	<ul class="nav nav-pills nav-custom nav-custom-light nav-justified mb-3" role="tablist">
+		                                <li class="nav-item">
+		                                    <a class="nav-link active" data-bs-toggle="tab" href="#currentTab" role="tab" aria-selected="false" style="font-weight: 600;">
+		                                    	<i class="mdi mdi-email" style="position: relative; top: 2px; font-size: 18px"></i> Demandes de congés à traiter
+		                                	</a>
+		                                </li>
+		                               	<li class="nav-item">
+		                                    <a class="nav-link" data-bs-toggle="tab" href="#doneTab" role="tab" aria-selected="false" style="font-weight: 600;">
+		                                    	<i class="mdi mdi-email-send" style="position: relative; top: 2px; font-size: 18px"></i> Demandes de congés transférées
+		                                	</a>
+		                            	</li>
+		                            	<li class="nav-item">
+		                                    <a class="nav-link" data-bs-toggle="tab" href="#closeTab" role="tab" aria-selected="false" style="font-weight: 600;">
+		                                    	<i class="mdi mdi-email-check" style="position: relative; top: 2px; font-size: 18px"></i> Demandes de congés clôturées
+		                                	</a>
+		                            	</li>
+		                            </ul>
+		                            <div class="tab-content text-muted">
+		                            	<div class="tab-pane active" id="currentTab" role="tabpanel">
+		                            		<div class="accordion custom-accordionwithicon accordion-flush accordion-fill-info" id="accordion-current">
+					                        	<div class="accordion-item shadow">
+					                            	<h2 class="accordion-header" id="headingTwo">
+					                                	<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+					                                    	FILTRE DE RECHERCHE
+					                                    </button>
+					                                </h2>
+					                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#default-accordion-example">
+					                                	<div class="accordion-body">
+					                                    	<form id="courrierCurrentSearchForm" name="courrierCurrentSearchForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+												          		<div class="row">
+												          		  <div ng-class="'col-md-4'">
+													            	<div class="form-group">
+													              	  <label style="color: #5c5e68">Référence courrier</label>
+													                  <input type="text" class="form-control" name="referenceCourrier" ng-model="dto.search.referenceCourrierCurrent" />
+													                </div>
+													              </div>
+																  <div ng-class="'col-md-4'">
+													            	<div class="form-group">
+													              	  <label style="color: #5c5e68">Référence demande</label>
+													                  <input type="text" class="form-control" name="referenceDemande" ng-model="dto.search.referenceDemandeCurrent" />
+													                </div>
+													              </div>
+													              <div ng-class="'col-md-4'">
+													            	<div class="form-group">
+													              	  <label style="color: #5c5e68">Date début enregistrement</label>
+													                  <input type="text" class="form-control" name="enregistrementDateStart" ng-model="dto.search.enregistrementDateStartCurrent" datepicker="datepicker" />
+													                </div>
+													              </div>
+													              <div ng-class="'col-md-4'">
+													            	<div class="form-group">
+													              	  <label style="color: #5c5e68">Date fin enregistrement</label>
+													                  <input type="text" class="form-control" name="enregistrementDateEnd" ng-model="dto.search.enregistrementDateEndCurrent" datepicker="datepicker" />
+													                </div>
+													              </div>
+													              <div ng-class="'col-md-8'">
+													            	<div class="form-group">
+													              	  <label style="color: #5c5e68">Objet</label>
+													                  <input type="text" class="form-control" name="objet" ng-model="dto.search.objetCurrent" />
+													                </div>
+													              </div>
+													              <div ng-class="'col-md-12'">
+																  	<div class="form-group" style="margin-top: 10px">
+																  	  <a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="advancedSearchCurrentCongeExterne()">
+																		<i class="mdi mdi-magnify label-icon align-middle fs-16 me-2"></i> Rechercher
+																	  </a>                        
+																    </div>
+																  </div>
+												          		</div>
+												        	</form>
+					                                    </div>
+					                                </div>
+					                            </div>
+			                        </div><br/>
+			                        <div style="text-align: right; margin-bottom: 10px;">
+		                                        <div style="float: left;" class="btn-group btn-group-sm mt-2 shadow" role="group" aria-label="Basic example">
+				                                    <button type="button" ng-click="checkAll('courrierCurrentId');" class="btn btn-success waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-marked-circle label-icon align-middle fs-12"></i> Tout cocher</button>
+				                                	<button type="button" ng-click="uncheckAll('courrierCurrentId');" class="btn btn-success waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-blank-circle-outline label-icon align-middle fs-12"></i> Tout décocher</button>
+				                            	</div>
+				                            	<a href="#" style="float:right;" ng-click="addCourrier()" class="btn btn-primary btn-label waves-effect waves-light"><i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Nouvelle demande</a>
+				                            	<a href="#" style="float:right; margin-right: 10px" ng-show="checked" ng-click="exportCourriers('courrierCurrentId')" class="btn btn-success btn-label waves-effect waves-light"><i class="mdi mdi-microsoft-excel label-icon align-middle fs-16 me-2"></i> Exporter sous Excel</a>	
+			                                	<div class="spinner-border text-info export-courrier" role="status" style="float:right; height: 25px; width: 25px; margin-top: 7px; margin-right: 10px">
+					                            	<span class="sr-only">Loading...</span>
+					                            </div>
+			                                </div><br/><br/>
+                                        	<div class="live-preview">
+	                                            <div class="table-responsive">
+													<table id="courrierCurrentTable" ng-controller="courrierCurrentTableController"
+														th:attr="ng-init='init();'"
+														class="table dt-responsive nowrap table-striped align-middle">
+														<thead>
+															<tr>
+																<th></th>
+																<th>REFERENCE COURRIER</th>
+																<th>DATE ENREGISTREMENT</th>
+																<th>REFERENCE DEMANDE</th>
+																<th>OBJET</th>
+																<th>TRANSFERE A</th>
+																<th>STATUT</th>
+																<th>ACTIONS</th>
+															</tr>
+														</thead>
+													</table>
+												</div>
+											</div>
+		                                </div>
+		                                <div class="tab-pane" id="doneTab" role="tabpanel">
+		                                	<div class="accordion custom-accordionwithicon accordion-flush accordion-fill-info" id="default-accordion-example">
+					                        	<div class="accordion-item shadow">
+					                            	<h2 class="accordion-header" id="headingTwo">
+					                                	<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+					                                    	FILTRE DE RECHERCHE
+					                                    </button>
+					                                </h2>
+					                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#default-accordion-example">
+					                                	<div class="accordion-body">
+					                                    	<form id="courrierDoneSearchForm" name="courrierDoneSearchForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+												          		<div class="row">
+												          		  <div ng-class="'col-md-4'">
+													            	<div class="form-group">
+													              	  <label style="color: #5c5e68">Référence courrier</label>
+													                  <input type="text" class="form-control" name="referenceCourrier" ng-model="dto.search.referenceCourrierDone" />
+													                </div>
+													              </div>
+																  <div ng-class="'col-md-4'">
+													            	<div class="form-group">
+													              	  <label style="color: #5c5e68">Référence demande</label>
+													                  <input type="text" class="form-control" name="referenceDemande" ng-model="dto.search.referenceDemandeDone" />
+													                </div>
+													              </div>
+													              <div ng-class="'col-md-4'">
+													            	<div class="form-group">
+													              	  <label style="color: #5c5e68">Date début enregistrement</label>
+													                  <input type="text" class="form-control" name="enregistrementDateStart" ng-model="dto.search.enregistrementDateStartDone" datepicker="datepicker" />
+													                </div>
+													              </div>
+													              <div ng-class="'col-md-4'">
+													            	<div class="form-group">
+													              	  <label style="color: #5c5e68">Date fin enregistrement</label>
+													                  <input type="text" class="form-control" name="enregistrementDateEnd" ng-model="dto.search.enregistrementDateEndDone" datepicker="datepicker" />
+													                </div>
+													              </div>
+													              <div ng-class="'col-md-8'">
+													            	<div class="form-group">
+													              	  <label style="color: #5c5e68">Objet</label>
+													                  <input type="text" class="form-control" name="objet" ng-model="dto.search.objetDone" />
+													                </div>
+													              </div>
+													              <div ng-class="'col-md-12'">
+																  	<div class="form-group" style="margin-top: 10px">
+																  	  <a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="advancedSearchDoneCongeExterne()">
+																		<i class="mdi mdi-magnify label-icon align-middle fs-16 me-2"></i> Rechercher
+																	  </a>                        
+																    </div>
+																  </div>
+												          		</div>
+												        	</form>
+					                                    </div>
+					                                </div>
+					                            </div>
+			                        </div><br/>
+			                        <div style="text-align: right; margin-bottom: 10px;">
+		                                        <div style="float: left;" class="btn-group btn-group-sm mt-2 shadow" role="group" aria-label="Basic example">
+				                                    <button type="button" ng-click="checkAll('courrierDoneId');" class="btn btn-success waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-marked-circle label-icon align-middle fs-12"></i> Tout cocher</button>
+				                                	<button type="button" ng-click="uncheckAll('courrierDoneId');" class="btn btn-success waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-blank-circle-outline label-icon align-middle fs-12"></i> Tout décocher</button>
+				                            	</div>
+				                            	<a href="#" style="float:right; margin-right: 10px" ng-show="checked" ng-click="exportCourriers('courrierDoneId')" class="btn btn-success btn-label waves-effect waves-light"><i class="mdi mdi-microsoft-excel label-icon align-middle fs-16 me-2"></i> Exporter sous Excel</a>	
+			                                	<div class="spinner-border text-info export-courrier" role="status" style="float:right; height: 25px; width: 25px; margin-top: 7px; margin-right: 10px">
+					                            	<span class="sr-only">Loading...</span>
+					                            </div>
+			                                </div><br/><br/>
+                                        	<div class="live-preview">
+	                                            <div class="table-responsive">
+													<table id="courrierDoneTable" ng-controller="courrierDoneTableController"
+														th:attr="ng-init='init();'"
+														class="table dt-responsive nowrap table-striped align-middle">
+														<thead>
+															<tr>
+																<th></th>
+																<th>REFERENCE COURRIER</th>
+																<th>DATE ENREGISTREMENT</th>
+																<th>REFERENCE DEMANDE</th>
+																<th>OBJET</th>
+																<th>TRANSFERE A</th>
+																<th>STATUT</th>
+															</tr>
+														</thead>
+													</table>
+												</div>
+											</div>
+		                                </div>
+		                                <div class="tab-pane" id="closeTab" role="tabpanel">
+		                                	<div class="accordion custom-accordionwithicon accordion-flush accordion-fill-info" id="default-accordion-example">
+					                        	<div class="accordion-item shadow">
+					                            	<h2 class="accordion-header" id="headingTwo">
+					                                	<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+					                                    	FILTRE DE RECHERCHE
+					                                    </button>
+					                                </h2>
+					                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#default-accordion-example">
+					                                	<div class="accordion-body">
+					                                    	<form id="courrierCompletedSearchForm" name="courrierCompletedSearchForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+												          		<div class="row">
+												          		  <div ng-class="'col-md-4'">
+													            	<div class="form-group">
+													              	  <label style="color: #5c5e68">Référence courrier</label>
+													                  <input type="text" class="form-control" name="referenceCourrier" ng-model="dto.search.referenceCourrierCompleted" />
+													                </div>
+													              </div>
+																  <div ng-class="'col-md-4'">
+													            	<div class="form-group">
+													              	  <label style="color: #5c5e68">Référence demande</label>
+													                  <input type="text" class="form-control" name="referenceDemande" ng-model="dto.search.referenceDemandeCompleted" />
+													                </div>
+													              </div>
+													              <div ng-class="'col-md-4'">
+													            	<div class="form-group">
+													              	  <label style="color: #5c5e68">Date début enregistrement</label>
+													                  <input type="text" class="form-control" name="enregistrementDateStart" ng-model="dto.search.enregistrementDateStartCompleted" datepicker="datepicker" />
+													                </div>
+													              </div>
+													              <div ng-class="'col-md-4'">
+													            	<div class="form-group">
+													              	  <label style="color: #5c5e68">Date fin enregistrement</label>
+													                  <input type="text" class="form-control" name="enregistrementDateEnd" ng-model="dto.search.enregistrementDateEndCompleted" datepicker="datepicker" />
+													                </div>
+													              </div>
+													              <div ng-class="'col-md-8'">
+													            	<div class="form-group">
+													              	  <label style="color: #5c5e68">Objet</label>
+													                  <input type="text" class="form-control" name="objet" ng-model="dto.search.objetCompleted" />
+													                </div>
+													              </div>
+													              <div ng-class="'col-md-12'">
+																  	<div class="form-group" style="margin-top: 10px">
+																  	  <a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="advancedSearchCompletedCongeExterne()">
+																		<i class="mdi mdi-magnify label-icon align-middle fs-16 me-2"></i> Rechercher
+																	  </a>                        
+																    </div>
+																  </div>
+												          		</div>
+												        	</form>
+					                                    </div>
+					                                </div>
+					                            </div>
+			                        </div><br/>
+			                        <div style="text-align: right; margin-bottom: 10px;">
+		                                        <div style="float: left;" class="btn-group btn-group-sm mt-2 shadow" role="group" aria-label="Basic example">
+				                                    <button type="button" ng-click="checkAll('courrierCompletedId');" class="btn btn-success waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-marked-circle label-icon align-middle fs-12"></i> Tout cocher</button>
+				                                	<button type="button" ng-click="uncheckAll('courrierCompletedId');" class="btn btn-success waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-blank-circle-outline label-icon align-middle fs-12"></i> Tout décocher</button>
+				                            	</div>
+				                            	<a href="#" style="float:right; margin-right: 10px" ng-show="checked" ng-click="exportCourriers('courrierCompletedId')" class="btn btn-success btn-label waves-effect waves-light"><i class="mdi mdi-microsoft-excel label-icon align-middle fs-16 me-2"></i> Exporter sous Excel</a>	
+			                                	<div class="spinner-border text-info export-courrier" role="status" style="float:right; height: 25px; width: 25px; margin-top: 7px; margin-right: 10px">
+					                            	<span class="sr-only">Loading...</span>
+					                            </div>
+			                                </div><br/><br/>
+                                        	<div class="live-preview">
+	                                            <div class="table-responsive">
+													<table id="courrierCloseTable" ng-controller="courrierCloseTableController"
+														th:attr="ng-init='init();'"
+														class="table dt-responsive nowrap table-striped align-middle">
+														<thead>
+															<tr>
+																<th></th>
+																<th>REFERENCE COURRIER</th>
+																<th>DATE ENREGISTREMENT</th>
+																<th>REFERENCE DEMANDE</th>
+																<th>OBJET</th>
+																<th>TRANSFERE A</th>
+																<th>STATUT</th>
+															</tr>
+														</thead>
+													</table>
+												</div>
+											</div>
+		                                </div>
+		                            </div>        
+                                	
+                                </div><!-- end card-body -->
+                            </div><!-- end card -->
+                        </div>
+        </div>
+    </div>
+    </div>
+    <div id="courrierModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-xl">
+					<div class="modal-content" style="border: none">
+						<div class="modal-header" style="background-color: #009DCA;">
+							<h5 class="modal-title" style="color: #FFFFFF">Enregistrement d'une nouvelle demande</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<form id="courrierForm" name="courrierForm" method="post" enctype="multipart/form-data"
+							class="form-horizontal" ui-jp="parsley">
+							<div class="modal-body p-lg">
+								<div class="row">
+									<div ng-class="'col-md-12'">
+									  	<div ng-if="courrierRequiredError" class="alert alert-danger" role="alert">
+									  	  <strong>Veuillez remplir tous les champs obligatoires !</strong>
+									  	</div>
+									  	<div ng-if="courrierTechnicalError" class="alert alert-danger" role="alert">
+									  	  <strong>Un problème est survenu ! Merci de contacter votre administrateur.</strong>
+									  	</div>
+									  	<div ng-if="courrierSuccess" class="alert alert-success" role="alert">
+									  	  <strong>L'opération s'est effectuée avec succès !</strong>
+									  	</div>
+									</div>
+									<div ng-class="'col-md-8'">
+										<div class="row">
+											<div ng-class="'col-md-6'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<label style="font-size: 13px; color: #000000;"><span class="asterik"> * </span> Référence Demande</label>
+													<input type="text" class="form-control" style="background: #f2f2f7" name="referenceDemande" ng-model="dto.referenceDemande" placeholder="Entrez une valeur" required="required" />
+												</div>
+											</div>
+											<div ng-class="'col-md-6'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<label style="font-size: 13px; color: #000000;"><span class="asterik"> * </span> Date d'enregistrement</label>
+													<input type="text" class="form-control" style="background: #f2f2f7" datepicker="datepicker" name="dateEnregistrement" ng-model="dto.dateEnregistrement" readonly="true" />
+												</div>
+											</div>
+											<div ng-class="'col-md-6'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<label style="font-size: 13px; color: #000000;"><span class="asterik"> * </span> Date de début de congé</label>
+													<input type="text" class="form-control" style="background: #f2f2f7" datepicker="datepicker" name="dateDebutConge" ng-model="dto.dateDebutConge" required="required" />
+												</div>
+											</div>
+											<div ng-class="'col-md-6'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<label style="font-size: 13px; color: #000000;"><span class="asterik"> * </span> Date de fin de congé</label>
+													<input type="text" class="form-control" style="background: #f2f2f7" datepicker="datepicker" name="dateFinConge" ng-model="dto.dateFinConge" required="required" />
+												</div>
+											</div>
+											<div ng-class="'col-md-12'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<label style="font-size: 13px; color: #000000;"><span class="asterik"> * </span> Objet</label>
+													<textarea class="form-control" style="background: #f2f2f7" name="objet" ng-model="dto.objet" placeholder="Entrez une valeur" required="required"></textarea>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div ng-class="'col-md-4'" style="padding-left: 20px;">
+								  		<div style="height: 100%; background: #E8F5FC !important; border-radius: 5px !important; padding: 10px !important;">
+											<div class="row">  
+											  <div ng-class="'col-md-12'">
+								            	<a id="btnNew" href="#" ng-click="addAttachment();" class="btn btn-primary btn-label waves-effect waves-light" style="width: 100%">
+						                        	<i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Ajouter une pièce jointe
+						                        </a>
+								              </div>
+								              <div ng-class="'col-md-12'">
+								            	<div class="form-group" style="margin-bottom: 10px" ng-show="dto.documents.length == 0">Il n'y a aucune pièce jointe ajoutée.</div>
+								            	<div class="form-group" style="margin-bottom: 10px" ng-repeat="document in dto.documents">
+								              		<label>Joindre un fichier</label>
+								              		<input type="file" id="document{{$index}}" name="document{{$index}}" ng-model="document" class="form-control attachment attachment-save" />
+								                </div>
+								              </div>
+								            </div>
+										</div>
+								  	</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<a id="saveCourrierId" href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="saveCourrier()">
+									<i class="mdi mdi-content-save label-icon align-middle fs-16 me-2"></i> Enregistrer
+								</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+	<div class="modal fade zoomIn" id="confirmationModal" tabindex="-1" aria-hidden="true">
+            	<div class="modal-dialog modal-dialog-centered">
+                	<div class="modal-content">
+                    	<div class="modal-body">
+                        	<div class="mt-2 text-center">
+                        		<img th:src="@{/resources/images/sending.gif}" alt="" style="width: 100px" />
+                            	<div class="pt-2 fs-15 mx-4 mx-sm-1">
+                                	<h5><strong>Êtes-vous sûr de vouloir enregistrer la demande ?</strong></h5>
+                                 	<p class="text-muted mx-4 mb-0">Cette action entraînera l'enregistrement de la demande.</p>
+                                 </div>
+                            </div>
+                            <div class="progress" style="margin-top: 10px; width: 100%" ng-show="validateProgress">
+								  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+								</div>
+                            <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+                            	<button type="button" class="btn btn-warning btn-label waves-effect waves-light" data-bs-dismiss="modal"><i class="mdi mdi-cancel label-icon align-middle fs-16"></i> Annuler</button>
+                               	<button type="button" class="btn btn-success btn-label waves-effect waves-light" id="saveConfirmCourrierId" ng-click="saveConfirmCourrier()"><i class="mdi mdi-content-save label-icon align-middle fs-16"></i> Confirmer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+  	</div>
+  	<div id="courrierDetailsModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-xl">
+					<div class="modal-content" style="border: none">
+						<div class="modal-header" style="background-color: #009DCA;">
+							<h5 class="modal-title" style="color: #FFFFFF">Informations de la demande Nº <span ng-bind="dto.referenceCourrier"></span></h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<form id="invoiceForm" name="invoiceForm" method="post" action="#"
+							class="form-horizontal" ui-jp="parsley">
+							<div class="modal-body p-lg">
+								<div class="row">
+									<div ng-class="'col-md-8'">
+										<div class="row">
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Référence courrier
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.referenceCourrier"></span>
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Référence Demande
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.referenceDemande"></span>
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Date d'enregistrement
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.dateEnregistrement"></span>
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Objet
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.objet"></span>
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Date de début de congé
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.dateDebutConge"></span>
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Date de fin de congé
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.dateFinConge"></span>
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" ng-show="dto.motifRejetAnnotationSg != null" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Motif de rejet Annotation SG
+												</div>
+											</div>
+											<div ng-class="'col-md-9'" ng-show="dto.motifRejetAnnotationSg != null" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.motifRejetAnnotationSg"></span>
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" ng-show="dto.motifRejetTraitementRh != null" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Motif de rejet Traitement RH
+												</div>
+											</div>
+											<div ng-class="'col-md-9'" ng-show="dto.motifRejetTraitementRh != null" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.motifRejetTraitementRh"></span>
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" ng-show="dto.motifRejetSignaturePm != null" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Motif de rejet Signature PM
+												</div>
+											</div>
+											<div ng-class="'col-md-9'" ng-show="dto.motifRejetSignaturePm != null" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.motifRejetSignaturePm"></span>
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" ng-show="dto.motifRejetTransfertRh != null" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Motif de rejet Transfert RH
+												</div>
+											</div>
+											<div ng-class="'col-md-9'" ng-show="dto.motifRejetTransfertRh != null" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.motifRejetTransfertRh"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div ng-class="'col-md-4'" style="padding-left: 20px;">
+								  		<div style="height: 100%; background: #E8F5FC !important; border-radius: 5px !important; padding: 10px !important;">
+											<div class="row">
+											  <div ng-class="'col-md-12'">
+											  	<p style="background-color: #076faf; color: #FFFFFF; padding: 5px; margin-bottom: 0.2rem">PIECES JOINTES</p>
+											  </div>
+											  <div ng-class="'col-md-12'" ng-show="dto.documents != null" ng-repeat="doc in dto.documents">
+								              	<a id="btnAssign_{{doc.dataId}}" href="#" class="btn btn-info btn-label waves-effect waves-light dropdown-toggle" style="width: 100%; font-weight: 600; font-size: 12px; padding-top: 3px; padding-bottom: 2px; background-color: #6c757d; border-color: #5d646b" data-bs-toggle="dropdown" aria-expanded="false">
+	                                            	<i class="mdi mdi-file label-icon align-middle fs-16 me-2"></i> {{doc.name}}
+	                                            </a>
+	                                            <ul class="dropdown-menu" aria-labelledby="btnAssign_{{doc.dataId}}">
+	                                            	<li style="border-bottom: 1px solid #EEEEEE"><a class="dropdown-item" href="#" ng-click="loadDocument(doc.dataId);"><i class="mdi mdi-eye label-icon align-middle fs-16 me-2"></i> Afficher</a></li>
+	                                            	<li><a class="dropdown-item" href="#" ng-click="downloadAttachment(doc.dataId);"><i class="mdi mdi-download label-icon align-middle fs-16 me-2"></i> Télécharger</a></li>
+	                                            </ul>
+								              </div>
+								            </div>
+										</div>
+								  	</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<a href="#" class="btn btn-info btn-label waves-effect waves-light" ng-click="displayTasks()">
+									<i class="mdi mdi-format-list-bulleted-square label-icon align-middle fs-16 me-2"></i> Historique de traitement
+								</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			
+			<div id="courrierActionModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-xl">
+					<div class="modal-content" style="border: none">
+						<div class="modal-header" style="background-color: #009DCA;">
+							<h5 class="modal-title" style="color: #FFFFFF">Informations de la demande Nº <span ng-bind="dto.referenceCourrier"></span></h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<form id="courrierSendForm" name="courrierSendForm" method="post" action="#"
+							class="form-horizontal" ui-jp="parsley">
+							<div class="modal-body p-lg">
+								<div class="row">
+									<div ng-class="'col-md-12'">
+									  	<div ng-if="courrierRequiredError" class="alert alert-danger" role="alert">
+									  	  <strong>Veuillez remplir tous les champs obligatoires !</strong>
+									  	</div>
+									  	<div ng-if="courrierTechnicalError" class="alert alert-danger" role="alert">
+									  	  <strong>Un problème est survenu ! Merci de contacter votre administrateur.</strong>
+									  	</div>
+									  	<div ng-if="courrierSuccess" class="alert alert-success" role="alert">
+									  	  <strong>L'opération s'est effectuée avec succès !</strong>
+									  	</div>
+									</div>
+									<div ng-class="'col-md-8'">
+										<div class="row">
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Référence courrier
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.referenceCourrier"></span>
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Référence Demande
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.referenceDemande"></span>
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Date d'enregistrement
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.dateEnregistrement"></span>
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Objet
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.objet"></span>
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Date de début de congé
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.dateDebutConge"></span>
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Date de fin de congé
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.dateFinConge"></span>
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" ng-show="dto.motifRejetAnnotationSg != null" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Motif de rejet Annotation SG
+												</div>
+											</div>
+											<div ng-class="'col-md-9'" ng-show="dto.motifRejetAnnotationSg != null" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.motifRejetAnnotationSg"></span>
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" ng-show="dto.motifRejetTraitementRh != null" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Motif de rejet Traitement RH
+												</div>
+											</div>
+											<div ng-class="'col-md-9'" ng-show="dto.motifRejetTraitementRh != null" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.motifRejetTraitementRh"></span>
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" ng-show="dto.motifRejetSignaturePm != null" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Motif de rejet Signature PM
+												</div>
+											</div>
+											<div ng-class="'col-md-9'" ng-show="dto.motifRejetSignaturePm != null" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.motifRejetSignaturePm"></span>
+												</div>
+											</div>
+											<div ng-class="'col-md-3'" ng-show="dto.motifRejetTransfertRh != null" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													Motif de rejet Transfert RH
+												</div>
+											</div>
+											<div ng-class="'col-md-9'" ng-show="dto.motifRejetTransfertRh != null" style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #EEEEEE">
+												<div class="form-group">
+													<span style="font-weight: 600" ng-bind="dto.motifRejetTransfertRh"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div ng-class="'col-md-4'" style="padding-left: 20px;">
+								  		<div style="height: 100%; background: #E8F5FC !important; border-radius: 5px !important; padding: 10px !important;">
+											<div class="row">  
+											  <div ng-class="'col-md-12'">
+								            	<a id="btnNew" href="#" ng-click="addAttachment();" class="btn btn-primary btn-label waves-effect waves-light" style="width: 100%">
+						                        	<i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Ajouter une pièce jointe
+						                        </a>
+								              </div>
+								              <div ng-class="'col-md-12'">
+								              	<div class="form-group" style="margin-bottom: 10px" ng-show="documents.length == 0">Il n'y a aucune pièce jointe ajoutée.</div>
+								            	<div class="form-group" style="margin-bottom: 10px" ng-repeat="document in dto.documents">
+								              		<label>Joindre un fichier</label>
+								              		<input type="file" id="documentNew{{$index}}" name="documentNew{{$index}}" ng-model="document" class="form-control attachment attachment-send" />
+								                </div>
+								              </div>
+								              <div ng-class="'col-md-12'" ng-show="documents != null" ng-repeat="doc in documents">
+								              	<a id="btnAssign_{{doc.dataId}}" href="#" class="btn btn-info btn-label waves-effect waves-light dropdown-toggle" style="width: 100%; font-weight: 600; font-size: 12px; padding-top: 3px; padding-bottom: 2px; background-color: #6c757d; border-color: #5d646b" data-bs-toggle="dropdown" aria-expanded="false">
+	                                            	<i class="mdi mdi-file label-icon align-middle fs-16 me-2"></i> {{doc.name}}
+	                                            </a>
+	                                            <ul class="dropdown-menu" aria-labelledby="btnAssign_{{doc.dataId}}">
+	                                            	<li style="border-bottom: 1px solid #EEEEEE"><a class="dropdown-item" href="#" ng-click="loadDocument(doc.dataId);"><i class="mdi mdi-eye label-icon align-middle fs-16 me-2"></i> Afficher</a></li>
+	                                            	<li><a class="dropdown-item" href="#" ng-click="downloadAttachment(doc.dataId);"><i class="mdi mdi-download label-icon align-middle fs-16 me-2"></i> Télécharger</a></li>
+	                                            </ul>
+								              </div>
+								            </div>
+										</div>
+								  	</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<a href="#" class="btn btn-danger btn-label waves-effect waves-light" id="cancelCourrierId" ng-click="cancelCourrier(dto.wSubWorkId)">
+									<i class="mdi mdi-close-thick label-icon align-middle fs-16 me-2"></i> Rejeter
+								</a>
+								<a href="#" class="btn btn-success btn-label waves-effect waves-light" id="sendCourrierId" ng-click="sendCourrier(dto.wSubWorkId)">
+									<i class="mdi mdi-send label-icon align-middle fs-16 me-2"></i> Transférer
+								</a>
+								<a href="#" class="btn btn-info btn-label waves-effect waves-light" ng-click="displayTasks()">
+									<i class="mdi mdi-format-list-bulleted-square label-icon align-middle fs-16 me-2"></i> Historique de traitement
+								</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			
+			<div id="taskModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-xl">
+					<div class="modal-content" style="border: none">
+						<div class="modal-header" style="background-color: #009DCA;">
+							<h5 class="modal-title" style="color: #FFFFFF">Historique de traitement de la demande Nº <span ng-bind="dto.referenceCourrier"></span></h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+							<div class="modal-body p-lg">
+								<div class="table-responsive">
+													<table id="taskTable" ng-controller="taskTableController"
+														th:attr="ng-init='init();'"
+														class="table dt-responsive nowrap table-striped align-middle">
+														<thead>
+															<tr>
+																<th style="width: 5px"></th>
+																<th>ETAPE</th>
+																<th>DATE DE TRANSFERT</th>
+																<th>DATE DE TRAITEMENT</th>
+																<th>DELAI DE TRAITEMENT</th>
+																<th>AFFECTE A</th>
+																<th>STATUT</th>
+															</tr>
+														</thead>
+													</table>
+												</div>
+							</div>
+							<div class="modal-footer">
+							</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal fade zoomIn" id="sendCourrierModal" tabindex="-1" aria-hidden="true">
+            	<div class="modal-dialog modal-dialog-centered">
+                	<div class="modal-content">
+                    	<div class="modal-body">
+                        	<div class="mt-2 text-center">
+                        		<img th:src="@{/resources/images/sending.gif}" alt="" style="width: 100px" />
+                            	<div class="pt-2 fs-15 mx-4 mx-sm-1">
+                                	<h5><strong>Êtes-vous sûr de vouloir transférer la demande ?</strong></h5>
+                                 	<p class="text-muted mx-4 mb-0">Cette action est irréversible et entraînera le transfert de la demande.</p>
+                                </div>
+                            </div>
+                            <div class="progress" style="margin-top: 10px; width: 100%" ng-show="validateProgress">
+								  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+								</div>
+                            <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+                            	<button type="button" class="btn btn-warning btn-label waves-effect waves-light" data-bs-dismiss="modal"><i class="mdi mdi-cancel label-icon align-middle fs-16"></i> Annuler</button>
+                               	<button type="button" class="btn btn-success btn-label waves-effect waves-light" id="confirmSendCourrierId" ng-click="confirmSendCourrier()"><i class="mdi mdi-send label-icon align-middle fs-16"></i> Transférer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+		  	</div>
+		  	<div class="modal fade zoomIn" id="cancelCourrierModal" tabindex="-1" aria-hidden="true">
+            	<div class="modal-dialog modal-dialog-centered">
+                	<div class="modal-content">
+                    	<div class="modal-body">
+                        	<div class="mt-2 text-center">
+                        		<img th:src="@{/resources/images/sending.gif}" alt="" style="width: 100px" />
+                            	<div class="pt-2 fs-15 mx-4 mx-sm-1">
+                                	<h5><strong>Êtes-vous sûr de vouloir rejeter la demande ?</strong></h5>
+                                 	<p class="text-muted mx-4 mb-0">Cette action est irréversible et entraînera le rejet de la demande.</p>
+                                	<form id="cancelCourrierForm" name="cancelCourrierForm" method="post" enctype="multipart/form-data"
+										class="form-horizontal" ui-jp="parsley">
+										<div ng-class="'col-md-12'">
+											<div ng-if="courrierRequiredError" style="font-size: 13px; margin-top: 10px" class="alert alert-danger" role="alert">
+										  	  <strong>Veuillez renseigner le motif de rejet !</strong>
+										  	</div>
+										  	<div ng-if="courrierTechnicalError" class="alert alert-danger" role="alert">
+										  	  <strong>Un problème est survenu ! Merci de contacter votre administrateur.</strong>
+										  	</div>
+											<div class="form-group">
+												<textarea style="margin-top: 15px" class="form-control" name="motif" placeholder="* Renseigner le motif de rejet"
+													ng-model="dto.motif" required="required"></textarea>
+											</div>
+										</div>
+									</form>
+                                </div>
+                            </div>
+                            <div class="progress" style="margin-top: 10px; width: 100%" ng-show="validateProgress">
+								  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+								</div>
+                            <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+                            	<button type="button" class="btn btn-warning btn-label waves-effect waves-light" data-bs-dismiss="modal"><i class="mdi mdi-cancel label-icon align-middle fs-16"></i> Annuler</button>
+                               	<button type="button" class="btn btn-danger btn-label waves-effect waves-light" id="confirmCancelCourrierId" ng-click="confirmCancelCourrier()"><i class="mdi mdi-close-thick label-icon align-middle fs-16"></i> Rejeter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+		  	</div>
+		  	<div class="modal fade zoomIn" id="removeCourrierModal" tabindex="-1" aria-hidden="true">
+		            	<div class="modal-dialog modal-dialog-centered">
+		                	<div class="modal-content">
+		                    	<div class="modal-body">
+		                        	<div class="mt-2 text-center">
+		                        		<lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
+		                            	<div class="pt-2 fs-15 mx-4 mx-sm-1">
+		                                	<h5><strong>Êtes-vous sûr de vouloir supprimer cette demande ?</strong></h5>
+		                                 	<p class="text-muted mx-4 mb-0">Cette action est irréversible et entraînera la suppression de la demande de façon définitive.</p>
+		                                 </div>
+		                            </div>
+		                            <div class="progress" style="margin-top: 10px; width: 100%" ng-show="removeProgress">
+										  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+										</div>
+		                            <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+		                            	<button type="button" class="btn btn-warning btn-label waves-effect waves-light" data-bs-dismiss="modal"><i class="mdi mdi-cancel label-icon align-middle fs-16"></i> Annuler</button>
+		                               	<button type="button" class="btn btn-danger btn-label waves-effect waves-light" id="delete-record" ng-click="confirmRemoveCourrier()"><i class="mdi mdi-trash-can label-icon align-middle fs-16"></i> Confirmer</button>
+		                            </div>
+		                        </div>
+		                    </div>
+		                </div>
+		  	</div>
+		  	<div id="notificationModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog">
+					<div class="modal-content" style="border: none">
+						<div class="modal-header" style="background-color: #009DCA;">
+							<h5 class="modal-title" style="color: #FFFFFF">Notifications</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body p-lg">
+							<div class="row">
+								<div ng-class="'col-md-12'">
+									<ul class="notification" ng-show="taskByProfile != 0">
+										<li ng-show="currentCongeExterneCountByProfile != 0"><i class="mdi mdi-text-box-outline" style="float: left; font-size: 25px; margin-top: -5px; color: #444444"></i> <div style="margin-left: 35px">Vous avez <strong><span ng-bind="currentCongeExterneCountByProfile"></span> tâche(s) de demande</strong> en attente de traitement. <a th:href="@{/congeexterne/}">Cliquez ici pour les traiter.</a></div></li>
+									</ul>
+									<div ng-show="taskByProfile == 0" style="text-align: center">
+										<img th:src="@{/resources/images/notification.svg}" alt="" height="150" />
+										<h4 style="margin-top: 20px">Vous n'avez aucune notification</h4>
+									</div>
+								</div>
+							</div>	
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+		</div>
+		
+		<div id="viewerModal" class="modal fade" data-backdrop="true">
+		  <div class="modal-dialog modal-xl">
+		    <div class="modal-content" style="border: none">
+		      <div class="modal-header" style="background-color: #009DCA;">
+		        <h5 class="modal-title" style="color: #FFFFFF">Affichage du document</h5>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body p-lg">
+		        <div class="row">
+		          <!-- Barre d'outils du document -->
+		          <div class="col-md-12 mb-3">
+		            <div class="document-toolbar d-flex justify-content-between align-items-center border-bottom pb-2">
+		              <div class="toolbar-left">
+		                <button class="btn btn-sm btn-outline-primary" ng-click="downloadDocument()" title="Télécharger">
+		                  <i class="fas fa-download"></i> Télécharger
+		                </button>
+		                <button class="btn btn-sm btn-outline-primary ms-2" ng-click="rotateLeft()" title="Rotation gauche">
+		                  <i class="fas fa-undo"></i>
+		                </button>
+		                <button class="btn btn-sm btn-outline-primary ms-1" ng-click="rotateRight()" title="Rotation droite">
+		                  <i class="fas fa-redo"></i>
+		                </button>
+		              </div>
+		              <div class="toolbar-right">
+		                <!-- Contrôles de zoom pour les images -->
+		                <div class="zoom-controls d-inline-block me-3" ng-show="documentType === 'image' || documentType === 'pdf'">
+		                  <button class="btn btn-sm btn-outline-primary" ng-click="zoomOut()" title="Zoom arrière">
+		                    <i class="fas fa-search-minus"></i>
+		                  </button>
+		                  <span class="mx-2">{{zoom}}%</span>
+		                  <button class="btn btn-sm btn-outline-primary" ng-click="zoomIn()" title="Zoom avant">
+		                    <i class="fas fa-search-plus"></i>
+		                  </button>
+		                  <button class="btn btn-sm btn-outline-primary ms-1" ng-click="resetZoom()" title="Réinitialiser">
+		                    <i class="fas fa-sync-alt"></i>
+		                  </button>
+		                </div>
+		                <!-- Navigation des pages pour les PDF -->
+		                <div class="page-navigation d-inline-block" ng-show="documentType === 'pdf' &amp;&amp; totalPages > 1">
+		                  <button class="btn btn-sm btn-outline-primary" ng-click="previousPage()" ng-disabled="currentPageIndex === 0">
+		                    <i class="fas fa-chevron-left"></i>
+		                  </button>
+		                  <span class="mx-2">{{currentPageIndex + 1}} / {{totalPages}}</span>
+		                  <button class="btn btn-sm btn-outline-primary" ng-click="nextPage()" ng-disabled="currentPageIndex === totalPages - 1">
+		                    <i class="fas fa-chevron-right"></i>
+		                  </button>
+		                </div>
+		              </div>
+		            </div>
+		          </div>
+		          
+		          <!-- Aperçu des miniatures pour les PDF -->
+		          <div class="col-md-2" ng-show="documentType === 'pdf' &amp;&amp; totalPages > 1">
+		            <div class="thumbnails-container border rounded p-2" style="max-height: 600px; overflow-y: auto;">
+		              <h6 class="text-center">Aperçu ({{totalPages}} pages)</h6>
+		              <div class="thumbnail-item" ng-repeat="thumbnail in thumbnails track by $index" 
+		                   ng-click="goToPage($index + 1)"
+		                   ng-class="{'active-thumbnail': currentPageIndex === $index}"
+		                   style="cursor: pointer; margin-bottom: 10px; border: 2px solid transparent;"
+		                   ng-style="{'border-color': currentPageIndex === $index ? '#009DCA' : 'transparent'}">
+		                <img ng-src="{{thumbnail}}" class="img-fluid" alt="Page {{$index + 1}}"/>
+		                <div class="text-center small">Page {{$index + 1}}</div>
+		              </div>
+		            </div>
+		          </div>
+		          
+		          <!-- Affichage principal du document -->
+		          <div ng-class="{'col-md-10': documentType === 'pdf' &amp;&amp; totalPages &gt; 1, 'col-md-12': documentType !== 'pdf' || totalPages &lt;= 1}">
+		            <div class="document-viewer-container">
+		              <!-- Message de chargement -->
+		              <div class="loading-indicator d-flex justify-content-center align-items-center" ng-show="isLoading" style="min-height: 200px;">
+		                <div class="spinner-border text-primary" role="status"></div>
+		                <span class="ms-2">Chargement...</span>
+		              </div>
+		              
+		              <!-- Message d'erreur -->
+		              <div class="error-message" ng-show="error">
+		                <div class="alert alert-danger">{{error}}</div>
+		              </div>
+		              
+		              <!-- Affichage du document -->
+		              <div class="document-display" ng-show="currentDocument || (documentType === 'pdf' &amp;&amp; pdfDocument)">
+		                <!-- Image avec contrôle de zoom et rotation -->
+		                <div ng-if="documentType === 'image'" class="image-container text-center">
+		                  <img ng-src="{{currentDocument}}" alt="Document image" 
+		                       ng-style="{'transform': 'rotate(' + rotation + 'deg) scale(' + zoom/100 + ')'}" 
+		                       style="transition: transform 0.3s ease-in-out; max-width: 100%; max-height: 600px;" />
+		                </div>
+		                
+		                <!-- Texte avec style amélioré -->
+		                <div ng-if="documentType === 'text'" class="text-container">
+		                  <pre class="text-document p-3 border rounded bg-light" style="max-height: 600px; overflow: auto;">{{currentDocument}}</pre>
+		                </div>
+		                
+		                <!-- PDF avec contrôles intégrés via PDF.js -->
+		                <div ng-if="documentType === 'pdf'" class="pdf-container text-center">
+		                  <canvas id="pdf-canvas" style="max-width: 100%;" 
+		                          ng-style="{'transform': 'scale(' + zoom/100 + ')'}"></canvas>
+		                          
+		                  <!-- Fallback pour les navigateurs sans support canvas -->
+		                  <div class="pdf-fallback" ng-if="!pdfDocument">
+		                    <p>Utilisation du lecteur PDF natif:</p>
+		                    <object data="{{pdfData}}" type="application/pdf" width="100%" height="600px">
+		                      <div class="pdf-fallback-message">
+		                        <p>Votre navigateur ne prend pas en charge l'affichage intégré des PDFs.</p>
+		                        <p>
+		                          <a ng-href="{{pdfData}}" target="_blank" download="{{fileName}}">
+		                            Télécharger le PDF
+		                          </a>
+		                        </p>
+		                      </div>
+		                    </object>
+		                  </div>
+		                </div>
+		              </div>
+		            </div>
+		          </div>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</div>
+  
+	<div layout:fragment="plugins" class="page-content">
+		<script th:src='@{/resources/js/client/congeExterne.js}'></script>
+	</div>
+</body>
+</html>

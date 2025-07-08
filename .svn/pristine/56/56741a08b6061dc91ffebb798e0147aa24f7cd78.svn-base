@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="utf-8" />
+  <title>AMAN - Authentification</title>
+  <meta name="description" content="Gestion des encours clients et recouvrement" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <!-- for ios 7 style, multi-resolution icon of 152x152 -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent" />
+  <link rel="apple-touch-icon" th:href="@{/resources/images/logo.png}" />
+  <meta name="apple-mobile-web-app-title" content="AMAN" />
+  <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="shortcut icon" sizes="196x196" th:href="@{/resources/images/logo.png}" />
+  
+  <!-- style -->
+  <link rel="stylesheet" th:href="@{/resources/animate.css/animate.min.css}" type="text/css" />
+  <link rel="stylesheet" th:href="@{/resources/glyphicons/glyphicons.css}" type="text/css" />
+  <link rel="stylesheet" th:href="@{/resources/font-awesome/css/font-awesome.min.css}" type="text/css" />
+  <link rel="stylesheet" th:href="@{/resources/material-design-icons/material-design-icons.css}" type="text/css" />
+
+  <link rel="stylesheet" th:href="@{/resources/bootstrap/dist/css/bootstrap.min.css}" type="text/css" />
+  <!-- build:css ../assets/styles/app.min.css -->
+  <link rel="stylesheet" th:href="@{/resources/styles/app.css}" type="text/css" />
+  <!-- endbuild -->
+  <link rel="stylesheet" th:href="@{/resources/fonts/roboto/font.css}" type="text/css" />
+  <link rel="stylesheet" th:href="@{/resources/styles/font.css}" type="text/css" />
+</head>
+<body>
+  <div class="app" id="page-container">
+<!-- ############ LAYOUT START-->
+  <!-- begin #content -->
+		<div id="content" class="content">
+			<div class="row">
+				<div class="col-md-12">
+					<div id="content" layout:fragment="content"></div>
+				</div>
+			</div>
+		</div>
+		<!-- end #content -->
+<!-- ############ LAYOUT END-->
+
+  </div>
+<!-- build:js scripts/app.html.js -->
+<!-- jQuery -->
+  <script th:src="@{/resources/libs/jquery/jquery/dist/jquery.js}"></script>
+<!-- Bootstrap -->
+  <script th:src="@{/resources/libs/jquery/tether/dist/js/tether.min.js}"></script>
+  <script th:src="@{/resources/libs/jquery/bootstrap/dist/js/bootstrap.js}"></script>
+<!-- core -->
+  <script th:src="@{/resources/libs/jquery/underscore/underscore-min.js}"></script>
+  <script th:src="@{/resources/libs/jquery/jQuery-Storage-API/jquery.storageapi.min.js}"></script>
+  <script th:src="@{/resources/libs/jquery/PACE/pace.min.js}"></script>
+
+  <script th:src="@{/resources/scripts/palette.js}"></script>
+  <script th:src="@{/resources/scripts/ui-include.js}"></script>
+  <script th:src="@{/resources/scripts/ui-device.js}"></script>
+  <script th:src="@{/resources/scripts/ui-form.js}"></script>
+  <script th:src="@{/resources/scripts/ui-nav.js}"></script>
+  <script th:src="@{/resources/scripts/ui-scroll-to.js}"></script>
+  <script th:src="@{/resources/scripts/ui-toggle-class.js}"></script>
+
+<!-- ajax -->
+  <script th:src="@{/resources/libs/jquery/jquery-pjax/jquery.pjax.js}"></script>
+  <script th:src="@{/resources/scripts/ajax.js}"></script>
+<!-- endbuild -->
+</body>
+</html>

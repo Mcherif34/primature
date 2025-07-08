@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<title></title>
+</head>
+<body>
+	<th:block th:fragment="form">
+		<form id="form" name="form" method="post" action="#"
+			class="form-horizontal">
+			
+			<div class="sidemenu">
+				<ul>
+					<li><a class="blue" ng-click="add()"><span>Ajouter</span><i class="fa fa-plus"></i></a></li>
+				</ul>
+			</div>
+			
+			<div class="panel panel-inverse" data-sortable-id="ui-widget-10">
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+					</div>
+					<h4 class="panel-title semi-bold">
+						<th:block th:text="#{referentiel.investisseur.form}"></th:block>
+					</h4>
+				</div>
+				
+				<div class="panel-body">
+					<div style="float: right;">
+						<a class="btn cancel aman-green-color" style="font-size: 12px;" ng-click="save()" title="Enregistrer"><i class="fa fa-save"></i> Enregistrer</a>
+					</div>
+					<fieldset ng-disabled="mode =='read'" style="margin-top: 45px">
+						<!-- Block 1 -->
+						<div class="row">
+							<input type="hidden" ng-model="dto.id"  />
+							<div ng-class="'col-md-6'">
+								<div class="form-group">
+									<label class="col-md-5 control-label"> Nature
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<select class="form-control" name="nature" ng-model="dto.natureId" required="required"
+										ng-options="n.id as n.libelle for n in natures"></select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"> <th:block th:text="#{referentiel.investisseur.cin}"></th:block>
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<input type="text" class="form-control" name="cin" 
+										ng-model="dto.cin" required="required" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"> <th:block th:text="#{referentiel.investisseur.mail}"></th:block>
+									</label>
+									<div class="col-md-7">
+										<input type="text" class="form-control" name="mail" 
+										ng-model="dto.mail" />
+									</div>
+								</div>
+							</div>
+							<div ng-class="'col-md-6'">
+								<div class="form-group">
+									<label class="col-md-5 control-label"> <th:block th:text="#{referentiel.investisseur.nom}"></th:block>
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<input type="text" class="form-control" name="nom" 
+										ng-model="dto.nom" required="required" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"> <th:block th:text="#{referentiel.investisseur.gsm}"></th:block>
+									</label>
+									<div class="col-md-7">
+										<input type="text" class="form-control" name="gsm" 
+										ng-model="dto.gsm" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"> <th:block th:text="#{referentiel.investisseur.adresse}"></th:block>
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<input type="text" class="form-control" name="adresse" 
+										ng-model="dto.adresse" required="required" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</fieldset>			
+					
+				</div>
+			</div>
+		</form>
+
+	</th:block>
+</body>
+</html>

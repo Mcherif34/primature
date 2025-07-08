@@ -1,0 +1,485 @@
+<!doctype html>
+<html 
+	lang="en" 
+	data-layout="vertical" 
+	data-topbar="light" 
+	data-sidebar="dark" 
+	data-sidebar-size="lg" 
+	data-sidebar-image="none" 
+	data-preloader="disable" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Gestion des procédures administratives - Primature du Tchad</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta content="Gestion des procédures administratives de la Primature du Tchad" name="description" />
+    <meta content="BRAIN IT" name="author" />
+    <link rel="shortcut icon" th:href="@{/resources/images/favicon.png}" />
+    <link th:href="@{/resources/libs/jsvectormap/css/jsvectormap.min.css}" href="assets/libs/jsvectormap/css/jsvectormap.min.css" rel="stylesheet" type="text/css" />
+	<link th:href="@{/resources/libs/swiper/swiper-bundle.min.css}" href="assets/libs/swiper/swiper-bundle.min.css" rel="stylesheet" type="text/css" />
+    <script th:src="@{/resources/js/layout.js}"></script>
+    <link th:href="@{/resources/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/resources/css/icons.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/resources/css/app.min.css}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" th:href="@{/resources/styles/app.css}" type="text/css" />
+    <link th:href="@{/resources/css/custom.min.css}" rel="stylesheet" type="text/css" />
+    
+    <link rel="stylesheet" th:href="@{/resources/libs/jquery/plugins/integration/bootstrap/3/dataTables.bootstrap.css}" type="text/css" />
+	<link th:href="@{/resources/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css}" rel="stylesheet" />
+	<link th:href="@{/resources/plugins/bootstrap-daterangepicker/daterangepicker.css}" rel="stylesheet" />
+	<link th:href="@{/resources/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css}" rel="stylesheet" />
+	<link rel="stylesheet" th:href="@{/resources/libs/jquery/summernote/dist/summernote.css}" type="text/css" />
+	<link th:href="@{/resources/libs/quill/quill.core.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/resources/libs/quill/quill.bubble.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/resources/libs/quill/quill.snow.css}" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" th:href="@{/resources/libs/jquery/select2/dist/css/select2.min.css}" type="text/css" />
+	<link rel="stylesheet" th:href="@{/resources/libs/jquery/select2-bootstrap-theme/dist/select2-bootstrap.min.css}" type="text/css" />
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+	<script th:src="@{/resources/libs/jquery/PACE/pace.min.js}"></script>
+	<script th:src="@{/resources/libs/angular/angular/angular.js}"></script>
+	<script
+		th:src="@{/resources/libs/angular/angular-animate/angular-animate.js}"></script>
+	<script th:src="@{/resources/libs/angular/angular-message/dist/angular-messages.js}"></script>
+	<script th:src="@{/resources/static/js/external/registration.js}"></script>
+	<script type="text/javascript">
+		var context = "/primature";
+	</script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	    var URL = [[${URL}]];
+	/*]]>*/
+	</script>
+</head>
+<body ng-app="primature">
+	<div class="app" id="app">
+		<div id="layout-wrapper">
+	        <div class="app-menu navbar-menu">
+	            <!-- LOGO -->
+	            <div class="navbar-brand-box" style="border-bottom: 1px solid #39596d">
+	                <!-- Light Logo-->
+	                <a th:href="@{/}" class="logo logo-light">
+	                    <span class="logo-sm">
+	                        <img th:src="@{/resources/images/primature_logo.svg}" alt="" height="22" />
+	                    </span>
+	                    <span class="logo-xl">
+	                        <img th:src="@{/resources/images/edoc_logo_white.png}" alt="" height="50" />
+	                    </span>
+	                </a>
+	                <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">
+	                    <i class="ri-record-circle-line"></i>
+	                </button>
+	            </div>
+	
+	            <div id="scrollbar">
+	                <div class="container-fluid">
+	
+	                    <div id="two-column-menu">
+	                    </div>
+	                    <ul class="navbar-nav" id="navbar-nav">
+	                        <li class="menu-title"><span data-key="t-exploitation">Exploitation</span></li>
+	                        <li class="nav-item">
+	                            <a class="nav-link menu-link" th:href="@{/}">
+	                                <i class="mdi mdi-poll"></i> <span data-key="t-dashboards">Tableau de bord</span>
+	                            </a>
+	                        </li>
+	                        <li class="nav-item">
+	                            <a class="nav-link menu-link" href="#externe" data-bs-toggle="collapse" role="button" aria-expanded="true" aria-controls="guides">
+	                                <i class="mdi mdi-email"></i> <span data-key="t-permissions">Procédures externes</span>
+	                            </a>
+	                            <div class="collapse menu-dropdown show" id="externe">
+	                                <ul class="nav nav-sm flex-column" style="list-style-type: none">
+	                                	<li class="nav-item">
+	                                		<a class="nav-link menu-link" href="#correspondance" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="guides">
+				                                <i class="mdi mdi-file"></i> <span data-key="t-permissions">Correspondances</span>
+				                            </a>
+				                            <div class="collapse menu-dropdown" id="correspondance">
+				                                <ul class="nav nav-sm flex-column">
+				                                    <li class="nav-item">
+							                            <a class="nav-link menu-link" th:href="@{/correspondancesg/}">
+							                                <span data-key="t-dashboards">Correspondances adressées au Secrétariat Général</span>
+							                            </a>
+							                        </li>
+							                        <li class="nav-item">
+							                            <a class="nav-link menu-link" th:href="@{/correspondancedircab/}">
+							                                <span data-key="t-dashboards">Correspondances adressées à la Direction de cabinet du Premier Ministre</span>
+							                            </a>
+							                        </li>
+							                    </ul>
+							                </div>
+				                        </li>
+				                        <li class="nav-item">
+	                                		<a class="nav-link menu-link" href="#audience" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="guides">
+				                                <i class="mdi mdi-file"></i> <span data-key="t-permissions">Demandes d'audience</span>
+				                            </a>
+				                            <div class="collapse menu-dropdown" id="audience">
+				                                <ul class="nav nav-sm flex-column">
+				                                    <li class="nav-item">
+							                            <a class="nav-link menu-link" th:href="@{/audiencepm/}">
+							                                <span data-key="t-dashboards">Demandes d'audience adressées au Premier Ministre</span>
+							                            </a>
+							                        </li>
+							                        <li class="nav-item">
+							                            <a class="nav-link menu-link" th:href="@{/audiencesg/}">
+							                                <span data-key="t-dashboards">Demandes d'audience adressées au Secrétaire Général</span>
+							                            </a>
+							                        </li>
+							                    </ul>
+							                </div>
+				                        </li>
+				                        <li class="nav-item">
+				                            <a class="nav-link menu-link" th:href="@{/congeexterne}">
+				                                <i class="mdi mdi-file"></i> <span data-key="t-dashboards">Demandes de congés</span>
+				                            </a>
+				                        </li>
+				                        <li class="nav-item">
+				                            <a class="nav-link menu-link" th:href="@{/missionexterne}">
+				                                <i class="mdi mdi-file"></i> <span data-key="t-dashboards">Ordres de mission</span>
+				                            </a>
+				                        </li>
+				                        <li class="nav-item">
+				                            <a class="nav-link menu-link" th:href="@{/titularisation/}">
+				                                <i class="mdi mdi-file"></i> <span data-key="t-dashboards">Projets de titularisation</span>
+				                            </a>
+				                        </li>
+	                                </ul>
+	                            </div>
+	                        </li>
+	                        <li class="nav-item">
+	                            <a class="nav-link menu-link" href="#interne" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="guides">
+	                                <i class="mdi mdi-email"></i> <span data-key="t-permissions">Procédures internes</span>
+	                            </a>
+	                            <div class="collapse menu-dropdown" id="interne">
+	                                <ul class="nav nav-sm flex-column">
+	                                    <li class="nav-item">
+				                            <a class="nav-link menu-link" th:href="@{/absence/}">
+				                                <i class="mdi mdi-file"></i> <span data-key="t-dashboards">Autorisations d'absence</span>
+				                            </a>
+				                        </li>
+				                        <li class="nav-item">
+				                            <a class="nav-link menu-link" th:href="@{/materiel/}">
+				                                <i class="mdi mdi-file"></i> <span data-key="t-dashboards">Bons de commande de matériels</span>
+				                            </a>
+				                        </li>
+				                        <li class="nav-item">
+				                            <a class="nav-link menu-link" th:href="@{/decision/}">
+				                                <i class="mdi mdi-file"></i> <span data-key="t-dashboards">Décisions</span>
+				                            </a>
+				                        </li>
+	                                    <li class="nav-item">
+				                            <a class="nav-link menu-link" th:href="@{/congeinterne}">
+				                                <i class="mdi mdi-file"></i> <span data-key="t-dashboards">Demandes de congés</span>
+				                            </a>
+				                        </li>
+				                        <li class="nav-item">
+				                            <a class="nav-link menu-link" th:href="@{/felicitations}">
+				                                <i class="mdi mdi-file"></i> <span data-key="t-dashboards">Lettres de félicitations</span>
+				                            </a>
+				                        </li>
+				                        <li class="nav-item">
+				                            <a class="nav-link menu-link" th:href="@{/nomination/}">
+				                                <i class="mdi mdi-file"></i> <span data-key="t-dashboards">Nominations par arrêté</span>
+				                            </a>
+				                        </li>
+				                        <li class="nav-item">
+				                            <a class="nav-link menu-link" th:href="@{/missioninterne}">
+				                                <i class="mdi mdi-file"></i> <span data-key="t-dashboards">Ordres de mission</span>
+				                            </a>
+				                        </li>
+	                                </ul>
+	                            </div>
+	                        </li>
+	                        <li class="menu-title"><span data-key="t-administration">Administration</span></li>
+	                                                <li class="nav-item">
+                            <a class="nav-link menu-link" th:href="@{/administration/profile}">
+                                <i class="mdi mdi-security"></i> <span data-key="t-permissions">Utilisateurs et Groupes</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" th:href="@{/administration/external-registrations/list}">
+                                <i class="mdi mdi-account-plus"></i> <span data-key="t-permissions">Inscriptions Externes</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" th:href="@{/settings}">
+                                <i class="mdi mdi-cog"></i> <span data-key="t-permissions">Paramètres</span>
+                            </a>
+                        </li>
+	                        <li class="menu-title"><span data-key="t-help">Aide</span></li>
+	                        <li class="nav-item">
+	                            <a class="nav-link menu-link" th:href="@{/help}">
+	                                <i class="mdi mdi-lifebuoy"></i> <span data-key="t-support">Manuel d'utilisation</span>
+	                            </a>
+	                        </li>
+	                        <li class="nav-item">
+	                            <a class="nav-link menu-link" href="#" ng-click="contactForm()">
+	                                <i class="mdi mdi-phone"></i> <span data-key="t-support">Nous contacter</span>
+	                            </a>
+	                        </li>
+	                    </ul>
+	                </div>
+	                <!-- Sidebar -->
+	            </div>
+	
+	            <div class="sidebar-background"></div>
+	        </div>
+	        <header id="page-topbar">
+				    <div class="layout-width">
+				        <div class="navbar-header">
+				            <div class="d-flex">
+				                <!-- LOGO -->
+				                <div class="navbar-brand-box horizontal-logo">
+				                    <a href="index.html" class="logo logo-dark">
+				                        <span class="logo-sm">
+				                            <img th:src="@{/resources/images/logo-sm.png}" alt="" height="22" />
+				                        </span>
+				                        <span class="logo-lg">
+				                            <img th:src="@{/resources/images/logo-dark.png}" alt="" height="17" />
+				                        </span>
+				                    </a>
+				
+				                    <a href="index.html" class="logo logo-light">
+				                        <span class="logo-sm">
+				                            <img th:src="@{/resources/images/logo-sm.png}" alt="" height="22" />
+				                        </span>
+				                        <span class="logo-lg">
+				                            <img th:src="@{/resources/images/logo-light.png}" alt="" height="17" />
+				                        </span>
+				                    </a>
+				                </div>
+				
+				                <button type="button" class="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger shadow-none" id="topnav-hamburger-icon">
+				                    <span class="hamburger-icon">
+				                        <span></span>
+				                        <span></span>
+				                        <span></span>
+				                    </span>
+				                </button>
+				            </div>
+							<img th:src="@{/resources/images/primature_header.png}" alt="Primature du Tchad" style="height: 40px; margin-left: 100px" />
+				            <div class="d-flex align-items-center">
+								<div class="dropdown d-md-none topbar-head-dropdown header-item">
+				                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle shadow-none" id="page-header-search-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				                        <i class="bx bx-search fs-22"></i>
+				                    </button>
+				                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0" aria-labelledby="page-header-search-dropdown">
+				                        <form class="p-3">
+				                            <div class="form-group m-0">
+				                                <div class="input-group">
+				                                    <input type="text" class="form-control" placeholder="Search ..." aria-label="Recipient's username" />
+				                                    <button class="btn btn-primary" type="submit"><i class="mdi mdi-magnify"></i></button>
+				                                </div>
+				                            </div>
+				                        </form>
+				                    </div>
+				                </div>
+				
+				                <div class="ms-1 header-item d-none d-sm-flex">
+				                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle shadow-none" data-toggle="fullscreen">
+				                        <i class='bx bx-fullscreen fs-22'></i>
+				                    </button>
+				                </div>
+				
+				                <div class="ms-1 header-item d-none d-sm-flex">
+				                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode shadow-none">
+				                        <i class='bx bx-moon fs-22'></i>
+				                    </button>
+				                </div>
+				
+				                <div class="dropdown ms-sm-3 header-item topbar-user">
+				                    <button type="button" class="btn shadow-none" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				                        <span class="d-flex align-items-center">
+				                            <img class="rounded-circle header-profile-user" th:src="@{/resources/images/users/avatar-1.jpg}" alt="Header Avatar" />
+				                            <span class="text-start ms-xl-2">
+				                            	<!-- <input type="hidden" th:value="${profile}" id="profileUser" />-->
+				                                <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text"></span>
+				                                <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text"></span>
+				                            </span>
+				                        </span>
+				                    </button>
+				                    <div class="dropdown-menu dropdown-menu-end" style="--vz-dropdown-min-width:20rem;">
+				                        <!-- item-->
+				                        <h6 class="dropdown-header">Bienvenue <span th:text="${name}"></span> !</h6>
+				                        <div style="background-color: #d1e4ff; margin: 20px; margin-top: 5px; margin-bottom: 5px; padding: 5px; border-radius: 3px;" th:text="${profileName}"></div>
+				                        <input type="hidden" th:value="${profileId}" id="profileId" />
+				                        <input type="hidden" th:value="${profileName}" id="profileName" />
+				                        <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Mon profil</span></a>
+				                        <div class="dropdown-divider"></div>
+				                        <a class="dropdown-item" href="#" ng-click="displayNotifications()"><i class="mdi mdi-bell-ring text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Mes notifications</span></a>
+				                        <div class="dropdown-divider"></div>
+				                        <a class="dropdown-item" th:href="@{/logout}"><i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span class="align-middle" data-key="t-logout">Déconnexion</span></a>
+				                    </div>
+				                </div>
+				            </div>
+				        </div>
+				    </div>
+				</header>
+				<div class="vertical-overlay"></div>
+	        	<div id="content" layout:fragment="content"></div>
+	        <footer class="footer">
+		                <div class="container-fluid">
+		                    <div class="row">
+		                        <div class="col-sm-12">
+		                            <script>document.write(new Date().getFullYear())</script> © <a href="https://primature.gouv.td/" target="_blank">PRIMATURE DU TCHAD</a>. Tous droits réservés.
+		                        </div>
+		                        </div>
+		                </div>
+		            </footer>
+	    </div>
+	</div>
+    
+    <!--start back-to-top-->
+    <button onclick="topFunction()" class="btn btn-danger btn-icon" id="back-to-top">
+        <i class="ri-arrow-up-line"></i>
+    </button>
+    <!--end back-to-top-->
+
+    <!--preloader-->
+    <div id="preloader">
+        <div id="status">
+            <div class="spinner-border text-primary avatar-sm" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JAVASCRIPT -->
+    <script th:src="@{/resources/libs/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/resources/libs/simplebar/simplebar.min.js}"></script>
+    <script th:src="@{/resources/libs/node-waves/waves.min.js}"></script>
+    <script th:src="@{/resources/libs/feather-icons/feather.min.js}"></script>
+    <script th:src="@{/resources/js/pages/plugins/lord-icon-2.1.0.js}"></script>
+    <script th:src="@{/resources/js/plugins.js}"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <!-- apexcharts -->
+    <script th:src="@{/resources/libs/apexcharts/apexcharts.min.js}"></script>
+
+    <!-- Vector map-->
+    <script th:src="@{/resources/libs/jsvectormap/js/jsvectormap.min.js}"></script>
+    <script th:src="@{/resources/libs/jsvectormap/maps/world-merc.js}"></script>
+
+    <!--Swiper slider js-->
+    <script th:src="@{/resources/libs/swiper/swiper-bundle.min.js}"></script>
+
+    <!-- Dashboard init -->
+    <script th:src="@{/resources/js/pages/dashboard-ecommerce.init.js}"></script>
+
+	<!-- App js -->
+    <script th:src="@{/resources/js/app.js}"></script>
+    
+    <script th:src="@{/resources/libs/jquery/jquery/dist/jquery.js}"></script>
+
+	<!-- Bootstrap -->
+	<script th:src="@{/resources/libs/jquery/tether/dist/js/tether.min.js}"></script>
+	<script
+		th:src="@{/resources/libs/jquery/bootstrap/dist/js/bootstrap.js}"></script>
+	<!-- core -->
+	<script th:src="@{/resources/libs/jquery/underscore/underscore-min.js}"></script>
+	<script
+		th:src="@{/resources/libs/jquery/jQuery-Storage-API/jquery.storageapi.min.js}"></script>
+		
+	<script th:src="@{/resources/plugins/bootbox/bootbox.js}"></script>
+	<script th:src="@{/resources/plugins/bootbox/ngBootbox.min.js}"></script>
+	
+	<script th:src="@{/resources/plugins/gritter/js/jquery.gritter.min.js}"></script>
+	
+    <script
+		th:src="@{/resources/plugins/DataTables/media/js/jquery.dataTables.js}"></script>
+	<script
+		th:src="@{/resources/plugins/DataTables/extensions/Select/js/dataTables.select.min.js}"></script>
+
+	<script
+		th:src="@{/resources/libs/jquery/datatables/media/js/jquery.dataTables.min.js}"></script>
+	<script
+		th:src="@{/resources/libs/jquery/plugins/integration/bootstrap/3/dataTables.bootstrap.js}"></script>
+	<script th:src="@{/resources/plugins/DataTables/langue.js}"></script>
+
+	<script
+		th:src="@{/resources/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js}"></script>
+	<script
+		th:src="@{/resources/plugins/bootstrap-datepicker/js/bootstrap-datepicker.fr.js}"></script>
+	<script
+		th:src="@{/resources/plugins/bootstrap-daterangepicker/moment.js}"></script>
+	<script
+		th:src="@{/resources/plugins/bootstrap-daterangepicker/moment-fr.js}"></script>
+	<script
+		th:src="@{/resources/plugins/bootstrap-daterangepicker/daterangepicker.js}"></script>
+	<script
+		th:src="@{/resources/plugins/bootstrap-eonasdan-datetimepicker/build/js/bootstrap-datetimepicker.min.js}"></script>
+
+	<script th:src="@{/resources/js/base/baseServices.js}"></script>
+	<script th:src="@{/resources/js/simple-autocomplete.js}"></script>
+	<script th:src="@{/resources/js/custom-table.js}"></script>
+	<script th:src="@{/resources/js/myTable.js}"></script>
+
+	<script
+		th:src="@{/resources/libs/jquery/summernote/dist/summernote.js}"></script>
+	
+	<script th:src="@{/resources/libs/jquery/flot/jquery.flot.js}"></script>
+	<script th:src="@{/resources/libs/jquery/flot/jquery.flot.time.js}"></script>
+	<script th:src="@{/resources/libs/jquery/flot/jquery.flot.resize.js}"></script>
+	<script th:src="@{/resources/libs/jquery/flot/jquery.flot.pie.js}"></script>
+	<script
+		th:src="@{/resources/libs/jquery/flot.tooltip/js/jquery.flot.tooltip.min.js}"></script>
+	<script
+		th:src="@{/resources/libs/jquery/flot-spline/js/jquery.flot.spline.min.js}"></script>
+	<script
+		th:src="@{/resources/libs/jquery/flot.orderbars/js/jquery.flot.orderBars.js}"></script>
+
+	<script th:src="@{/resources/js/jszip.js}"></script>
+	<script th:src="@{/resources/js/xlsx.js}"></script>
+	<script th:src="@{/resources/js/xlsx.full.min.js}"></script>
+	<script th:src="@{/resources/js/FileSaverminjs.js}"></script>
+	
+	<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+	
+	<!-- Sweet Alerts js -->
+    <script th:src="@{/resources/libs/sweetalert2/sweetalert2.min.js}"></script>
+    
+    <!-- ckeditor -->
+    <script th:src="@{/resources/libs/%40ckeditor/ckeditor5-build-classic/build/ckeditor.js}"></script>
+
+    <!-- quill js -->
+    <script th:src="@{/resources/libs/quill/quill.min.js}"></script>
+
+    <!-- init js -->
+    <script th:src="@{/resources/js/pages/form-editor.init.js}"></script>
+    
+    <script
+		th:src="@{/resources/libs/jquery/select2/dist/js/select2.min.js}"></script>
+		
+	<script th:src="@{/resources/libs/pdfjs/pdf.min.js}"></script>
+	<script th:src="@{/resources/libs/pdfjs/pdf.worker.min.js}"></script>
+	
+	<script>
+		if (typeof pdfjsLib !== 'undefined') {
+			pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.mjs';
+		}
+	</script>
+	
+	<script>
+    	$(document).ready(function() {
+        	$('#summernote').summernote();
+    	});
+  	</script>
+	<script>
+		$(document).ready(function(){
+			$('.flag').tooltip();
+		});
+	</script>
+	<script>
+		$(document).ready(function() {
+	   		$('#prospectTable').DataTable();
+		});
+	</script>
+	<script>
+	  	$('.select2').select2({
+	 		placeholder: 'Choisir une option'
+		});
+	</script>
+	<div id="plugins" layout:fragment="plugins"></div>
+</body>
+</html>

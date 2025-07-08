@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/configurationLayout">
+<head>
+</head>
+<body ng-controller="moduleController" th:attr="ng-init='init();'">
+<div layout:fragment="content">
+<div class="main-content">	
+	<div class="page-content">
+		<div class="container-fluid">
+			<div class="row">
+            	<div class="col-12">
+                	<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    	<h4 class="mb-sm-0">Modules</h4>
+					</div>
+                </div>
+        	</div>
+        	<!-- Module Edit Start -->
+                   	<div class="modal fade bs-example-modal-lg" id="moduleModal" tabindex="-1" aria-labelledby="exampleModalgridLabel">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalgridLabel">Modification d'un module</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="editModuleForm" name="editModuleForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+                                        <div class="row g-3">
+                                            <div class="col-xxl-6">
+                                                <div>
+                                                    <label for="name" class="form-label">Nom</label>
+                                                    <input type="text" class="form-control" id="name" ng-model="dto.name" name="name" />
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                            <div class="col-xxl-6">
+                                                <label for="icon" class="form-label">Icon</label>
+                                                <input type="text" class="form-control" id="icon" ng-model="dto.icon" name="icon" />
+                                            </div>
+                                            <!--end col-->
+                                            <div class="col-xxl-12">
+                                                <div>
+                                                    <label for="shortDescription" class="form-label">Description courte</label>
+                                                    <input type="text" class="form-control" name="shortDescription" ng-model="dto.shortDescription" id="shortDescription"  />
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                            <div class="col-lg-12">
+                                                <label class="form-label">Description</label>
+												<textarea class="form-control" name="description" ng-model="dto.description"></textarea>
+                                            </div>
+                                            <!--end col-->
+                                            <div class="col-lg-12">
+                                                <div class="hstack gap-2 justify-content-end">
+                                                    <a class="btn btn-light" data-bs-dismiss="modal">Annuler</a>
+                                                    <a class="btn btn-primary" ng-click="saveModule()">Enregistrer</a>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                        </div>
+                                        <!--end row-->
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        		<div class="row">
+                   <div class="col-xl-4" ng-repeat="module in modules">
+                       <div class="card">
+                           <div class="card-body p-0">
+                               <div class="alert alert-secondary border-0 rounded-top rounded-0 m-0 d-flex align-items-center" role="alert">
+                               	<div class="fs-18 px-2"><i class="{{module.icon}}"></i></div>
+                                   <div class="flex-grow-1 text-truncate">
+                                      	   {{module.name}}
+                                   </div>
+                                   <div class="flex-shrink-0 fs-18">
+                                       <a href="#" data-bs-toggle="modal" data-bs-target="#moduleInfo{{module.id}}" class="text-reset text-decoration-underline icon-lg"><i class="mdi mdi-information icon-lg"></i></a>
+                                   </div>
+                               </div>
+
+                               <div class="row align-items-center justify-content-between p-3">
+                                   <div class="col-sm-10">
+                                       <div class="">
+                                           {{module.shortDescription}}
+                                       </div>
+                                   </div>
+                               </div>
+                               <div class="row align-items-center justify-content-between mb-2">
+                                   <div class="col-sm-3 px-4">
+	                                   <div class="">
+                                         <a href="#" class="btn btn-info" ng-click="editModule(module.id)">Modifier</a>
+                                       </div>
+	                               </div>
+                                   <div class="col-sm-7 px-4 d-flex flex-row align-items-center justify-content-between">
+                                        <div class="form-check form-switch form-switch-right form-switch-md">
+	                                        <label for="default" class="form-label text-muted">Activé/Desactivé</label>
+	                                        <input ng-class="{'form-check-input code-switcher bg-success':{{module.isEnable}}, 'form-check-input code-switcher bg-dark': !{{module.isEnable}}}" name="isEnable" ng-checked="{{module.isEnable}}" ng-model="dto.isEnable" ng-change="handleModuleStatus(module.id)" type="checkbox" id="default" />
+                                    	</div>
+                                    	<div class="flex-shrink-0 fs-24">
+	                                       <a href="#" class="text-reset text-decoration-underline icon-lg" ng-click="editContentModule(module.id)"><i ng-class="{'mdi mdi-cog text-success':{{module.isEnable}}, 'mdi mdi-cog text-dark':!{{module.isEnable}}}"></i></a>
+	                                   </div>
+                                   </div>
+                                   <div class="col-xs-2">
+                                   </div>
+                               </div>
+                           </div> <!-- end card-body-->
+                       </div>
+                       <div class="modal fade bs-example-modal-lg" id="moduleInfo{{module.id}}" tabindex="-1" aria-labelledby="exampleModalgridLabel">
+                          <div class="modal-dialog modal-lg">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title"> {{module.name}}</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form action="javascript:void(0);">
+                                          <div class="row g-3">
+                                              <div class="col-xxl-3">
+                                                  <div>
+                                                      <label for="firstName" class="form-label">Nom : </label>
+                                                  </div>
+                                              </div>
+                                              <!--end col-->
+                                              <div class="col-xxl-6">
+                                                  <div>
+                                                      <label for="lastName" class="text-muted">{{module.name}}</label>
+                                                  </div>
+                                              </div>
+                                              <!--end col-->
+                                          </div>
+                                          <!--end row-->
+                                          <div class="row g-3">
+                                              <div class="col-xxl-3">
+                                                  <div>
+                                                      <label for="firstName" class="form-label">Description courte : </label>
+                                                  </div>
+                                              </div>
+                                              <!--end col-->
+                                              <div class="col-xxl-6">
+                                                  <div>
+                                                      <label for="lastName" class="text-muted">{{module.shortDescription}}</label>
+                                                  </div>
+                                              </div>
+                                              <!--end col-->
+                                          </div>
+                                          <!--end row-->
+                                          <div class="row g-3">
+                                              <div class="col-xxl-3">
+                                                  <div>
+                                                      <label for="firstName" class="form-label">Description Longue : </label>
+                                                  </div>
+                                              </div>
+                                              <!--end col-->
+                                              <div class="col-xxl-6">
+                                                  <div>
+                                                      <label for="lastName" class="text-muted">{{module.description}}</label>
+                                                  </div>
+                                              </div>
+                                              <!--end col-->
+                                          </div>
+                                          <!--end row-->
+                                          <div class="row g-3">
+                                              <div class="col-xxl-3 d-flex flex-row align-items-center">
+                                                  <div>
+                                                      <label for="firstName" class="form-label">Activé : </label>
+                                                  </div>
+                                              </div>
+                                              <!--end col-->
+                                              <div class="col-xxl-6">
+                                                  <div>
+                                                      <label for="lastName" ng-if="module.isEnable == true" class="text-muted alert alert-success px-3 py-1">Oui</label>
+                                                      <label for="lastName" ng-if="module.isEnable == false" class="text-muted alert alert-danger px-3 py-1">Non</label>
+                                                  </div>
+                                              </div>
+                                              <!--end col-->
+                                          </div>
+                                          <!--end row-->
+                                          <div class="row g-3">
+                                              <div class="col-xxl-3">
+                                                  <div>
+                                                      <label for="firstName" class="form-label">Dernière activation par : </label>
+                                                  </div>
+                                              </div>
+                                              <!--end col-->
+                                              <div class="col-xxl-6">
+                                                  <div>
+                                                      <label for="lastName" class="text-muted">{{module.activatedByNom}} {{module.activatedByPrenom}}</label>
+                                                  </div>
+                                              </div>
+                                              <!--end col-->
+                                          </div>
+                                          <!--end row-->
+                                          <div class="row g-3">
+                                              <div class="col-xxl-3">
+                                                  <div>
+                                                      <label for="firstName" class="form-label">Date d'activation : </label>
+                                                  </div>
+                                              </div>
+                                              <!--end col-->
+                                              <div class="col-xxl-6">
+                                                  <div>
+                                                      <label for="lastName" class="text-muted">{{module.activatedAt}}</label>
+                                                  </div>
+                                              </div>
+                                              <!--end col-->
+                                          </div>
+                                          <!--end row-->
+                                          <div class="row g-3">
+                                              <div class="col-lg-12">
+                                                  <div class="hstack gap-2 justify-content-end">
+                                                      <button type="button" class="btn btn-light" data-bs-dismiss="modal">Fermé</button>
+                                                  </div>
+                                              </div>
+                                              <!--end col-->
+                                          </div>
+                                          <!--end row-->
+                                      </form>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <!-- edit content modal -->
+		               <div class="modal fade" id="activeModuleModal" aria-hidden="true" tabindex="-1">
+		                   <div class="modal-dialog modal-dialog-centered">
+		                       <div class="modal-content">
+		                           <div class="modal-body text-center p-5">
+		                               <lord-icon src="https://cdn.lordicon.com/tdrtiskw.json" trigger="loop" colors="primary:#f7b84b,secondary:#405189" style="width:130px;height:130px"></lord-icon>
+		                               <div class="mt-4 pt-4">
+		                                   <h4>Module désactivé</h4>
+		                                   <p class="text-muted">Veuillez activer le module avant de pouvoir configurer.</p>
+		                                   <!-- Toogle to second dialog -->
+		                                   <a class="btn btn-success" h="#" ng-click="activeModule(module.id)">
+		                                       Activer
+		                                   </a>
+		                               </div>
+		                           </div>
+		                       </div>
+		                   </div>
+		               </div>
+                   </div> <!-- end col-->
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ############ PAGE START-->
+
+<!-- ############ PAGE END-->
+</div>
+<div layout:fragment="plugins" class="page-content">
+	<script th:src='@{/resources/js/administration/module.js}'></script>
+</div>
+</body>
+</html>

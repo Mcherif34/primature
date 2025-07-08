@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+	<title></title>
+</head>
+<body ng-controller="rapprochementController" th:attr="ng-init='init();'">
+	<div layout:fragment="content" class="page-content">
+		<div ng-view="ng-view"></div>
+		<div class="panel panel-inverse" >
+			<div class="panel-heading">
+				<h4 class="panel-title" th:text="#{investissement.contrat.list}"></h4>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12">
+						<table id="contratTable"
+							class="table table-striped table-bordered"
+							ng-controller="contratTableController"
+							th:attr="ng-init='init();'">
+							<thead>
+								<tr>
+									<th th:text="#{investissement.contrat.id}"></th>
+									<th th:text="#{investissement.contrat.numeroContrat}"></th>
+									<th th:text="#{investissement.contrat.dateContrat}"></th>
+									<th th:text="#{investissement.contrat.dateFin}"></th>
+									<th th:text="#{investissement.contrat.rfParcelle}"></th>
+									<th th:text="#{investissement.contrat.demandeDate}"></th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<th:block th:include="investissement/rapprochement/rapprochementForm::form"></th:block>
+	</div>
+	<div layout:fragment="plugins" class="page-content">
+		<script th:src='@{/resources/js/investissement/rapprochement/rapprochement.js}'></script>
+	</div>
+</body>
+</html>

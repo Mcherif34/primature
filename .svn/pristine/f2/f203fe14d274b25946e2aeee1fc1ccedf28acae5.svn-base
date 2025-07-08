@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<title></title>
+</head>
+<body>
+	<th:block th:fragment="form">
+		<form id="form" name="form" method="post" action="#"
+			class="form-horizontal">
+			
+			<div class="sidemenu">
+				<ul>
+				  <li>
+				    <a class="ajouter" ng-click="add()"><span>Ajouter</span><i class="fa fa-plus"></i></a>
+				  </li>
+				  <li>
+				    <a class="modifier" ng-click="edit()"><span>Modifier</span><i class="fa fa-pencil"></i></a>
+				  </li>
+				  <li>
+				    <a class="enregistrer" ng-click="save()"><span>Enregistrer</span><i class="fa fa-save"></i></a>
+				  </li>
+				  <li>
+				    <a class="supprimer" ng-click="remove()"><span>Supprimer</span><i class="fa fa-trash-o"></i></a>
+				  </li>
+				</ul>
+			</div>
+			
+			<div class="panel panel-inverse" data-sortable-id="ui-widget-10">
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+					</div>
+					<h4 class="panel-title semi-bold">
+						<th:block th:text="#{administration.secUtilisateurAuthorite.form}"></th:block>
+					</h4>
+				</div>
+				
+				<div class="panel-body">
+				
+					<fieldset ng-disabled="mode =='read'" >
+						<!-- Block 1 -->
+						<div class="row">
+						<input type="hidden" ng-model="dto.id"  />
+							<div ng-class="'col-md-4'">
+								<form-input th:attr="title=''+#{administration.secUtilisateurAuthorite.utilisateur}+''" name="nomprenom"  ng-model="dto.nomprenom"></form-input>
+							</div>
+							<div ng-class="'col-md-4'">								
+								<form-input th:attr="title=''+#{administration.secUtilisateurAuthorite.authorite}+''" name="fonction"  ng-model="dto.fonction"></form-input>
+							</div>
+							<div ng-class="'col-md-4'">
+								<form-input th:attr="title=''+#{administration.secUtilisateurAuthorite.onNotif}+''" name="departement"  ng-model="dto.departement"></form-input>	
+							</div>
+						</div>
+					</fieldset>			
+					
+				</div>
+			</div>
+		</form>
+
+	</th:block>
+</body>
+</html>

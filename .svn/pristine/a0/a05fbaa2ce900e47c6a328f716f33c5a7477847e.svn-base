@@ -1,0 +1,151 @@
+package ma.brainit.aman.client.model;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "WSubWork")
+public class WSubWork {
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @Column(name = "SubWork_SubWorkID")
+    private Long id;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "SubWork_WorkID")
+	private WWork wWork;
+    
+	@Column(name = "SubWork_Flags")
+    private Integer subWorkFlags;
+    
+    @Temporal(TemporalType.DATE)
+	@Column(name = "SubWork_DateDue_Min", columnDefinition = "DATETIME")
+	private Date subWorkDateDueMin;
+    
+    @Temporal(TemporalType.DATE)
+	@Column(name = "SubWork_DateDue_Max", columnDefinition = "DATETIME")
+	private Date subWorkDateDueMax;
+    
+    @Temporal(TemporalType.DATE)
+	@Column(name = "SubWork_DateInitiated", columnDefinition = "DATETIME")
+	private Date subWorkDateInitiated;
+    
+    @Temporal(TemporalType.DATE)
+	@Column(name = "SubWork_DateCompleted", columnDefinition = "DATETIME")
+	private Date subWorkDateCompleted;
+    
+    @Column(name = "SubWork_Status", columnDefinition = "SMALLINT")
+    private Integer subWorkStatus;
+    
+    @Column(name = "SubWork_Title", columnDefinition = "NVARCHAR")
+    private String subWorkTitle;
+    
+    @Column(name = "SubWork_Project", columnDefinition = "NVARCHAR")
+    private String subWorkProject;
+    
+    @Column(name = "SubWork_UserData", columnDefinition = "NVARCHAR")
+    private String subWorkUserData;
+    
+    @Column(name = "SubWork_CustomData", columnDefinition = "NVARCHAR")
+    private String subWorkCustomData;
+    
+    public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public WWork getwWork() {
+		return wWork;
+	}
+
+	public void setwWork(WWork wWork) {
+		this.wWork = wWork;
+	}
+
+	public Integer getSubWorkFlags() {
+		return subWorkFlags;
+	}
+
+	public void setSubWorkFlags(Integer subWorkFlags) {
+		this.subWorkFlags = subWorkFlags;
+	}
+
+	public Date getSubWorkDateDueMin() {
+		return subWorkDateDueMin;
+	}
+
+	public void setSubWorkDateDueMin(Date subWorkDateDueMin) {
+		this.subWorkDateDueMin = subWorkDateDueMin;
+	}
+
+	public Date getSubWorkDateDueMax() {
+		return subWorkDateDueMax;
+	}
+
+	public void setSubWorkDateDueMax(Date subWorkDateDueMax) {
+		this.subWorkDateDueMax = subWorkDateDueMax;
+	}
+
+	public Date getSubWorkDateInitiated() {
+		return subWorkDateInitiated;
+	}
+
+	public void setSubWorkDateInitiated(Date subWorkDateInitiated) {
+		this.subWorkDateInitiated = subWorkDateInitiated;
+	}
+
+	public Date getSubWorkDateCompleted() {
+		return subWorkDateCompleted;
+	}
+
+	public void setSubWorkDateCompleted(Date subWorkDateCompleted) {
+		this.subWorkDateCompleted = subWorkDateCompleted;
+	}
+
+	public Integer getSubWorkStatus() {
+		return subWorkStatus;
+	}
+
+	public void setSubWorkStatus(Integer subWorkStatus) {
+		this.subWorkStatus = subWorkStatus;
+	}
+
+	public String getSubWorkTitle() {
+		return subWorkTitle;
+	}
+
+	public void setSubWorkTitle(String subWorkTitle) {
+		this.subWorkTitle = subWorkTitle;
+	}
+
+	public String getSubWorkProject() {
+		return subWorkProject;
+	}
+
+	public void setSubWorkProject(String subWorkProject) {
+		this.subWorkProject = subWorkProject;
+	}
+
+	public String getSubWorkUserData() {
+		return subWorkUserData;
+	}
+
+	public void setSubWorkUserData(String subWorkUserData) {
+		this.subWorkUserData = subWorkUserData;
+	}
+
+	public String getSubWorkCustomData() {
+		return subWorkCustomData;
+	}
+
+	public void setSubWorkCustomData(String subWorkCustomData) {
+		this.subWorkCustomData = subWorkCustomData;
+	}
+	
+}

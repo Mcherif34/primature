@@ -1,0 +1,438 @@
+app.controller('homeController', function($scope, $http, $ngBootbox, $location, CRUDService, NotificationService, constants) {
+	$scope.dto = {};
+	$scope.dto.search = {};
+	$scope.courrierTable = null;
+	$scope.dto.attachmentsDTO = [{}];
+	$scope.filtre = {};
+	$scope.selected = null;
+	$scope.mode = null;
+	$scope.clients = null;
+	$scope.contacts = null;
+	$scope.sheets = null;
+	$scope.categories = null;
+	$scope.materials = null;
+	$scope.cities = null;
+	$scope.clientTable = null;
+	$scope.contactTable = null;
+	$scope.sheetTable = null;
+	$scope.commentTable = null;
+	$scope.sheetRequiredError = false;
+	$scope.sheetTechnicalError = false;
+	$scope.sheetSuccess = false;
+	$scope.commentRequiredError = false;
+	$scope.commentTechnicalError = false;
+	$scope.commentSuccess = false;
+	$scope.qualificationDelayPlaceholderStatus = true;
+	$scope.reparationDelayPlaceholderStatus = true;
+	$scope.ClosingDelayPlaceholderStatus = true;
+	$scope.newTicket = true;
+	$scope.fieldBg = "#FFFFFF";
+	$scope.defaultTable = "invoice";
+	
+	$scope.notQualified = 0;
+	
+	$scope.baseUrl = "/";
+	$scope.regularBaseUrl = "/courrier/regular/rest/";
+	$scope.outgoingBaseUrl = "/courrier/outgoing/rest/";
+	$scope.invoiceBaseUrl = "/courrier/invoice/rest/";
+	
+	$scope.zoneRecheche = false;
+	
+	$scope.init = function() {
+		$scope.mode="read";
+		$scope.addSheetForm = false;
+		$scope.editSheetForm = false;
+		CRUDService.init($scope);
+		
+		$scope.initIndicators();
+		$scope.courrierProcess();
+		$scope.courrierProcessYear();
+		
+		$scope.currentDate = moment().format('dddd, D MMMM YYYY');
+		$scope.currentYear = new Date().getFullYear();
+		
+		/*$scope.sheetTitle = "TOUS LES TICKETS";
+		$scope.getCountSheet();
+		$scope.initListCategories();
+		$scope.initListProblemTypes();
+		$scope.initListCities();
+		if(document.getElementById('profileUser').value == 'Administrateur') {
+			$scope.qualificationDelay();
+			$scope.reparationDelay();
+			$scope.closingDelay();
+		}
+		document.getElementById("export-sheet").style.display = "none";*/
+		
+	};
+	
+	$scope.initIndicators = function() {
+		$http.get(context+$scope.regularBaseUrl+"getCurrentRegularCount").success(function(data, status) {   
+			$scope.currentRegularCount = data;
+		});
+		$http.get(context+$scope.outgoingBaseUrl+"getCurrentOutgoingCount").success(function(data, status) {   
+			$scope.currentOutgoingCount = data;
+		});
+		$http.get(context+$scope.invoiceBaseUrl+"getCurrentInvoiceCount").success(function(data, status) {   
+			$scope.currentInvoiceCount = data;
+		});
+	}
+	
+	$scope.displayRegularCourrier = function() {
+		$scope.defaultTable = "regular";
+	}
+	
+	$scope.displayOutgoingCourrier = function() {
+		$scope.defaultTable = "outgoing";
+	}
+	
+	$scope.displayInvoiceCourrier = function() {
+		$scope.defaultTable = "invoice";
+	}
+	
+	$scope.courrierProcess = function() {
+		$http.get(context+$scope.invoiceBaseUrl+"getCurrentNotOverdueInvoiceCount").success(function(data, status) {
+			$scope.currentNotOverdueInvoiceCount = data;
+			$http.get(context+$scope.invoiceBaseUrl+"getCurrentOverdueInvoiceCount").success(function(data, status) {
+				$scope.currentOverdueInvoiceCount = data;
+				$http.get(context+$scope.invoiceBaseUrl+"getCompletedInvoiceCount").success(function(data, status) {
+					$scope.completedInvoiceCount = data;
+					$http.get(context+$scope.regularBaseUrl+"getCurrentNotOverdueRegularCount").success(function(data, status) {
+						$scope.currentNotOverdueRegularCount = data;
+						$http.get(context+$scope.regularBaseUrl+"getCurrentOverdueRegularCount").success(function(data, status) {
+							$scope.currentOverdueRegularCount = data;
+							$http.get(context+$scope.regularBaseUrl+"getCompletedRegularCount").success(function(data, status) {
+								$scope.completedRegularCount = data;
+								$http.get(context+$scope.outgoingBaseUrl+"getCurrentNotOverdueOutgoingCount").success(function(data, status) {
+									$scope.currentNotOverdueOutgoingCount = data;
+									$http.get(context+$scope.outgoingBaseUrl+"getCurrentOverdueOutgoingCount").success(function(data, status) {
+										$scope.currentOverdueOutgoingCount = data;
+										$http.get(context+$scope.outgoingBaseUrl+"getCompletedOutgoingCount").success(function(data, status) {
+											$scope.completedOutgoingCount = data;
+											var options,
+											chart,
+											dealTypeChartsColors=((
+												options = {
+													series: [
+														{
+															name: 'EN COURS ',
+															data: [$scope.currentNotOverdueRegularCount, $scope.currentNotOverdueInvoiceCount, $scope.currentNotOverdueOutgoingCount],
+															color: '#299CDB'
+														},
+														{
+															name: 'EN RETARD ',
+															data: [$scope.currentOverdueRegularCount, $scope.currentOverdueInvoiceCount, $scope.currentOverdueOutgoingCount],
+															color: '#ea6069'
+														},
+														{
+															name: 'CLOTURES ',
+															data: [$scope.completedRegularCount, $scope.completedInvoiceCount, $scope.completedOutgoingCount],
+															color: '#45CB85'
+														},
+													],
+													chart: {
+														type: 'bar',
+														height: 350,
+														toolbar: {
+												            show: false
+												          }
+													},
+													plotOptions: {
+														bar: {
+															horizontal: false,
+															columnWidth: '65%',
+															endingShape: 'rounded'
+														},
+													},
+													dataLabels: {
+														enabled: false,
+													},
+													stroke: {
+														show: true,
+														width: 4,
+														colors: ['transparent'],
+													},
+													grid: {
+												          borderColor: '#e7e7e7',
+												          row: {
+												            colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+												            opacity: 0.5
+												          },
+												        },
+													xaxis: {
+														categories: ['CLASSIQUES', 'FACTURES', 'DEPART'],
+													},
+													yaxis: {
+													},
+													fill: {
+														opacity: 1,
+													},
+													tooltip: {
+														y: {
+															formatter: function (val) {
+															return '';
+														},
+													},
+												},
+											},
+											(chart=new ApexCharts(document.querySelector("#courrierProcess"),options)).render()));
+											$scope.qualificationDelayPlaceholderStatus = false;
+										});
+									});
+								});
+							});
+						});
+					});
+				});
+			});
+		});
+	}
+	
+	$scope.courrierProcessYear = function() {
+		var currentDataValue = [];
+		var completedDataValue = [];
+		$http.get(context+$scope.invoiceBaseUrl+"getCurrentInvoiceCountByYear/"+new Date().getFullYear()).success(function(data, status) {
+			if(data.length != 0) {
+				for(i = 1; i <= 12; i++) {
+					for(j = 0; j < data.length; j++) {
+						if(i == data[j][0]) {
+							currentDataValue.push(data[j]);
+						}
+						else {
+							currentDataValue.push([i, 0]);
+						}
+					}
+				}
+			} else {
+				for(i = 1; i <= 12; i++) {
+					currentDataValue.push([i, 0]);
+				}
+			}
+			$http.get(context+$scope.invoiceBaseUrl+"getCompletedInvoiceCountByYear/"+new Date().getFullYear()).success(function(data, status) {
+				if(data.length != 0) {
+					for(i = 1; i <= 12; i++) {
+						for(j = 0; j < data.length; j++) {
+							if(i == data[j][0]) {
+								completedDataValue.push(data[j]);
+							}
+							else {
+								completedDataValue.push([i, 0]);
+							}
+						}
+					}
+				} else {
+					for(i = 1; i <= 12; i++) {
+						completedDataValue.push([i, 0]);
+					}
+				}
+				var options,
+				chart,
+				dealTypeChartsColors=((
+						options = {
+						          series: [
+						          {
+						            name: "EN COURS",
+						            data: [currentDataValue[0][1], currentDataValue[1][1], currentDataValue[2][1], currentDataValue[3][1], currentDataValue[4][1], currentDataValue[5][1], currentDataValue[6][1], currentDataValue[7][1], currentDataValue[8][1], currentDataValue[9][1], currentDataValue[10][1], currentDataValue[11][1]],
+						            color: "#009EC7"
+						          },
+						          {
+						            name: "CLOTURES",
+						            data: [completedDataValue[0][1], completedDataValue[1][1], completedDataValue[2][1], completedDataValue[3][1], completedDataValue[4][1], completedDataValue[5][1], completedDataValue[6][1], completedDataValue[7][1], completedDataValue[8][1], completedDataValue[9][1], completedDataValue[10][1], completedDataValue[11][1]],
+						            color: "#51BA98"
+						          }
+						        ],
+						          chart: {
+						          height: 350,
+						          type: 'line',
+						          dropShadow: {
+						            enabled: false,
+						            color: '#000',
+						            top: 18,
+						            left: 7,
+						            blur: 10,
+						            opacity: 0.2
+						          },
+						          toolbar: {
+						            show: false
+						          }
+						        },
+						        colors: ['#299CDB', '#45CB85'],
+						        dataLabels: {
+						          enabled: false,
+						        },
+						        stroke: {
+						          curve: 'straight'
+						        },
+						        grid: {
+						          borderColor: '#e7e7e7',
+						          row: {
+						            colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+						            opacity: 0.5
+						          },
+						        },
+						        markers: {
+						          size: 1
+						        },
+						        xaxis: {
+						          categories: ['JAN', 'FEV', 'MARS', 'AVR', 'MAI', 'JUIN', 'JUIL', 'AOUT', 'SEPT', 'OCT', 'NOV', 'DEC'],
+						        },
+						        yaxis: {
+						        },
+						        legend: {
+						          position: 'top',
+						          horizontalAlign: 'center',
+						          floating: false,
+						        }
+						        },
+
+						(chart=new ApexCharts(document.querySelector("#courrierProcessYear"),options)).render()));
+						$scope.qualificationDelayPlaceholderStatus = false;
+			});
+		});
+	}
+	
+});
+
+app.controller('courrierTableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [ 
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'refArriveeBoc'},
+			{mDataProp: 'dateEnregistrement'},
+			{mDataProp: 'dateReception'},
+			{mDataProp: 'dateFacture'},
+			{mDataProp: 'numFacture'},
+			{mDataProp: 'expediteur'},
+			{mDataProp: 'montantFacture'},
+			{mDataProp: 'taskTitle'},
+			{mDataProp: 'performer', "mRender": function(data, type, full) {
+				if(full.wSubWorkDateCompleted != null) {
+					result = '';
+				} else {
+					result = full.performer;
+				}
+				return result;
+			}},
+			{mDataProp: 'wSubWorkDateInitiated', "mRender": function(data, type, full) {
+				var result = '';
+				if(full.wSubWorkDateInitiated != null) {
+					var date = full.wSubWorkDateInitiated.split('/');
+					if(Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24)) > 4) {
+						result = '<span class="badge text-bg-danger">'+Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24))+' JOUR(S)</span>';
+					}
+					else {
+						result = '<span class="badge text-bg-info">'+Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24))+' JOUR(S)</span>';
+					}
+				}
+				
+				return result;
+			}}
+		];
+		$scope.$parent.courrierTable = TableManager.init("courrierTable", $scope.$parent.invoiceBaseUrl+"currentList", columns, 0, "DESC");
+		
+		$scope.$parent.courrierTable.on('select', function (e, dt, type, indexes) {
+			var rowData = $scope.$parent.courrierTable.rows(indexes).data().toArray();
+			var id = null;
+			if(rowData.length > 0) {
+				$scope.$parent.selected = rowData[0];
+				id = rowData[0].id;
+				$scope.$parent.load(id);
+			}
+		});
+	};
+});
+
+app.controller('courrierClassiqueTableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [ 
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'refArriveeBoc'},
+			{mDataProp: 'dateEnregistrement'},
+			{mDataProp: 'dateReception'},
+			{mDataProp: 'expediteur'},
+			{mDataProp: 'objet'},
+			{mDataProp: 'typeInstructionDg'},
+			{mDataProp: 'taskTitle'},
+			{mDataProp: 'performer', "mRender": function(data, type, full) {
+				if(full.wSubWorkDateCompleted != null) {
+					result = '';
+				} else {
+					result = full.performer;
+				}
+				return result;
+			}},
+			{mDataProp: 'wSubWorkDateInitiated', "mRender": function(data, type, full) {
+				var result = '';
+				if(full.wSubWorkDateInitiated != null) {
+					var date = full.wSubWorkDateInitiated.split('/');
+					if(Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24)) > 4) {
+						result = '<span class="badge text-bg-danger">'+Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24))+' JOUR(S)</span>';
+					}
+					else {
+						result = '<span class="badge text-bg-info">'+Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24))+' JOUR(S)</span>';
+					}
+				}
+				
+				return result;
+			}}
+		];
+		$scope.$parent.courrierClassiqueTable = TableManager.init("courrierClassiqueTable", $scope.$parent.regularBaseUrl+"currentList", columns, 0, "DESC");
+		
+		$scope.$parent.courrierClassiqueTable.on('select', function (e, dt, type, indexes) {
+			var rowData = $scope.$parent.courrierClassiqueTable.rows(indexes).data().toArray();
+			var id = null;
+			if(rowData.length > 0) {
+				$scope.$parent.selected = rowData[0];
+				id = rowData[0].id;
+				$scope.$parent.load(id);
+			}
+		});
+	};
+});
+
+app.controller('courrierDepartTableController', function($scope,$http) {
+	$scope.init = function() {
+		var columns = [ 
+			{mDataProp: 'id', "visible": false},
+			{mDataProp: 'refDepartBoc'},
+			{mDataProp: 'dateLivraison'},
+			{mDataProp: 'dateDepart'},
+			{mDataProp: 'destinataire'},
+			{mDataProp: 'observations'},
+			{mDataProp: 'redacteur'},
+			{mDataProp: 'taskTitle'},
+			{mDataProp: 'performer', "mRender": function(data, type, full) {
+				if(full.wSubWorkDateCompleted != null) {
+					result = '';
+				} else {
+					result = full.performer;
+				}
+				return result;
+			}},
+			{mDataProp: 'wSubWorkDateInitiated', "mRender": function(data, type, full) {
+				var result = '';
+				if(full.wSubWorkDateInitiated != null) {
+					var date = full.wSubWorkDateInitiated.split('/');
+					if(Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24)) > 4) {
+						result = '<span class="badge text-bg-danger">'+Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24))+' JOUR(S)</span>';
+					}
+					else {
+						result = '<span class="badge text-bg-info">'+Math.round((new Date()-new Date(date[2]+'-'+date[1]+'-'+date[0]))/(1000*60*60*24))+' JOUR(S)</span>';
+					}
+				}
+				
+				return result;
+			}}
+		];
+		$scope.$parent.courrierDepartTable = TableManager.init("courrierDepartTable", $scope.$parent.outgoingBaseUrl+"currentList", columns, 0, "DESC");
+		
+		$scope.$parent.courrierDepartTable.on('select', function (e, dt, type, indexes) {
+			var rowData = $scope.$parent.courrierDepartTable.rows(indexes).data().toArray();
+			var id = null;
+			if(rowData.length > 0) {
+				$scope.$parent.selected = rowData[0];
+				id = rowData[0].id;
+				$scope.$parent.load(id);
+			}
+		});
+	};
+});

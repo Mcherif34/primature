@@ -1,0 +1,80 @@
+package ma.brainit.aman.client.model;
+
+import java.util.Date;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "GED.KUAF")
+public class Performer {
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @Column(name = "ID")
+    private Long id;
+    
+    @Column(name = "Name", columnDefinition = "NVARCHAR")
+    private String name;
+    
+    @Column(name = "FirstName", columnDefinition = "NVARCHAR")
+    private String firstname;
+    
+    @Column(name = "LastName", columnDefinition = "NVARCHAR")
+    private String lastname;
+    
+    @Column(name = "Type", columnDefinition = "NVARCHAR")
+    private String type;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "GroupID")
+	private Performer group;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public Performer getGroup() {
+		return group;
+	}
+
+	public void setGroup(Performer group) {
+		this.group = group;
+	}
+
+}

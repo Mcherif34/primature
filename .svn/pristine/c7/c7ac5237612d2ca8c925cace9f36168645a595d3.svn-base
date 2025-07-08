@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<title></title>
+</head>
+<body>
+	<th:block th:fragment="form">
+		<form id="form" name="form" method="post" action="#"
+			class="form-horizontal">
+			
+			<div class="sidemenu">
+				<ul>
+					<li><a class="blue" ng-click="add()"><span>Ajouter</span><img height="17px"
+						src="/aman/resources/images/btn-add.png"/></a></li>
+					<li><a class="blue" ng-click="edit()"><span>Modifier</span><i
+							class="fa fa-pencil"></i></a></li>
+					<li><a class="blue" ng-click="save()"><span>Enregistrer</span><i
+							class="fa fa-save"></i></a></li>
+					<li><a class="blue" ng-click="remove()"><span>Supprimer</span><img height="17px"
+						src="/aman/resources/images/btn-delete.png"/></a></li>
+				</ul>
+			</div>
+			
+			<div class="panel panel-inverse" data-sortable-id="ui-widget-10">
+				<div class="panel-heading">
+					<div class="panel-heading-btn"></div>
+					<h4 class="panel-title semi-bold" th:text="#{administration.profile.details}"></h4>
+				</div>
+				<div class="panel-body">
+					<fieldset ng-disabled="mode =='read'">
+						<div class="row">
+							<div ng-class="'col-md-6'">
+								<div class="form-group">
+									<label class="col-md-4 control-label" th:text="#{administration.profile.intitule}"></label>
+									<div class="col-md-8">
+										<input type="hidden" ng-model="dto.id" readonly="readonly" />
+										<input type="text" class="form-control" name="intitule"
+											ng-model="dto.intitule" required="required" />
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</fieldset>
+					
+					<fieldset>
+						<legend th:text="#{administration.profile.listAuthorites}"></legend>
+						<div class="row" >
+							<div class="col-md-6" th:each="secModules : ${listSecModules}" >
+								<div id="listeModules" class="panel-group accordion-style">
+									<div class="panel panel-default" th:each="secModule : ${secModules}"  >
+										<div class="panel-heading">
+											<a th:href="'#group-'+${secModule.id}"
+												data-toggle="collapse" class="accordion-toggle collapsed">
+												<span th:text="${secModule.libelle}"></span>
+											</a>
+										</div>
+										<div class="panel-collapse collapse" th:id="'group-'+${secModule.id}" >
+											<div class="panel-body">
+												<div class="panel-group accordion-style">
+													<div class="panel panel-default" th:each="secEcran : ${secModule.secEcranDTOs}" >
+														<div class="panel-heading">
+															<a th:href="'#group-'+${secModule.id}+'-sub-'+${secEcran.id}"
+																data-toggle="collapse" class="accordion-toggle collapsed"> 
+																<span th:text="${secEcran.libelle}"></span>
+															</a>
+														</div>
+														<div class="panel-collapse collapse" th:id="'group-'+${secModule.id}+'-sub-'+${secEcran.id}">
+															<div class="panel-body" th:each="secAuthorite : ${secEcran.secAuthoriteDTOs}" >
+																<input type="checkbox" ng-disabled="mode =='read'" th:attr="ng-checked='checked('+${secAuthorite.id}+')',ng-click='toggleChecked('+${secAuthorite.id}+')'" />
+																<span th:text="${secAuthorite.intitule}"></span>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+					
+				</div>
+			</div>
+		</form>
+	</th:block>
+</body>
+</html>

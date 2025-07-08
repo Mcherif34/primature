@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+	<title></title>
+</head>
+<body ng-controller="reminderPortofolioController" th:attr="ng-init='init();'">
+	<div layout:fragment="search">
+		<form class="form-inline" role="search">
+			<input type="text"
+				class="form-control b-a rounded px-3 form-control-sm"
+				style="min-width: 350px;" ng-model="dto.search.key"
+				placeholder="Rechercher client par code ou raison sociale" /> <a
+				href="#" ng-click="searchClient()" class="btn success p-x-md"
+				style="border-radius: 20px; padding-top: 3px; padding-bottom: 5px; margin-left: 10px; margin-right: 20px;"><i
+				class="fa fa-search"></i></a>
+		</form>
+	</div>
+	<div layout:fragment="content">
+		<div class="main-content">	
+			<div class="page-content">
+				<div class="container-fluid">
+					<div class="row">
+		            	<div class="col-12">
+		                	<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+		                    	<h4 class="mb-sm-0">Portefeuilles de relance</h4>
+		                    	
+		                    	<div class="page-title-right">
+		                        	<ol class="breadcrumb m-0">
+		                            	<li class="breadcrumb-item font-weight-bold"><a th:href="@{/}">Tableau de bord</a></li>
+		                                <li class="breadcrumb-item active">Portefeuilles de relance</li>
+		                            </ol>
+		                        </div>
+							</div>
+		                </div>
+		        	</div>
+		        	<div class="col-xxl-12">
+		                            <div class="card">
+		                                <div class="card-body">
+		                                    <ul class="nav nav-tabs nav-justified mb-3" role="tablist">
+		                                        <li class="nav-item">
+		                                            <a class="nav-link active" data-bs-toggle="tab" href="#portofolioTab" role="tab" aria-selected="false" style="font-weight: 600;">
+		                                                <i class="mdi mdi-view-grid-outline"></i> Portefeuilles
+		                                            </a>
+		                                        </li>
+		                                        <li class="nav-item">
+		                                            <a class="nav-link" data-bs-toggle="tab" href="#clientTab" role="tab" aria-selected="false" style="font-weight: 600;">
+		                                                <i class="mdi mdi-account-circle-outline"></i> Clients
+		                                            </a>
+		                                        </li>
+		                                    </ul>
+		                                    <!-- Tab panes -->
+		                                    <div class="tab-content text-muted">
+		                                        <div class="tab-pane active" id="portofolioTab" role="tabpanel">
+		                                        	<div style="text-align: right; margin-bottom: 10px;">
+		                                        		<div style="float: left;" class="btn-group btn-group-sm mt-2 shadow" role="group" aria-label="Basic example">
+		                                                    <button type="button" ng-click="checkAll('reminderPortofolioId');" class="btn btn-primary waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-marked-circle label-icon align-middle fs-12"></i> Tout cocher</button>
+		                                                    <button type="button" ng-click="uncheckAll('reminderPortofolioId');" class="btn btn-primary waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-blank-circle-outline label-icon align-middle fs-12"></i> Tout décocher</button>
+		                                                </div>
+			                                        	<a href="#" ng-show="checked" ng-click="deleteReminderPortofolios()" class="btn btn-danger btn-label waves-effect waves-light"><i class="mdi mdi-trash-can label-icon align-middle fs-16 me-2"></i> Supprimer</a>
+			                                        	<a href="#" ng-click="addReminderPortofolio()" class="btn btn-primary btn-label waves-effect waves-light"><i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Nouveau</a>
+			                                        	<a href="#" ng-click="" class="btn btn-primary" style="padding-top: 6px; padding-bottom: 6px;"><i class="mdi mdi-tune label-icon align-middle fs-16"></i></a>
+			                                        </div>
+		                                        	<div class="live-preview">
+			                                            <div class="table-responsive">
+															<table id="reminderPortofolioTable" ng-controller="reminderPortofolioTableController"
+																	th:attr="ng-init='init();'" class="table dt-responsive nowrap table-striped align-middle">
+														        <thead>
+														          <tr>
+														          	<th></th>
+														            <th style="width: 5px"></th>
+														            <th>Nom</th>
+														            <th>Description</th>
+														            <th>Nombre de clients</th>
+														            <th>Scénario attaché</th>
+														            <th>Actions</th>
+														          </tr>
+														        </thead>
+														      </table>
+														</div>
+													</div>
+		                                        </div>
+		                                        <div class="tab-pane" id="clientTab" role="tabpanel">
+		                                        	<div style="text-align: right; margin-bottom: 10px;">
+		                                        		<div style="float: left;" class="btn-group btn-group-sm mt-2 shadow" role="group" aria-label="Basic example">
+		                                                    <button type="button" ng-click="checkAll('reminderClientId');" class="btn btn-primary waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-marked-circle label-icon align-middle fs-12"></i> Tout cocher</button>
+		                                                    <button type="button" ng-click="uncheckAll('reminderClientId');" class="btn btn-primary waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-blank-circle-outline label-icon align-middle fs-12"></i> Tout décocher</button>
+		                                                </div>
+		                                        		<a href="#" ng-click="removeClient('reminderClientId')" class="btn btn-danger btn-label waves-effect waves-light"><i class="mdi mdi-tray-remove label-icon align-middle fs-16 me-2"></i> Supprimer du portefeuille</a>
+			                                        </div>
+			                                        <div class="live-preview">
+			                                            <div class="table-responsive">
+			                                            	<table id="clientTable" ng-controller="clientTableController"
+																th:attr="ng-init='init();'"
+																class="table dt-responsive nowrap table-striped align-middle">
+																<thead>
+																	<tr>
+																		<th></th>
+																		<th style="width: 5px"></th>
+																		<th>Code</th>
+																		<th>Raison sociale</th>
+																		<th>Groupe</th>
+																		<th>Ville</th>
+																		<th>Identifiant légal</th>
+																		<th>Mode de règlement</th>
+																		<th>Actions</th>
+																	</tr>
+																</thead>
+															</table>
+														</div>
+													</div>  
+		                                        </div>
+		                                    </div>
+		                                </div><!-- end card-body -->
+		                            </div><!-- end card -->
+		                        </div>
+		        </div>
+		    </div>
+		    </div>
+		    <div id="reminderPortofolioModal" class="modal fade" data-backdrop="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+      	  <h5 class="modal-title" ng-if="addReminderPortofolioForm">Enregistrement d'un portefeuille de relance</h5>
+      	  <h5 class="modal-title" ng-if="editReminderPortofolioForm">Modification d'un portefeuille de relance</h5>
+      	  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="reminderPortofolioForm" name="reminderPortofolioForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+          <div class="modal-body p-lg">
+            <div class="row">
+			  <input type="hidden" ng-model="dto.id" />
+			  <div ng-class="'col-md-12'">
+			  	<p class="text-muted">Renseignez les champs obligatoires</p>
+			  	<div ng-if="reminderPortofolioRequiredError" class="alert alert-danger" role="alert">
+			  	  Veuillez remplir tous les champs obligatoires !
+			  	</div>
+			  	<div ng-if="reminderPortofolioTechnicalError" class="alert alert-danger" role="alert">
+			  	  Un problème est survenu ! Merci de contacter votre administrateur.
+			  	</div>
+			  	<div ng-if="reminderPortofolioSuccess" class="alert alert-success" role="alert">
+			  	  L'opération s'est effectuée avec succès !
+			  	</div>
+			  </div>
+			  <div ng-class="'col-md-12'">
+            	<div class="form-group">
+              	  <label><span class="asterik"> * </span> Nom</label>
+                  <input type="text" class="form-control" name="name" ng-model="dto.name" required="required" />                        
+                </div>
+			  </div>
+			  <div ng-class="'col-md-12'">
+            	<div class="form-group">
+                  <label>Description</label>
+                  <textarea class="form-control" name="description" ng-model="dto.description"></textarea>
+                </div>
+			  </div>
+			</div>
+          </div>
+          <div class="modal-footer">
+			<a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="saveReminderPortofolio()">
+	        	<i class="mdi mdi-content-save label-icon align-middle fs-16 me-2"></i> Enregistrer
+	        </a>
+		  </div>
+        </form>
+      </div><!-- /.modal-content -->
+    </div>
+  </div>
+  <div id="clientModal" class="modal fade" data-backdrop="true">
+		    <div class="modal-dialog modal-lg modal-customized">
+		      <div class="modal-content">
+		        <div class="modal-header">
+		      	  <h5 class="modal-title">Liste des clients sans portefeuille</h5>
+		      	  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		        </div>
+		        <form id="clientForm" name="clientForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+		          <div class="modal-body modal-lg modal-customized">
+		          	<div style="margin-bottom: 14px;">
+		          		<div class="btn-group btn-group-sm mt-2 shadow" role="group" aria-label="Basic example">
+		                	<button type="button" ng-click="checkAll('clientId');" class="btn btn-primary waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-marked-circle label-icon align-middle fs-12"></i> Tout cocher</button>
+		                    <button type="button" ng-click="uncheckAll('clientId');" class="btn btn-primary waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-blank-circle-outline label-icon align-middle fs-12"></i> Tout décocher</button>
+		                </div>
+		            </div>
+		          	<div class="table-responsive">
+						<table width="100%" id="clientWithoutPortofolioTable"
+						   	   ng-controller="clientWithoutPortofolioTableController"
+							   th:attr="ng-init='init();'" class="table table-striped b-t b-b">
+							<thead>
+								<tr>
+									<th></th>
+									<th style="width: 5px"></th>
+									<th>Code</th>
+									<th>Raison sociale</th>
+									<th>Groupe</th>
+									<th>Ville</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+		          </div>
+		          <div class="modal-footer">
+		          	<a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="saveClient('clientId')">
+			        	<i class="mdi mdi-content-save label-icon align-middle fs-16 me-2"></i> Enregistrer
+			        </a>
+		          </div>
+		        </form>
+		      </div><!-- /.modal-content -->
+		    </div>
+		  </div>
+	</div>
+<div layout:fragment="plugins" class="page-content">
+	<script th:src='@{/resources/js/reminder/reminderPortofolio.js}'></script>
+</div>
+</body>
+</html>

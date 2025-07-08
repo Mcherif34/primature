@@ -1,0 +1,115 @@
+package ma.brainit.aman.client.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import ma.brainit.aman.administration.actions.SearchParam;
+import ma.brainit.aman.client.dao.WSubWorkTaskDao;
+import ma.brainit.aman.client.dto.WSubWorkTaskDTO;
+import ma.brainit.aman.client.dto.converters.WSubWorkTaskDTOConverter;
+import ma.brainit.aman.client.model.WSubWorkTask;
+import ma.brainit.aman.client.service.WSubWorkTaskService;
+import ma.brainit.aman.webservice.GedService;
+import ma.brainit.base.BasePaginatorDao;
+import ma.brainit.base.BaseTable;
+import ma.brainit.base.utils.Util;
+
+@Service
+@Transactional
+public class WSubWorkTaskServiceImpl implements WSubWorkTaskService {
+
+	@Value("${opentext.url}")
+	private String opentextUrl;
+	
+	@Value("${opentext.login}")
+	private String opentextLogin;
+
+	@Value("${opentext.password}")
+	private String opentextPassword;
+	
+	@Value("${opentext.courrierFactureID}")
+	private Long opentextCourrierFactureID;
+	
+	private GedService ged = new GedService();
+	
+	@Autowired
+	private WSubWorkTaskDTOConverter WSubWorkTaskDTOConverter;
+
+	@Autowired
+	private BasePaginatorDao<WSubWorkTask, Long> paginatorDao;
+
+	@Autowired
+	private WSubWorkTaskDao WSubWorkTaskDao;
+
+	@Override
+	public String getPage(Integer page, Integer limit, String sort, String direction, String search) {
+		StringBuilder condition = new StringBuilder("");
+		List<SearchParam> searchParams = Util.fromSearchParamsJSON(search);
+		searchParams  = WSubWorkTaskDTOConverter.convertSearchParamToEntity(search);
+		this.paginatorDao.setEntityClass(WSubWorkTask.class);
+		List<WSubWorkTask> list = paginatorDao.getPaginator(page, limit,sort,direction,searchParams, condition.toString());
+		Long totalCount = paginatorDao.count(searchParams, condition.toString());
+		List<WSubWorkTaskDTO> dtos = WSubWorkTaskDTOConverter.convertFromDataBeanList(list);
+		return Util.toJson(new BaseTable<WSubWorkTaskDTO>(dtos,totalCount));
+	}
+	
+	@Override
+	public String getPage(Integer page, Integer limit, String sort, String direction, String search, Long workId) {
+		StringBuilder condition = new StringBuilder("");
+		if(workId != null) {
+			condition.append("WHERE e.subWorkTaskDateReady IS NOT NULL AND e.subWorkTaskTitle NOT LIKE '%EVALUER%' AND e.wWork.id = ").append(workId);
+		}
+		List<SearchParam> searchParams = Util.fromSearchParamsJSON(search);
+		searchParams  = WSubWorkTaskDTOConverter.convertSearchParamToEntity(search);
+		this.paginatorDao.setEntityClass(WSubWorkTask.class);
+		List<WSubWorkTask> list = paginatorDao.getPaginator(page, limit,sort,direction,searchParams, condition.toString());
+		Long totalCount = paginatorDao.count(searchParams, condition.toString());
+		List<WSubWorkTaskDTO> dtos = WSubWorkTaskDTOConverter.convertFromDataBeanList(list);
+		return Util.toJson(new BaseTable<WSubWorkTaskDTO>(dtos,totalCount));
+	}
+
+	@Override
+	@Transactional
+	public WSubWorkTaskDTO save(WSubWorkTaskDTO dto) {
+		WSubWorkTask entity = WSubWorkTaskDTOConverter.convertFromDTO(dto);
+		entity = WSubWorkTaskDao.save(entity);
+
+		return WSubWorkTaskDTOConverter.convertFromDataBean(entity);
+	}
+
+	@Override
+	@Transactional
+	public WSubWorkTaskDTO load(Long id) {
+		WSubWorkTask entity = WSubWorkTaskDao.findOne(id);
+		return WSubWorkTaskDTOConverter.convertFromDataBean(entity);
+	}
+
+	@Override
+	@Transactional
+	public void delete(Long id) {
+		WSubWorkTaskDao.delete(id);
+	}
+
+	@Override
+	@Transactional
+	public List<WSubWorkTaskDTO> getAll() {
+		List<WSubWorkTask> list = WSubWorkTaskDao.findAll();
+		List<WSubWorkTaskDTO> dtos = WSubWorkTaskDTOConverter.convertFromDataBeanList(list);
+
+		return dtos;
+	}
+
+	@Override
+	@Transactional
+	public List<WSubWorkTaskDTO> getAllByWork(Long wWorkId) {
+		List<WSubWorkTask> list = WSubWorkTaskDao.getByWork(wWorkId);
+		List<WSubWorkTaskDTO> dtos = WSubWorkTaskDTOConverter.convertFromDataBeanList(list);
+
+		return dtos;
+	}
+	
+}

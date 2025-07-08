@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+</head>
+<body ng-controller="dashboardController" th:attr="ng-init='init();'">
+<div layout:fragment="content" class="page-content">
+<!-- ############ PAGE START-->
+<div class="p-a white lt box-shadow">
+	<div class="row">
+		<div class="col-sm-12">
+			<h4 class="mb-0 _300">Tableau de bord</h4>
+		</div>
+	</div>
+</div>
+<div class="padding">
+	<div class="row">
+		<div class="col-sm-8 col-md-8">
+	        <div class="box">
+	          <div class="box-header">
+	            <h3 class="_300">Balance âgée</h3>
+	            <small>Balance âgée consolidée à la date du <strong>{{currentDate}}</strong></small>
+	          </div>
+	          <div class="box-body" style="padding-top: 0">
+	          	<div class="row" style="padding-bottom: 10px">
+		          	<div class="col-sm-3 col-md-3" style="text-align: center; padding-bottom: 5px"><span class="label" style="padding-left: 15px; padding-right: 15px; background: #666666;">Non échu : {{totalNotOverdueAmount}}</span></div>
+		          	<div class="col-sm-3 col-md-3" style="text-align: center;"><span class="label" style="padding-left: 15px; padding-right: 15px; background: #666666;">0 - 30 j : {{totalOverdueAmount30}}</span></div>
+		          	<div class="col-sm-3 col-md-3" style="text-align: center;"><span class="label" style="padding-left: 15px; padding-right: 15px; background: #666666;">31 - 60 j : {{totalOverdueAmount60}}</span></div>
+		          	<div class="col-sm-3 col-md-3" style="text-align: center;"><span class="label" style="padding-left: 15px; padding-right: 15px; background: #666666;">61 - 90 j : {{totalOverdueAmount90}}</span></div>
+		          	<div class="col-sm-3 col-md-3" style="text-align: center;"><span class="label" style="padding-left: 15px; padding-right: 15px; background: #666666;">91 - 120 j : {{totalOverdueAmount120}}</span></div>
+		          	<div class="col-sm-3 col-md-3" style="text-align: center;"><span class="label" style="padding-left: 15px; padding-right: 15px; background: #666666;">121 - 150 j : {{totalOverdueAmount150}}</span></div>
+		          	<div class="col-sm-3 col-md-3" style="text-align: center;"><span class="label" style="padding-left: 15px; padding-right: 15px; background: #666666;">+150 j : {{totalOverdueAmount151}}</span></div>
+	          	</div>
+	            <canvas id="flotOverdueAmount"></canvas>
+	          </div>
+	        </div>
+        </div>
+        <div class="col-sm-4 col-md-4">
+	        <div class="box">
+	          <div class="box-header">
+	          	<h3 class="_300">Filtre de recherche</h3>
+	          </div>
+	          <div class="box-body" style="padding-bottom: 0">
+	          	<div class="row">
+	          		<div ng-class="'col-md-12'">
+						<div class="form-group">
+							<label>Situation au </label>
+							<input type="text" class="form-control" name="date"
+								ng-model="dto.search.date" datepicker="datepicker" />
+						</div>
+					</div>
+					<div ng-class="'col-md-12'">
+						<div class="form-group">
+							<label>Famille de clients</label> <select class="form-control"
+								name="clientPortofolioId"
+								ng-model="dto.search.clientPortofolioId"
+								ng-options="c.id as c.name for c in clientPortofolios">
+								<option value="">Choisir une option</option>
+								</select>
+						</div>
+					</div>
+					<div ng-class="'col-md-12'">
+						<div class="form-group">
+							<label>Code client</label> <select id="codeClient"
+								class="form-control select2" style="width: 100%;"
+								name="codeClient" ng-model="dto.search.codeClient">
+								<option value="">Choisir une option</option>
+							</select>
+						</div>
+					</div>
+					<div ng-class="'col-md-12'">
+						<div class="form-group">
+							<label>Raison sociale</label> <select id="companyName"
+								class="form-control select2" style="width: 100%;" name="id"
+								ng-model="dto.search.companyName">
+								<option value="">Choisir une option</option>
+							</select>
+						</div>
+					</div>
+					<div ng-class="'col-md-12'">
+						<div class="form-group">
+							<label>Chargé de recouvrement</label>
+							<select class="form-control"
+								name="recoveryUserId"
+								ng-model="dto.search.recoveryUserId"
+								ng-options="r.id as (r.prenom + ' ' + r.nom) for r in recoveryUsers">
+								<option value="">Choisir une option</option>
+							</select>
+						</div>
+					</div>
+					<div ng-class="'col-md-12'">
+						<div class="form-group">
+							<a href="#" ng-click="advancedSearch()"
+									class="btn success p-x-md">Rechercher</a> <input type="reset"
+									class="btn warn p-x-md" value="Annuler" />
+						</div>
+					</div>
+				</div>
+	          </div>
+	        </div>
+        </div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12 col-md-12">
+			<div class="box">
+				<div class="table-responsive">
+					<table width="100%" id="outstandingStatusTable"
+						ng-controller="outstandingStatusTableController"
+						th:attr="ng-init='init();'"
+						class="table table-striped b-t b-b">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Statut</th>
+								<th style="width: 20%">Raison sociale</th>
+								<th>Encours accordé</th>
+								<th>Encours réel</th>
+								<th>Encours non échu</th>
+								<th>Dépassement</th>
+								<th>Total Retard</th>
+								<th>Retard &lt; à 30 jrs</th>
+								<th>Retard entre 30 et 90 jrs</th>
+								<th>Retard &gt; à 90 jrs</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="invoiceTotalModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg modal-customized">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Liste de factures en attente de règlement</h5>
+						</div>
+						<form name="" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+				          <div class="modal-body p-lg">
+				            <div class="row">
+							  <div ng-class="'col-md-12'">
+							  <div style="margin-bottom: 14px;">
+									<a href="#" ng-click="checkAll('invoiceId');"><span class="label orange">Sélectionner tout</span></a>&nbsp;&nbsp;<a href="#" ng-click="uncheckAll('invoiceId');"><span class="label warn">Sélectionner aucun</span></a>
+								</div>
+								<div class="table-responsive" style="background: #FFFFFF">
+									<table width="100%" id="invoiceTotalTable"
+										ng-controller="invoiceTotalTableController"
+										th:attr="ng-init='init();'"
+										class="table table-striped b-t b-b">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th></th>
+												<th>Date de facture</th>
+												<th>Date d'échéance</th>
+												<th>Retard</th>
+												<th>N° Facture</th>
+												<th>Montant restant TTC</th>
+												<th>Règlement</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							  </div>
+							</div>
+				          </div>
+				          <div class="modal-footer">
+				          	<a href="#" ng-if="checked" class="btn info p-x-md" style="background: #666666;" ng-click="addPromiseClient('invoiceId')">Ajouter une promesse de règlement</a>
+							<a href="#" ng-if="checked" class="btn warn p-x-md" ng-click="addReminderClient('invoiceId')">Générer une relance</a>
+				          	<a href="#" class="btn danger p-x-md" data-dismiss="modal">Fermer</a>
+				          </div>
+				        </form>
+					</div>
+				</div>
+			</div>
+			<div id="invoiceNotOverdueModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg modal-customized">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Liste de factures non échues en attente de règlement</h5>
+						</div>
+						<form name="" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+				          <div class="modal-body p-lg">
+				            <div class="row">
+							  <div ng-class="'col-md-12'" style="background: #FFFFFF">
+								<div class="table-responsive">
+									<table width="100%" id="invoiceNotOverdueTable"
+										ng-controller="invoiceNotOverdueTableController"
+										th:attr="ng-init='init();'"
+										class="table table-striped b-t b-b">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>Date de facture</th>
+												<th>Date d'échéance</th>
+												<th>Retard</th>
+												<th>N° Facture</th>
+												<th>Montant restant TTC</th>
+												<th>Règlement</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							  </div>
+							</div>
+				          </div>
+				          <div class="modal-footer">
+				          	<a href="#" class="btn danger p-x-md" data-dismiss="modal">Fermer</a>
+				          </div>
+				        </form>
+					</div>
+				</div>
+			</div>
+			<div id="invoiceOverdueModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg modal-customized">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Liste de factures échues en attente de règlement</h5>
+						</div>
+						<form name="" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+				          <div class="modal-body p-lg">
+				            <div class="row">
+							  <div ng-class="'col-md-12'" style="background: #FFFFFF">
+								<div class="table-responsive">
+									<table width="100%" id="invoiceOverdueTable"
+										ng-controller="invoiceOverdueTableController"
+										th:attr="ng-init='init();'"
+										class="table table-striped b-t b-b">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>Date de facture</th>
+												<th>Date d'échéance</th>
+												<th>Retard</th>
+												<th>N° Facture</th>
+												<th>Montant restant TTC</th>
+												<th>Règlement</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							  </div>
+							</div>
+				          </div>
+				          <div class="modal-footer">
+				          	<a href="#" class="btn danger p-x-md" data-dismiss="modal">Fermer</a>
+				          </div>
+				        </form>
+					</div>
+				</div>
+			</div>
+			<div id="invoiceOverdue30Modal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg modal-customized">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Liste de factures échues à moins de 30 jours en attente de règlement</h5>
+						</div>
+						<form name="" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+				          <div class="modal-body p-lg">
+				            <div class="row">
+							  <div ng-class="'col-md-12'" style="background: #FFFFFF">
+								<div class="table-responsive">
+									<table width="100%" id="invoiceOverdue30Table"
+										ng-controller="invoiceOverdue30TableController"
+										th:attr="ng-init='init();'"
+										class="table table-striped b-t b-b">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>Date de facture</th>
+												<th>Date d'échéance</th>
+												<th>Retard</th>
+												<th>N° Facture</th>
+												<th>Montant restant TTC</th>
+												<th>Règlement</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							  </div>
+							</div>
+				          </div>
+				          <div class="modal-footer">
+				          	<a href="#" class="btn danger p-x-md" data-dismiss="modal">Fermer</a>
+				          </div>
+				        </form>
+					</div>
+				</div>
+			</div>
+			<div id="invoiceOverdue60Modal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg modal-customized">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Liste de factures échues entre 30 et 90 jours en attente de règlement</h5>
+						</div>
+						<form name="" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+				          <div class="modal-body p-lg">
+				            <div class="row">
+							  <div ng-class="'col-md-12'" style="background: #FFFFFF">
+								<div class="table-responsive">
+									<table width="100%" id="invoiceOverdue60Table"
+										ng-controller="invoiceOverdue60TableController"
+										th:attr="ng-init='init();'"
+										class="table table-striped b-t b-b">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>Date de facture</th>
+												<th>Date d'échéance</th>
+												<th>Retard</th>
+												<th>N° Facture</th>
+												<th>Montant restant TTC</th>
+												<th>Règlement</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							  </div>
+							</div>
+				          </div>
+				          <div class="modal-footer">
+				          	<a href="#" class="btn danger p-x-md" data-dismiss="modal">Fermer</a>
+				          </div>
+				        </form>
+					</div>
+				</div>
+			</div>
+			<div id="invoiceOverdue90Modal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg modal-customized">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Liste de factures échues à plus de 90 jours en attente de règlement</h5>
+						</div>
+						<form name="" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+				          <div class="modal-body p-lg">
+				            <div class="row">
+							  <div ng-class="'col-md-12'" style="background: #FFFFFF">
+								<div class="table-responsive">
+									<table width="100%" id="invoiceOverdue90Table"
+										ng-controller="invoiceOverdue90TableController"
+										th:attr="ng-init='init();'"
+										class="table table-striped b-t b-b">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>Date de facture</th>
+												<th>Date d'échéance</th>
+												<th>Retard</th>
+												<th>N° Facture</th>
+												<th>Montant restant TTC</th>
+												<th>Règlement</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							  </div>
+							</div>
+				          </div>
+				          <div class="modal-footer">
+				          	<a href="#" class="btn danger p-x-md" data-dismiss="modal">Fermer</a>
+				          </div>
+				        </form>
+					</div>
+				</div>
+			</div>
+</div>
+<!-- ############ PAGE END-->
+</div>
+<div layout:fragment="plugins" class="page-content">
+	<script th:src='@{/resources/js/dashboard/overdueAmount.js}'></script>
+</div>
+</body>
+</html>

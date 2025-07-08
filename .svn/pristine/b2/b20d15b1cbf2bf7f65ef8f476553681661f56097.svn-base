@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+	<title></title>
+</head>
+<body ng-controller="moduleController" th:attr="ng-init='init();'">
+<div layout:fragment="content" class="page-content">
+<!-- ############ PAGE START-->
+<div class="p-a white lt box-shadow">
+	<div class="row">
+		<div class="col-sm-6">
+			<h4 class="mb-0 _300">Gestion des modules</h4>
+			<small class="text-muted">Gestion des modules</small>
+		</div>
+	</div>
+</div>
+<!-- ############ PAGE START-->
+<div class="padding">
+  <div class="row">
+    <div class="col-md-12">
+    	<div class="b-b b-primary nav-active-primary">
+			<ul class="nav nav-tabs">
+				<li class="nav-item"><a class="nav-link nav-tab active"
+					href="#" data-toggle="tab" data-target="#tab1">Modules</a></li>
+				<li class="nav-item"><a class="nav-link nav-tab" href="#"
+					data-toggle="tab" data-target="#tab2">Ecrans</a></li>
+				<li class="nav-item"><a class="nav-link nav-tab" href="#"
+					data-toggle="tab" data-target="#tab3">Autorisations</a></li>
+			</ul>
+		</div>
+		<div class="tab-content p-a m-b-md">
+			<div class="tab-pane animated fadeIn text-muted active" id="tab1">
+				<div class="box">
+				    <div class="box-header">
+				      <div style="float:left; margin-top: 3px;">
+				        <h2 class="mb-0 _300">Liste des modules</h2>
+				        <small class="text-muted"><a style="font-size: 13px !important;" th:href="@{/}"><span class="nav-link-breadcrumb label">Tableau de bord</span></a> <span class="nav-link-breadcrumb label primary">Modules</span></small>
+				      </div>
+				      <ul class="button_actions">
+						<li><a href="#" ng-click="addModule()" class="btn btn-fw success"><i class="fa fa-plus"></i> &nbsp;<span>Nouveau</span></a></li>
+					  </ul>
+				    </div>
+				    <div class="table-responsive">
+				      <table id="moduleTable" ng-controller="moduleTableController"
+							th:attr="ng-init='init();'" class="table table-striped b-t b-b">
+				        <thead>
+				          <tr>
+				            <th>ID</th>
+				            <th>Code</th>
+				            <th>Libellé</th>
+				            <th>Actions</th>
+				          </tr>
+				        </thead>
+				      </table>
+				    </div>
+			   </div>
+			</div>
+			<div class="tab-pane animated fadeIn text-muted" id="tab2">
+				<div class="box">
+					<div class="box-header">
+						<div style="float: left; margin-top: 3px;">
+							<h2 class="mb-0 _300">Liste des écrans</h2>
+							<small class="text-muted"><a style="font-size: 13px !important;" th:href="@{/}"><span class="nav-link-breadcrumb label"> Tableau de bord </span></a> <span class="nav-link-breadcrumb label primary">Ecrans</span></small>
+						</div>
+						<ul class="button_actions">
+							<li><a href="#" ng-if="dto.id" ng-click="addScreen()" class="btn btn-fw success"><i class="fa fa-plus"></i> &nbsp;<span>Nouveau</span></a></li>
+						</ul>
+					</div>
+					<div class="table-responsive">
+						<table id="screenTable" ng-controller="screenTableController"
+							th:attr="ng-init='init();'" class="table table-striped b-t b-b">
+				        <thead>
+				          <tr>
+				            <th>ID</th>
+				            <th>Code</th>
+				            <th>Libellé</th>
+				            <th>Actions</th>
+				          </tr>
+				        </thead>
+				      </table>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane animated fadeIn text-muted" id="tab3">
+				<div class="box">
+					<div class="box-header">
+						<div style="float: left; margin-top: 3px;">
+							<h2 class="mb-0 _300">Liste des autorisations</h2>
+							<small class="text-muted"><a style="font-size: 13px !important;" th:href="@{/}"><span class="nav-link-breadcrumb label"> Tableau de bord </span></a> <span class="nav-link-breadcrumb label primary">Autorisations</span></small>
+						</div>
+						<ul class="button_actions">
+							<li><a href="#" ng-if="dto.screen.id" ng-click="addAuthority()" class="btn btn-fw success"><i class="fa fa-plus"></i> &nbsp;<span>Nouveau</span></a></li>
+						</ul>
+					</div>
+					<div class="table-responsive">
+						<table id="authorityTable" ng-controller="authorityTableController"
+							th:attr="ng-init='init();'" class="table table-striped b-t b-b">
+				        <thead>
+				          <tr>
+				            <th>ID</th>
+				            <th>Code</th>
+				            <th>Libellé</th>
+				            <th>Actions</th>
+				          </tr>
+				        </thead>
+				      </table>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+  </div>
+  <!-- .modal -->
+  <div id="moduleModal" class="modal fade" data-backdrop="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+      	  <h5 class="modal-title" ng-if="addModuleForm">Enregistrement d'un module</h5>
+      	  <h5 class="modal-title" ng-if="editModuleForm">Modification d'un module</h5>
+        </div>
+        <form id="moduleForm" name="moduleForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+          <div class="modal-body p-lg">
+            <div class="row">
+			  <input type="hidden" ng-model="dto.id" />
+			  <div ng-class="'col-md-12'">
+			  	<p class="text-muted">Renseignez les champs obligatoires</p>
+			  	<div ng-if="moduleRequiredError" class="alert alert-danger" role="alert">
+			  	  Veuillez remplir tous les champs obligatoires !
+			  	</div>
+			  	<div ng-if="moduleTechnicalError" class="alert alert-danger" role="alert">
+			  	  Un problème est survenu ! Merci de contacter votre administrateur.
+			  	</div>
+			  	<div ng-if="moduleSuccess" class="alert alert-success" role="alert">
+			  	  L'opération s'est effectuée avec succès !
+			  	</div>
+			  </div>
+			  <div ng-class="'col-md-12'">
+            	<div class="form-group">
+              	  <label><span class="asterik"> * </span> Code</label>
+                  <input type="text" class="form-control" name="module" ng-model="dto.module" required="required" />                        
+                </div>
+                <div class="form-group">
+              	  <label><span class="asterik"> * </span> Libellé</label>
+                  <input type="text" class="form-control" name="libelle" ng-model="dto.libelle" required="required" />                        
+                </div>
+			  </div>
+			</div>
+          </div>
+          <div class="modal-footer">
+          	<a href="#" class="btn warn p-x-md" data-dismiss="modal">Annuler</a>
+			<a href="#" ng-click="saveModule()" class="btn success p-x-md">Enregistrer</a>
+          </div>
+        </form>
+      </div><!-- /.modal-content -->
+    </div>
+  </div>
+  <div id="screenModal" class="modal fade" data-backdrop="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+      	  <h5 class="modal-title" ng-if="addScreenForm">Enregistrement d'un écran</h5>
+      	  <h5 class="modal-title" ng-if="editScreenForm">Modification d'un écran</h5>
+        </div>
+        <form id="screenForm" name="screenForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+          <div class="modal-body p-lg">
+            <div class="row">
+			  <input type="hidden" ng-model="dto.id" />
+			  <div ng-class="'col-md-12'">
+			  	<p class="text-muted">Renseignez les champs obligatoires</p>
+			  	<div ng-if="screenRequiredError" class="alert alert-danger" role="alert">
+			  	  Veuillez remplir tous les champs obligatoires !
+			  	</div>
+			  	<div ng-if="screenTechnicalError" class="alert alert-danger" role="alert">
+			  	  Un problème est survenu ! Merci de contacter votre administrateur.
+			  	</div>
+			  	<div ng-if="screenSuccess" class="alert alert-success" role="alert">
+			  	  L'opération s'est effectuée avec succès !
+			  	</div>
+			  </div>
+			  <div ng-class="'col-md-12'">
+            	<div class="form-group">
+              	  <label><span class="asterik"> * </span> Code</label>
+                  <input type="text" class="form-control" name="ecran" ng-model="dto.screen.ecran" required="required" />                        
+                </div>
+                <div class="form-group">
+              	  <label><span class="asterik"> * </span> Libellé</label>
+                  <input type="text" class="form-control" name="libelle" ng-model="dto.screen.libelle" required="required" />                        
+                </div>
+			  </div>
+			</div>
+          </div>
+          <div class="modal-footer">
+          	<a href="#" class="btn warn p-x-md" data-dismiss="modal">Annuler</a>
+			<a href="#" ng-click="saveScreen()" class="btn success p-x-md">Enregistrer</a>
+          </div>
+        </form>
+      </div><!-- /.modal-content -->
+    </div>
+  </div>
+  <div id="authorityModal" class="modal fade" data-backdrop="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+      	  <h5 class="modal-title" ng-if="addAuthorityForm">Enregistrement d'une autorisation</h5>
+      	  <h5 class="modal-title" ng-if="editAuthorityForm">Modification d'une autorisation</h5>
+        </div>
+        <form id="authorityForm" name="authorityForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+          <div class="modal-body p-lg">
+            <div class="row">
+			  <input type="hidden" ng-model="dto.id" />
+			  <div ng-class="'col-md-12'">
+			  	<p class="text-muted">Renseignez les champs obligatoires</p>
+			  	<div ng-if="authorityRequiredError" class="alert alert-danger" role="alert">
+			  	  Veuillez remplir tous les champs obligatoires !
+			  	</div>
+			  	<div ng-if="authorityTechnicalError" class="alert alert-danger" role="alert">
+			  	  Un problème est survenu ! Merci de contacter votre administrateur.
+			  	</div>
+			  	<div ng-if="authoritySuccess" class="alert alert-success" role="alert">
+			  	  L'opération s'est effectuée avec succès !
+			  	</div>
+			  </div>
+			  <div ng-class="'col-md-12'">
+            	<div class="form-group">
+              	  <label><span class="asterik"> * </span> Code</label>
+                  <input type="text" class="form-control" name="ecran" ng-model="dto.authority.code" required="required" />                        
+                </div>
+                <div class="form-group">
+              	  <label><span class="asterik"> * </span> Libellé</label>
+                  <input type="text" class="form-control" name="libelle" ng-model="dto.authority.intitule" required="required" />                        
+                </div>
+			  </div>
+			</div>
+          </div>
+          <div class="modal-footer">
+          	<a href="#" class="btn warn p-x-md" data-dismiss="modal">Annuler</a>
+			<a href="#" ng-click="saveAuthority()" class="btn success p-x-md">Enregistrer</a>
+          </div>
+        </form>
+      </div><!-- /.modal-content -->
+    </div>
+  </div>
+  <!-- / .modal -->
+  </div>
+</div>
+<div layout:fragment="plugins" class="page-content">
+	<script th:src='@{/resources/js/administration/module.js}'></script>
+</div>
+</body>
+</html>

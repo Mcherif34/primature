@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+	<title></title>
+</head>
+<body ng-controller="letterTemplateController" th:attr="ng-init='init();'">
+	<div layout:fragment="search">
+		<form class="form-inline" role="search">
+			<input type="text"
+				class="form-control b-a rounded px-3 form-control-sm"
+				style="min-width: 350px;" ng-model="dto.search.key"
+				placeholder="Rechercher client par code ou raison sociale" /> <a
+				href="#" ng-click="searchClient()" class="btn success p-x-md"
+				style="border-radius: 20px; padding-top: 3px; padding-bottom: 5px; margin-left: 10px; margin-right: 20px;"><i
+				class="fa fa-search"></i></a>
+		</form>
+	</div>
+	<div layout:fragment="content">
+		<div class="main-content">	
+			<div class="page-content">
+				<div class="container-fluid">
+					<div class="row">
+		            	<div class="col-12">
+		                	<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+		                    	<h4 class="mb-sm-0">Modèles de lettre</h4>
+		                    	
+		                    	<div class="page-title-right">
+		                        	<ol class="breadcrumb m-0">
+		                            	<li class="breadcrumb-item font-weight-bold"><a th:href="@{/}">Tableau de bord</a></li>
+		                                <li class="breadcrumb-item active">Modèles de lettre</li>
+		                            </ol>
+		                        </div>
+							</div>
+		                </div>
+		        	</div>
+		        	<div class="col-xxl-12">
+		                            <div class="card">
+		                                <div class="card-body">
+		                                    <div style="text-align: right; margin-bottom: 10px;">
+		                                    	<div style="float: left;" class="btn-group btn-group-sm mt-2 shadow" role="group" aria-label="Basic example">
+                                                    <button type="button" ng-click="checkAll('letterTemplateId');" class="btn btn-primary waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-marked-circle label-icon align-middle fs-12"></i> Tout cocher</button>
+                                                    <button type="button" ng-click="uncheckAll('letterTemplateId');" class="btn btn-primary waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-blank-circle-outline label-icon align-middle fs-12"></i> Tout décocher</button>
+                                                </div>
+			                                    <a href="#" ng-show="checked" ng-click="deleteLetterTemplates()" class="btn btn-danger btn-label waves-effect waves-light"><i class="mdi mdi-trash-can label-icon align-middle fs-16 me-2"></i> Supprimer</a>
+			                                    <a href="#" ng-click="addLetterTemplate()" class="btn btn-primary btn-label waves-effect waves-light"><i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Nouveau</a>
+			                                    <a href="#" ng-click="" class="btn btn-primary" style="padding-top: 6px; padding-bottom: 5px;"><i class="mdi mdi-tune label-icon align-middle fs-16"></i></a>
+			                                </div>
+		                                    <div class="live-preview">
+			                                	<div class="table-responsive">
+			                                    	<table id="letterTemplateTable" ng-controller="letterTemplateTableController"
+														th:attr="ng-init='init();'" class="table dt-responsive nowrap table-striped align-middle">
+														<thead>
+															<tr>
+														    	<th></th>
+														        <th style="width: 5px"></th>
+														        <th>Nom</th>
+														        <th>Description</th>
+														        <th>Actions</th>
+														    </tr>
+														</thead>
+													</table>
+												</div>
+											</div>
+		                                </div><!-- end card-body -->
+		                            </div><!-- end card -->
+		                        </div>
+		        </div>
+		    </div>
+		    </div>
+		<div id="letterTemplateModal" class="modal fade" data-backdrop="true">
+		    <div class="modal-dialog modal-lg">
+		      <div class="modal-content">
+		        <div class="modal-header">
+		      	  <h5 class="modal-title" ng-if="addLetterTemplateForm">Enregistrement d'un modèle de lettre</h5>
+		      	  <h5 class="modal-title" ng-if="editLetterTemplateForm">Modification d'un modèle de lettre</h5>
+		      	  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		        </div>
+		        <form id="letterTemplateForm" name="letterTemplateForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+		          <div class="modal-body p-lg">
+		            <div class="row">
+					  <input type="hidden" ng-model="dto.id" />
+					  <div ng-class="'col-md-12'">
+					  	<p class="text-muted">Renseignez les champs obligatoires</p>
+					  	<div ng-if="letterTemplateRequiredError" class="alert alert-danger" role="alert">
+					  	  Veuillez remplir tous les champs obligatoires !
+					  	</div>
+					  	<div ng-if="letterTemplateTechnicalError" class="alert alert-danger" role="alert">
+					  	  Un problème est survenu ! Merci de contacter votre administrateur.
+					  	</div>
+					  	<div ng-if="letterTemplateSuccess" class="alert alert-success" role="alert">
+					  	  L'opération s'est effectuée avec succès !
+					  	</div>
+					  </div>
+					  <div ng-class="'col-md-12'">
+		            	<div class="form-group">
+		              	  <label><span class="asterik"> * </span> Nom</label>
+		                  <input type="text" class="form-control" name="name" ng-model="dto.name" required="required" />                        
+		                </div>
+		              </div>
+		              <div ng-class="'col-md-12'">
+		                <div class="form-group">
+		                  <label>Objet</label>
+		                  <input type="text" class="form-control" name="description" ng-model="dto.description" required="required" />
+		                </div>
+		              </div>
+		              <div ng-class="'col-md-12'">
+		                <div class="form-group">
+		                  <label>Message</label>
+		                  <div id="snoweditor" style="height: 300px;"></div>
+		                </div>
+					  </div>
+					</div>
+		          </div>
+		          <div class="modal-footer">
+		          	<a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="saveLetterTemplate()">
+			        	<i class="mdi mdi-content-save label-icon align-middle fs-16 me-2"></i> Enregistrer
+			        </a>
+		          </div>
+		        </form>
+		      </div><!-- /.modal-content -->
+		    </div>
+		  </div>
+	</div>
+<div layout:fragment="plugins" class="page-content">
+	<script th:src='@{/resources/js/reminder/letterTemplate.js}'></script>
+</div>
+</body>
+</html>

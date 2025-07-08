@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<title></title>
+</head>
+<body>
+	<th:block th:fragment="form">
+		<form id="form" name="form" method="post" action="#"
+			class="form-horizontal">
+			
+			<div class="sidemenu">
+				<ul>
+					<li><a class="blue" ng-click="add()"><span>Ajouter</span><i class="fa fa-plus"></i></a></li>
+					<li ng-if="dto.id"><a class="blue large" th:href="@{/investissement/dossierApprobhc/parcelle/{{dto.id}}}"><span>Dossier Approbation</span><i class="fa fa-check"></i></a></li>
+					<li ng-if="dto.id"><a class="blue large" th:href="@{/investissement/dossierSubvhc/parcelle/{{dto.id}}}"><span>Dossier Subvention</span><i class="fa fa-life-ring"></i></a></li>
+				</ul>
+			</div>
+			
+			<div class="panel panel-inverse" data-sortable-id="ui-widget-10">
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+					</div>
+					<h4 class="panel-title semi-bold">
+						<th:block th:text="#{investissement.parcelle.form}"></th:block>
+					</h4>
+				</div>
+				
+				<div class="panel-body">
+					<div style="float: right;">
+						<a class="btn cancel aman-green-color" style="font-size: 12px;" ng-click="save()" title="Enregistrer"><i class="fa fa-save"></i> Enregistrer</a>
+					</div>
+					<fieldset ng-disabled="mode =='read'" style="margin-top: 45px">
+						<!-- Block 1 -->
+						<div class="row">
+							<input type="hidden" ng-model="dto.id"  />
+							<div ng-class="'col-md-6'">
+								<div class="form-group">
+									<label class="col-md-5 control-label"> <th:block th:text="#{investissement.parcelle.refParcelle}"></th:block>
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<input type="text" class="form-control" name="refParcelle"
+										ng-model="dto.refParcelle" required="required" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"> <th:block th:text="#{investissement.parcelle.superficie}"></th:block>
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<input type="text" class="form-control" name="superficie" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+										ng-model="dto.superficie" required="required" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"> <th:block th:text="#{investissement.parcelle.investisseurNom}"></th:block>
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<select class="form-control" name="investisseur" ng-model="dto.investisseurId" required="required"
+										ng-options="i.id as i.nom for i in investisseurs"></select>
+									</div>
+								</div>
+							</div>
+							<div ng-class="'col-md-6'">
+								<div class="form-group">
+									<label class="col-md-5 control-label"> <th:block th:text="#{investissement.parcelle.province}"></th:block>
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<select class="form-control" name="province" ng-model="dto.provinceId" ng-change="loadCommunes(dto.provinceId)" required="required"
+										ng-options="p.id as p.libelle for p in provinces"></select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"> <th:block th:text="#{investissement.parcelle.commune}"></th:block>
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<select class="form-control" name="commune" ng-model="dto.communeId" ng-change="loadKsars(dto.communeId)" required="required"
+										ng-options="c.id as c.libelle for c in communes"></select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"> <th:block th:text="#{investissement.parcelle.ksar}"></th:block>
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<select class="form-control" name="ksar" ng-model="dto.ksarId" required="required"
+										ng-options="k.id as k.ksar for k in ksars"></select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</fieldset>			
+					
+				</div>
+			</div>
+		</form>
+	</th:block>
+</body>
+</html>

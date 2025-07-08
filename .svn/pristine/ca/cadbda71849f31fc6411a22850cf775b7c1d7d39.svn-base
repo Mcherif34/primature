@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<title></title>
+</head>
+<body>
+	<th:block th:fragment="form">
+		<form id="form" name="form" method="post" action="#"
+			class="form-horizontal">
+			
+			<div class="sidemenu">
+				<ul>
+					<li><a class="blue" ng-click="add()"><span>Ajouter</span><i class="fa fa-plus"></i></a></li>
+					<li><a class="blue" ng-click="addActivite()"><span>Activité</span><i class="fa fa-caret-right"></i></a></li>
+				</ul>
+			</div>
+			
+			<div class="panel panel-inverse" data-sortable-id="ui-widget-10">
+				<div class="panel-heading">
+					<div class="panel-heading-btn">
+					</div>
+					<h4 class="panel-title semi-bold">
+						<th:block th:text="#{investissement.dossierSubv.form}"></th:block>
+					</h4>
+				</div>
+				
+				<div class="panel-body">
+					<div style="float: right;">
+						<a class="btn cancel aman-green-color" style="font-size: 12px;" ng-click="save()" title="Enregistrer"><i class="fa fa-save"></i> Enregistrer</a>
+					</div>
+					<fieldset ng-disabled="mode =='read'" style="margin-top: 45px">
+						<!-- Block 1 -->
+						<div class="row">
+							<input type="hidden" ng-model="dto.id"  />
+							<div ng-class="'col-md-6'">
+								<div class="form-group">
+									<label class="col-md-5 control-label"> Numéro de dossier
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<input type="text" class="form-control" name="numeroDossier" 
+										ng-model="dto.numeroDossier" required="required" />
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-md-5 control-label"> Date de dépôt
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<input type="text" class="form-control" name="dateDepot" datepicker="datepicker" 
+										ng-model="dto.dateDepot" required="required" />
+									</div>
+								</div>
+								
+								<div class="form-group" ng-if="dto.dossierApprobId">
+									<label class="col-md-5 control-label"> Dossier Approbation
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<select class="form-control" name="dossierApprob" ng-model="dto.dossierApprobId" ng-disabled="disabled"
+										ng-options="d.id as d.numeroDossier for d in dossierApprobs" required="required"></select>
+									</div>
+								</div>
+								
+								<div class="form-group" ng-if="dto.contratId">
+									<label class="col-md-5 control-label"> Contrat
+									</label>
+									<div class="col-md-5">
+										<select class="form-control" name="contrat" ng-model="dto.contratId" ng-disabled="disabled"
+										ng-options="c.id as c.numeroContrat for c in contrats"></select>
+									</div>
+									<div class="col-md-2" style="padding-left: 10px;">
+										<a class="btn cancel aman-blue-color" style="font-size: 12px;" ng-click="addAvenant()" title="Selectionner Avenant">Avenant</a>
+									</div>
+								</div>
+								
+								<div class="form-group" ng-if="dto.avenantId">
+									<label class="col-md-5 control-label"> Avenant
+									</label>
+									<div class="col-md-7">
+										<select class="form-control" name="avenant" ng-model="dto.avenantId" ng-disabled="disabled"
+										ng-options="a.id as a.dateEffet for a in avenants"></select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"> Investisseur
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<select class="form-control" name="investisseur" ng-model="dto.investisseurId" required="required" ng-disabled="disabled"
+										ng-options="i.id as i.nom for i in investisseurs"></select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"> Rubrique
+										<span class="asterik"> * </span>
+									</label>
+									<div class="col-md-7">
+										<select class="form-control" name="rubrique" ng-model="dto.rubriqueId" ng-change="loadSousRubriques(dto.rubriqueId)"
+										ng-options="r.id as r.designation for r in rubriques" ng-disabled="disabledSubv" required="required"></select>
+									</div>
+								</div>
+							</div>
+							<div ng-class="'col-md-6'">
+								<div class="form-group" ng-if="dto.dossierApprobId">
+									<label class="col-md-5 control-label"> Superficie approuvée
+									</label>
+									<div class="col-md-7">
+										<input type="text" class="form-control" name="supApprouve" 
+										ng-model="dto.supApprouve" ng-disabled="disabled" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"> Superficie à subventionner
+									</label>
+									<div class="col-md-7">
+										<input type="text" class="form-control" name="supSubv" 
+										ng-model="dto.supSubv" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"> Montant investi
+									</label>
+									<div class="col-md-7">
+										<input type="text" class="form-control" name="mtInvesti" 
+										ng-model="dto.mtInvesti" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"> Montant estimé
+									</label>
+									<div class="col-md-7">
+										<input type="text" class="form-control" name="mtEstime" 
+										ng-model="dto.mtEstime" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-5 control-label"> Montant subventionné
+									</label>
+									<div class="col-md-7">
+										<input type="text" class="form-control" name="mtSubv" 
+										ng-model="dto.mtSubv" />
+									</div>
+								</div>
+							</div>
+						</div><br/>
+						<fieldset>
+						<legend>&nbsp;Liste des sous-rubriques&nbsp;</legend>
+							<div class="row">
+								<div class="col-md-12" ng-controller="sousRubriqueTableController" th:attr="ng-init='init();'">
+									<table id="sousRubriqueTable" class="table table-striped table-bordered">
+										<thead>
+											<tr>
+												<th>Id</th>
+												<th></th>
+												<th>Sous-rubrique</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							</div>
+						</fieldset>
+					</fieldset>			
+					
+				</div>
+			</div>
+		</form>
+
+		<div class="panel panel-inverse">
+			<div class="panel-heading">
+				<h4 class="panel-title semi-bold">Liste des activités</h4>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12" ng-controller="activiteTableController" th:attr="ng-init='init();'">
+						<div style="float: right;">
+							<a class="btn cancel aman-blue-color" style="font-size: 12px;" ng-click="editActivite()" title="Modifier"><i class="fa fa-pencil"></i> Modifier</a>
+							<a class="btn cancel aman-red-color" style="font-size: 12px;" ng-click="removeActivite()" title="Supprimer"><i class="fa fa-trash-o"></i> Supprimer</a>
+						</div>
+						<table id="activiteTable" class="table table-striped table-bordered">
+							<thead>
+								<tr>
+									<th>Id</th>
+									<th>Date Activité</th>
+									<th>Observation</th>
+									<th>Nature</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="modal fade" id="activitePopup" tabindex="-1"
+					role="dialog">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-header aman-blue-color">
+								<button type="button" class="bootbox-close-button close"
+									data-dismiss="modal" aria-hidden="true">×</button>
+								<h4 class="modal-title panel-title">
+									<b>Investissement &nbsp;<i class="fa fa-caret-right"></i>&nbsp; Dossier de subvention &nbsp;<i class="fa fa-caret-right"></i>&nbsp; Activité</b>
+								</h4>
+							</div>
+							<div class="modal-body">
+								<div class="bootbox-body">
+									<div class="panel-inverse"
+										data-sortable-id="ui-widget-10">
+										<div class="panel-body">
+											<div class="row">
+												<form id="activiteForm" name="activiteForm" method="post" action="#" class="form-horizontal">
+													<div ng-class="'col-md-6'">
+														<div class="form-group">
+															<label class="col-md-3 control-label"> Date
+															</label>
+															<div class="col-md-9">
+																<input type="text" class="form-control" name="dateActivite" ng-model="dto.activite.dateActivite" datepicker="datepicker" />
+															</div>
+														</div>
+													</div>
+													<div ng-class="'col-md-6'">
+														<div class="form-group">
+															<label class="col-md-3 control-label"> Nature
+															</label>
+															<div class="col-md-9">
+																<select class="form-control" name="natureActSubv" ng-model="dto.activite.natureActSubvId"
+																ng-options="n.id as n.libelle for n in natureActSubvs"></select>
+															</div>
+														</div>
+													</div>
+													<div ng-class="'col-md-12'">
+														<div class="form-group">
+															<label class="col-md-2 control-label"> Observation
+															</label>
+															<div class="col-md-10">
+																<textarea class="form-control" name="observation" ng-model="dto.activite.observation"></textarea>
+															</div>
+														</div>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer" style="text-align: center">
+								<button type="button" class="btn cancel aman-blue-color" style="font-size: 12px;" ng-click="closeActivite()">
+									<i class="fa fa-times"></i> Annuler
+								</button>
+								<button type="button" class="btn cancel aman-green-color" style="font-size: 12px;" ng-click="saveActivite()">
+									<i class="fa fa-save"></i> Ajouter
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="row">
+				<div class="modal fade" id="avenantPopup" tabindex="-1"
+					role="dialog">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-header aman-blue-color">
+								<button type="button" class="bootbox-close-button close"
+									data-dismiss="modal" aria-hidden="true">×</button>
+								<h4 class="modal-title panel-title">
+									<b>Contrat&nbsp;<i class="fa fa-caret-right"></i>&nbsp; Avenants</b>
+								</h4>
+							</div>
+							<div class="modal-body">
+								<div class="bootbox-body">
+									<div class="panel panel-inverse"
+										data-sortable-id="ui-widget-10">
+										<div class="panel-body">
+											<div class="row">
+												<div class="col-md-12" ng-controller="avenantTableController"
+													th:attr="ng-init='init('+${contratId}+');'">
+													<table id="avenantTable"
+														class="table table-striped table-bordered">
+														<thead>
+															<tr>
+																<th>Id</th>
+																<th>Date Effet</th>
+																<th>Superficie</th>
+															</tr>
+														</thead>
+													</table>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	</th:block>
+</body>
+</html>

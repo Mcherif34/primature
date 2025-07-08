@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+	<title></title>
+</head>
+<body ng-controller="userController" th:attr="ng-init='init();'">
+	<div layout:fragment="content" class="page-content">
+		<div ng-view="ng-view"></div>
+		<div class="panel panel-inverse" >
+			<div class="panel-heading">
+				<h4 class="panel-title" th:text="#{administration.user.list}"></h4>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12">
+						<table id="userTable"
+							class="table table-striped table-bordered"
+							ng-controller="userTableController"
+							th:attr="ng-init='init();'">
+							<thead>
+								<tr>
+									<th th:text="#{administration.user.id}"></th>
+									<th th:text="#{administration.user.login}"></th>
+									<th th:text="#{administration.user.nom}"></th>
+									<th th:text="#{administration.user.prenom}"></th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<th:block th:include="administration/user/userForm::form"></th:block>
+	</div>
+	<div layout:fragment="plugins" class="page-content">
+		<script th:src='@{/resources/js/administration/user/user.js}'></script>
+	</div>
+</body>
+</html>

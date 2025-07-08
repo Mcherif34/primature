@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+	<title></title>
+</head>
+<body ng-controller="vehicleController" th:attr="ng-init='init();'">
+<div layout:fragment="search">
+		<form class="form-inline" role="search">
+			<input type="text" class="form-control b-a rounded px-3 form-control-sm" style="min-width: 250px;" ng-model="dto.search.key" placeholder="Rechercher contrat" />
+			<a href="#" ng-click="searchVehicle()" class="btn success p-x-md" style="border-radius: 20px; padding-top: 3px; padding-bottom: 5px; margin-left: 10px; margin-right: 20px;"><i class="fa fa-search"></i></a>
+		</form>
+</div>
+	
+<div layout:fragment="content" class="page-content">
+<!-- ############ PAGE START-->
+<div class="p-a white lt box-shadow">
+	<div class="row">
+		<div class="col-sm-6">
+			<h4 class="mb-0 _300">Véhicules</h4>
+			<small class="text-muted">Véhicules</small>
+		</div>
+	</div>
+</div>
+<!-- ############ PAGE START-->
+<div class="padding">
+  <div class="row">
+    <div class="col-md-12">
+    	<div class="box">
+			<div class="box-header">
+				<div style="float:left; margin-top: 3px;">
+					<h2 class="mb-0 _300">Liste des véhicules</h2>
+				    <small class="text-muted"><a style="font-size: 13px !important;" th:href="@{/}"><span class="nav-link-breadcrumb label">Tableau de bord</span></a> <span class="nav-link-breadcrumb label primary">Véhicules</span></small>
+				</div>
+				<ul class="button_actions">
+					<!-- <li><a href="#" ng-click="addVehicle()" class="btn btn-fw info"><i class="fa fa-plus"></i> &nbsp;<span>Nouveau</span></a></li> -->
+					<li><a href="#" ng-click="importVehicles()" class="btn btn-fw success"><i class="fa fa-upload"></i> &nbsp;<span>Importer</span></a></li>
+					<li><a href="#" ng-click="" class="btn btn-fw orange"><i class="fa fa-download"></i> &nbsp;<span>Télécharger</span></a></li>
+				</ul>
+			</div>
+			<div class="table-responsive">
+				<table id="vehicleTable" ng-controller="vehicleTableController"
+					th:attr="ng-init='init();'" class="table table-striped b-t b-b">
+					<thead>
+				    	<tr>
+				        	<th>ID</th>
+				            <th>Code</th>
+				            <th>Date d'entrée</th>
+				            <th>Date de sortie</th>
+				            <th>Date DMC</th>
+				            <th>Marque</th>
+				            <th>Modèle</th>
+				            <th>Type</th>
+				            <th>Actions</th>
+				        </tr>
+				    </thead>
+				</table>
+			</div>
+		</div>
+    </div>
+  </div>
+  <!-- .modal -->
+  <div id="vehicleModal" class="modal fade" data-backdrop="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+      	  <h5 class="modal-title" ng-if="addVehicleForm">Enregistrement d'un véhicule</h5>
+      	  <h5 class="modal-title" ng-if="editVehicleForm">Modification d'un véhicule</h5>
+        </div>
+        <form id="vehicleForm" name="vehicleForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+          <div class="modal-body p-lg">
+            <div class="row">
+			  <input type="hidden" ng-model="dto.id" />
+			  <div ng-class="'col-md-12'">
+			  	<p class="text-muted">Renseignez les champs obligatoires</p>
+			  	<div ng-if="vehicleRequiredError" class="alert alert-danger" role="alert">
+			  	  Veuillez remplir tous les champs obligatoires !
+			  	</div>
+			  	<div ng-if="vehicleTechnicalError" class="alert alert-danger" role="alert">
+			  	  Un problème est survenu ! Merci de contacter votre administrateur.
+			  	</div>
+			  	<div ng-if="vehicleSuccess" class="alert alert-success" role="alert">
+			  	  L'opération s'est effectuée avec succès !
+			  	</div>
+			  </div>
+			  <div ng-class="'col-md-12'">
+            	<div class="form-group">
+              	  <label><span class="asterik"> * </span> Nom</label>
+                  <input type="text" class="form-control" name="name" ng-model="dto.name" required="required" />                        
+                </div>
+                <div class="form-group">
+                  <label>Description</label>
+                  <textarea class="form-control" name="description" ng-model="dto.description"></textarea>
+                </div>
+			  </div>
+			</div>
+          </div>
+          <div class="modal-footer">
+          	<a href="#" class="btn warn p-x-md" data-dismiss="modal">Annuler</a>
+			<a href="#" ng-click="saveVehicle()" class="btn success p-x-md">Enregistrer</a>
+          </div>
+        </form>
+      </div><!-- /.modal-content -->
+    </div>
+  </div>
+  <div id="importVehiclesModal" class="modal" data-backdrop="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Importation des véhicules</h5>
+							<img ng-show="importing" style="float: left; max-height: 20px;" th:src="@{/resources/images/loading.gif}" />
+						</div>
+						<form id="importVehiclesForm" name="importVehiclesForm" method="post" action="#"
+							class="form-horizontal" ui-jp="parsley">
+							<div class="modal-body p-lg">
+					            <div class="row">
+								  <input type="hidden" ng-model="dto.id" />
+								  <div ng-class="'col-md-12'">
+								  	<p class="text-muted">Renseignez les champs obligatoires</p>
+								  	<div ng-if="vehicleRequiredError" class="alert alert-danger" role="alert">
+								  	  Veuillez remplir tous les champs obligatoires !
+								  	</div>
+								  	<div ng-if="vehicleTechnicalError" class="alert alert-danger" role="alert">
+								  	  Un problème est survenu ! Merci de contacter votre administrateur.
+								  	</div>
+								  	<div ng-if="vehicleFileTypeError" class="alert alert-danger" role="alert">
+								  	  Le format du fichier est invalide ! Merci de vérifier.
+								  	</div>
+								  	<div ng-if="vehicleSuccess" class="alert alert-success" role="alert">
+								  	  L'opération s'est effectuée avec succès !
+								  	</div>
+								  </div>
+								  <div ng-class="'col-md-12'">
+								  	<div class="form-group">
+					                  <label><span class="asterik"> * </span> Importer</label>
+					                  <input type="file" class="form-control" id="vehicleFileInput" onchange="loadImportVehicles()" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />                        
+					                </div>
+								  </div>
+								</div>
+					          </div>
+							<div class="modal-footer">
+								<a href="#" class="btn warn p-x-md" data-dismiss="modal">Annuler</a>
+								<a href="#" ng-click="saveImportVehicles()" class="btn success p-x-md" ng-disabled="buttonDisabled">Enregistrer</a>
+							</div>
+						</form>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+			</div>
+  <!-- / .modal -->
+  </div>
+</div>
+<div layout:fragment="plugins" class="page-content">
+	<script th:src='@{/resources/js/administration/referentiel/vehicle.js}'></script>
+</div>
+</body>
+</html>

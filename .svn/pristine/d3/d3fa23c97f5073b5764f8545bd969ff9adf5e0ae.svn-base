@@ -1,0 +1,48 @@
+company.name = Suivi des investissements agricoles - ORMVA-TAF
+page.404.error.header = Page introuvable
+page.403.error.header = Page introuvable
+page.404.error.button =  Page d'accueil
+
+
+##Module
+menacantRuine = Menaçant Ruine
+patrimoines = Patrimoines
+projets = Projets
+rapports = Rapports
+administration = Administration
+ged = GED
+
+
+
+##Menu
+menu.tdb = TDB
+
+menu.sig = Carte
+
+menu.base = Données de base
+menu.base.investisseurs = Gestion des investisseurs
+menu.base.fournisseurs = Gestion des fournisseurs
+menu.base.partenaires = Gestion des partenaires
+menu.base.demandes = Source des demandes
+
+menu.investissement = Investissement
+menu.investissement.contrat.location = Investissement à contrat de location
+menu.investissement.contrat.hors.location = Investissement hors contrat de location
+menu.investissement.demande = Demande
+menu.investissement.contrat = Contrat
+menu.investissement.parcelle = Parcelle
+menu.investissement.rapprochement = Rapprochement Demande/Contrat
+menu.investissement.approbation = Dossier d'approbation
+menu.investissement.subvention = Dossier de subvention
+
+menu.referentiel = Référentiel
+
+menu.administration = Administration
+menu.administration.profils = Gestion de profils
+menu.administration.utilisateurs = Gestion des utilisateurs
+menu.administration.utilisateurAuthorites = Autorités notification
+
+menu.ged = GED
+menu.ged.ged = GED
+
+menu.logout= Déconnexion

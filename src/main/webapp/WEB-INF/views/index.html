@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+<title>Tableau de bord | Gestion des procédures administratives - Primature du Tchad</title>
+<meta charset="UTF-8" />
+<style>
+.notification {list-style-type: none; padding-left: 0}
+.notification li {padding-top: 7px; padding-bottom: 7px; border-bottom: 1px dotted #CCCCCC;}
+</style>
+</head>
+<body ng-controller="homeController" th:attr="ng-init='init();'">
+<div layout:fragment="content">
+<div class="main-content">	
+	<div class="page-content">
+		<div class="container-fluid">
+			<div class="row">
+            	<div class="col-12">
+                	<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    	<h4 class="mb-sm-0">Tableau de bord</h4>
+					</div>
+                </div>
+        	</div>
+        	<div ng-show="taskByProfile != 0" class="alert alert-warning alert-dismissible fade show" style="background: #F2D16D; border-color: none;" role="alert">
+			  <a href="#" ng-click="displayNotifications()" style="color: #5A3E1B; font-size: 14px">Notifications - Vous avez des tâches qui vous sont assignées. Cliquez pour les afficher et les traiter.</a>
+			  <button type="button" class="btn-close" style="color: #aa7f06 !important" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+        	<div class="accordion" id="accordionExample">
+			  <div class="accordion-item">
+			    <h2 class="accordion-header" id="headingOne">
+			      <button class="accordion-button" type="button" style="font-size: 16px" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+			        Procédures en cours de traitement
+			      </button>
+			    </h2>
+			    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+			      <div class="accordion-body">
+			        <div class="row">
+		        		<div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayRegularCourrier()">
+			                     	<div class="card-body bg-info rounded" style="display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                        		<div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentDecisionCount"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Decisions</p>
+			                                </div>
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		               <div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayCorrespondance()">
+			                     	<div class="card-body bg-success rounded" style="display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3" style="background-color: #35a067">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                        		<div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentCorrespondanceCount"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Correspondances</p>
+			                                </div>
+			                                
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		               <div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayOutgoingCourrier()">
+			                     	<div class="card-body rounded" style="background-color: #5B2F33; display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3" style="background-color: #381316">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                            	 <div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentMaterielCount"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Commandes Materiels</p>
+			                                </div>
+			                               
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		               <div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayOutgoingCourrier()">
+			                     	<div class="card-body rounded" style="background-color: #FF9852; display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3" style="background-color: #9e592b">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                            	 <div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentNominationCount"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Nominations</p>
+			                                </div>
+			                               
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		           </div><!-- end row -->
+		           <div class="row">
+		        		<div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayRegularCourrier()">
+			                     	<div class="card-body rounded" style="display:flex; background-color: #004EB2; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3" style="background-color: #022f69">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                        		<div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentTitularisationCount"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Titularisations</p>
+			                                </div>
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		               <div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayInvoiceCourrier()">
+			                     	<div class="card-body rounded" style="background-color: #0C4733; display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3" style="background-color: #073324">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                        		<div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentCongeCount"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Conges payes</p>
+			                                </div>
+			                                
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		               <div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayOutgoingCourrier()">
+			                     	<div class="card-body rounded" style="background-color: #404856; display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3" style="background-color: #262b33">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                            	 <div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentMissionCount"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Ordres de mission</p>
+			                                </div>
+			                               
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		               <div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayOutgoingCourrier()">
+			                     	<div class="card-body rounded" style="background-color: #f2b744; display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3" style="background-color: #a17e3a">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                            	 <div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important">3</h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Lettres de felicitations</p>
+			                                </div>
+			                               
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		           </div><!-- end row -->
+			      </div>
+			    </div>
+			  </div>
+			  <div class="accordion-item">
+			    <h2 class="accordion-header" id="headingTwo">
+			      <button class="accordion-button collapsed" type="button" style="font-size: 16px" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+			        Répartition des procédures par entité
+			      </button>
+			    </h2>
+			    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+			      <div class="accordion-body">
+			        <div class="row">
+		        		<div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayRegularCourrier()">
+			                     	<div class="card-body bg-info rounded" style="display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                        		<div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentCountSpm"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Secretariat part. du PM</p>
+			                                </div>
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		               <div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayInvoiceCourrier()">
+			                     	<div class="card-body bg-success rounded" style="display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3" style="background-color: #35a067">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                        		<div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentCountDircab"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Cabinet du PM</p>
+			                                </div>
+			                                
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		               <div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayOutgoingCourrier()">
+			                     	<div class="card-body rounded" style="background-color: #5B2F33; display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3" style="background-color: #381316">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                            	 <div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentCountSg"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Secretariat General</p>
+			                                </div>
+			                               
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		               <div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayOutgoingCourrier()">
+			                     	<div class="card-body rounded" style="background-color: #FF9852; display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3" style="background-color: #9e592b">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                            	 <div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentCountConseiller"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Conseillers techniques</p>
+			                                </div>
+			                               
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		           </div><!-- end row -->
+		           <div class="row">
+		        		<div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayRegularCourrier()">
+			                     	<div class="card-body rounded" style="display:flex; background-color: #004EB2; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3" style="background-color: #022f69">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                        		<div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentCountCourrier"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Direction des courriers</p>
+			                                </div>
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		               <div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayInvoiceCourrier()">
+			                     	<div class="card-body rounded" style="background-color: #0C4733; display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3" style="background-color: #073324">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                        		<div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentCountRh"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Service des RH</p>
+			                                </div>
+			                                
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		               <div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayOutgoingCourrier()">
+			                     	<div class="card-body rounded" style="background-color: #404856; display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3" style="background-color: #262b33">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                            	 <div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentCountDaaf"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Direction financiere</p>
+			                                </div>
+			                               
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		               <div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayOutgoingCourrier()">
+			                     	<div class="card-body rounded" style="background-color: #f2b744; display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3" style="background-color: #a17e3a">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                            	 <div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentCountProtocole"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Direction de Protocole</p>
+			                                </div>
+			                               
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		           </div>
+		           <div class="row">
+		        		<div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayRegularCourrier()">
+			                     	<div class="card-body bg-info rounded" style="display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                        		<div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentCountSom"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Service OM</p>
+			                                </div>
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		               <div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayInvoiceCourrier()">
+			                     	<div class="card-body bg-success rounded" style="display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3" style="background-color: #35a067">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                        		<div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentCountDircom"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Direction des comm.</p>
+			                                </div>
+			                                
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		               <div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayOutgoingCourrier()">
+			                     	<div class="card-body rounded" style="background-color: #5B2F33; display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3" style="background-color: #381316">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                            	 <div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentCountMateriel"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Service MPI</p>
+			                                </div>
+			                               
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		               <div class="col-xl-3 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayOutgoingCourrier()">
+			                     	<div class="card-body rounded" style="background-color: #FF9852; display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3" style="background-color: #9e592b">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                            	 <div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentCountExterne"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Partenaires</p>
+			                                </div>
+			                               
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		           </div><!-- end row -->
+			      </div>
+			    </div>
+			  </div>
+			  <div class="accordion-item">
+			    <h2 class="accordion-header" id="headingThree">
+			      <button class="accordion-button collapsed" type="button" style="font-size: 16px" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+			        Status de traitement des procédures
+			      </button>
+			    </h2>
+			    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+			      <div class="accordion-body">
+			        <div class="row">
+		        		<div class="col-xl-4 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayRegularCourrier()">
+			                     	<div class="card-body bg-info rounded" style="display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                        		<div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="currentCount"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> En cours</p>
+			                                </div>
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		               <div class="col-xl-4 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayInvoiceCourrier()">
+			                     	<div class="card-body bg-success rounded" style="display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3" style="background-color: #35a067">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                        		<div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="completedCount"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Cloturees</p>
+			                                </div>
+			                                
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		               <div class="col-xl-4 col-md-6">
+		                     <div class="card card-animate">
+		                     	<a href="#" ng-click="displayOutgoingCourrier()">
+			                     	<div class="card-body rounded" style="background-color: #EA6069; display:flex; flex-direction: row; align-items:center; justify-content: space-between;">
+				                     	<div class="">
+			                                <div class="avatar-sm flex-shrink-0">
+			                                	<span class="avatar-title rounded fs-3" style="background-color: #932a30">
+			                                    	<i class="bx bxs-bar-chart-alt-2"></i>
+			                                    </span>
+			                                </div>
+			                            </div>
+			                        	<div class="" style="display:flex; flex-direction: column; align-items: flex-end; justify-content: end;">
+			                            	 <div>
+			                                	<h4 class="fs-22 fw-semibold ff-secondary mb-0" style="position: relative !important; top: -5px !important; font-size: 25px !important; color: #FFFFFF !important"><span ng-bind="rejectedCount"></span></h4>
+			                                </div>
+			                            	<div class="flex-grow-1 overflow-hidden">
+			                                	<p class="text-uppercase fw-medium text-muted text-truncate mb-0" style="color: #FFFFFF !important"> Rejetees</p>
+			                                </div>
+			                               
+			                            </div>
+			                            
+			                        </div>
+		                        </a><!-- end card body -->
+		                   </div><!-- end card -->
+		               </div>
+		           </div><!-- end row -->
+			      </div>
+			    </div>
+			  </div>
+			</div>
+          <div class="row" style="margin-top: 20px">
+           				<div class="col-xl-6">
+                            <div class="card">
+                                <div class="card-header border-0" style="display:flex; flex-direction:row; align-items-:center; justify-content:space-between;">
+	                                <div>
+	                                	<h5 class="card-title mb-2 flex-grow-1" style="font-size: 16px; color: #000000">Traitement global des procédures</h5>
+	                                    <h6 class="card-title mb-0 flex-grow-1 text-muted" style="margin-top: 5px; font-size: 12px; text-transform: uppercase">A la date du <span id="currentDate" ng-bind="currentDate"></span></h6>
+	                                </div>
+                                    <div class="flex-shrink-0">
+                                        <div class="card-header-dropdown">
+                                           <!-- <a href="#" ng-click="qualificationDelayDetail()" class="badge text-bg-info" style="padding-top: 6px; font-weight: normal">PLUS D'INFORMATIONS</a> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-header p-0 border-0 bg-soft-light">
+                                    <div class="row g-0 text-center">
+                                        <div class="col-12 col-sm-12">
+                                            <div class="p-3 border border-dashed border-start-0 placeholder-glow">
+                                                <div id="courrierProcess" ng-class="{'apex-charts placeholder col-12 rounded-2':qualificationDelayPlaceholderStatus}" dir="ltr"></div>
+                                            </div>
+                                        </div>
+                                        <!--end col-->
+                                    </div>
+                                </div><!-- end card header -->
+                                <div class="card-body p-0 pb-2">
+                                    <div>
+                                        <div id="audiences_metrics_charts" data-colors='["--vz-success", "--vz-gray-300"]' class="apex-charts" dir="ltr"></div>
+                                    </div>
+                                </div><!-- end card body -->
+                            </div><!-- end card -->
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="card">
+                                <div class="card-header border-0" style="display:flex; flex-direction:row; align-items-:center; justify-content:space-between;">
+	                                <div>
+	                                	<h5 class="card-title mb-2 flex-grow-1" style="font-size: 16px; color: #000000">Traitement des procédures par période</h5>
+	                                    <h6 class="card-title mb-0 flex-grow-1 text-muted" style="margin-top: 5px; font-size: 12px; text-transform: uppercase">ANNEE <span id="currentYear" ng-bind="currentYear"></span></h6>
+	                                </div>
+	                                <div class="flex-shrink-0">
+                                        <div class="card-header-dropdown">
+                                            <!-- <a href="#" ng-click="qualificationDelayDetail()" class="badge text-bg-info" style="padding-top: 6px; font-weight: normal">PLUS D'INFORMATIONS</a> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-header p-0 border-0 bg-soft-light">
+                                    <div class="row g-0 text-center">
+                                        <div class="col-12 col-sm-12">
+                                            <div class="p-3 border border-dashed border-start-0 placeholder-glow">
+                                                <div id="courrierProcessYear" ng-class="{'apex-charts placeholder col-12 rounded-2':qualificationDelayPlaceholderStatus}" dir="ltr"></div>
+                                            </div>
+                                        </div>
+                                        <!--end col-->
+                                    </div>
+                                </div><!-- end card header -->
+                                <div class="card-body p-0 pb-2">
+                                    <div>
+                                        <div id="mailProcessing" data-colors='["--vz-success", "--vz-gray-300"]' class="apex-charts" dir="ltr"></div>
+                                    </div>
+                                </div><!-- end card body -->
+                            </div><!-- end card -->
+                        </div>
+                        <div class="col-xl-12" ng-show="defaultTable == 'correspondance'">
+                            <div class="card" style="padding: 10px">
+                                <div class="card-header border-0" style="display:flex; flex-direction:row; align-items-:center; justify-content:space-between;">
+	                                <div>
+	                                	<h5 class="card-title mb-2 flex-grow-1" style="font-size: 16px; color: #000000">Liste des correspondances adressées au Secrétariat Général</h5>
+	                                	<h6 class="card-title mb-0 flex-grow-1 text-muted" style="margin-top: 5px; font-size: 12px; text-transform: uppercase">CORRESPONDANCES EN COURS DE TRAITEMENT</h6>
+	                                </div>
+	                                <a th:href="@{/correspondancesg/}" style="float:right; padding-top: 10px" class="btn btn-primary btn-label waves-effect waves-light"><i class="mdi mdi-arrow-right label-icon align-middle fs-16 me-2"></i> Accéder à plus de correspondances</a>
+                                </div>
+                                <div class="card-body p-0 pb-2">
+                                    <div class="table-responsive">
+													<table id="courrierCurrentTable" ng-controller="courrierCurrentTableController"
+														th:attr="ng-init='init();'"
+														class="table dt-responsive nowrap table-striped align-middle">
+														<thead>
+															<tr>
+																<th></th>
+																<th>REFERENCE COURRIER</th>
+																<th>DATE RECEPTION</th>
+																<th>DATE ENREGISTREMENT</th>
+																<th>REFERENCE EXPEDITEUR</th>
+																<th>EXPEDITEUR</th>
+																<th>OBJET</th>
+																<th>TRANSFERE A</th>
+																<th>STATUT</th>
+															</tr>
+														</thead>
+													</table>
+												</div>
+                                </div><!-- end card body -->
+                            </div><!-- end card -->
+                        </div>
+           </div>
+		</div>
+		<div id="notificationModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog">
+					<div class="modal-content" style="border: none">
+						<div class="modal-header" style="background-color: #009DCA;">
+							<h5 class="modal-title" style="color: #FFFFFF">Notifications</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body p-lg">
+							<div class="row">
+								<div ng-class="'col-md-12'">
+									<ul class="notification" ng-show="taskByProfile != 0">
+										<li ng-show="currentCorrespondanceCountByProfile != 0"><i class="mdi mdi-text-box-outline" style="float: left; font-size: 25px; margin-top: -5px; color: #444444"></i> <div style="margin-left: 35px">Vous avez <strong><span ng-bind="currentCorrespondanceCountByProfile"></span> tâche(s) de correspondance</strong> en attente de traitement. <a th:href="@{/correspondancesg/}">Cliquez ici pour les traiter.</a></div></li>
+									</ul>
+									<div ng-show="taskByProfile == 0" style="text-align: center">
+										<img th:src="@{/resources/images/notification.svg}" alt="" height="150" />
+										<h4 style="margin-top: 20px">Vous n'avez aucune notification</h4>
+									</div>
+								</div>
+							</div>	
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+		</div>
+		<div id="contactModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Besoin d'assistance ?</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body p-lg">
+							<div class="row">
+								<div ng-class="'col-md-12'">
+									Vous rencontrez des difficultés et besoin d'assistance, merci de nous écrire sur <a href="mailto:techRNEC@interieur.gov.ma">techRNEC@interieur.gov.ma</a> ou sur <a href="mailto:hotline@medasys.ma">hotline@medasys.ma</a>.
+								</div>
+							</div>	
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+		</div>
+		<div id="qualificationDelayDetailModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Délai de qualification</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body p-lg">
+							<div class="row">
+								<div ng-class="'col-md-6'">
+									<div class="card" style="box-shadow: none;">
+		                                <div class="card-header p-0 border-0 bg-soft-light">
+		                                    <div class="row g-0 text-center">
+		                                        <div class="col-12 col-sm-12">
+		                                            <div class="p-3 border-dashed" style="border-color: #eeeeee; padding-top: 37px !important; padding-bottom: 38px !important">
+		                                                <div id="qualificationDelayDetail" ng-class="{'apex-charts placeholder col-12 rounded-2':qualificationDelayPlaceholderStatus}" dir="ltr"></div>
+		                                            </div>
+		                                        </div>
+		                                        <!--end col-->
+		                                    </div>
+		                                </div><!-- end card header -->
+		                            </div><!-- end card -->
+								</div>
+								<div ng-class="'col-md-6'">
+									<form id="qualificationDelayDetailForm" name="qualificationDelayDetailForm" method="post" action="#"
+										class="form-horizontal" ui-jp="parsley">
+										<div class="row" style="background: #edede1 !important; border: 1px solid #F7F7F2 !important; border-radius: 3px !important; padding: 10px !important; margin-bottom: 10px !important">
+										  <p class="text-muted" style="color: #000000 !important; font-weight: 600 !important">FILTRE DE RECHERCHE</p>
+										  <div ng-class="'col-md-12'">
+							            	<div class="form-group">
+							              	  <label>Ville</label>
+							              	  <select class="form-select" name="cityId" ng-model="dto.searchQualification.cityId" ng-options="c.id as c.name for c in cities" required="required" ng-disabled="disabled">
+												  <option value="">Choisir une option</option>
+											  </select>
+							                </div>
+							              </div>
+							              <div ng-class="'col-md-12'">
+							            	<div class="form-group">
+							              	  <label>Type du matériel</label>
+							              	  <select class="form-select" name="categoryId" ng-model="dto.searchQualification.categoryId" ng-options="c.id as c.name for c in categories" ng-change="loadMaterials()" required="required">
+												  <option value="">Choisir une option</option>
+											  </select>
+							                </div>
+							              </div>
+							              <div ng-class="'col-md-12'">
+								            <div class="form-group">
+								            	<label>Lieu de réparation</label>
+								                <select class="form-select" name="materialPlace" ng-model="dto.searchQualification.materialPlace">
+													<option value="">Choisir une option</option>
+													<option value="workPlace">Chez MEDAYS</option>
+													<option value="clientPlace">Chez le client</option>
+												</select>
+								            </div>
+								          </div>
+								          <div ng-class="'col-md-6'">
+								            <div class="form-group">
+								            	<label>Période de début de réception</label>
+								                <input type="text" class="form-control" name="receptionDateStart" ng-model="dto.searchQualification.receptionDateStart" datepicker="datepicker" />
+								            </div>
+								          </div>
+								          <div ng-class="'col-md-6'">
+								          	<div class="form-group">
+								          	  	<label>Période de fin de réception</label>
+								                <input type="text" class="form-control" name="receptionDateEnd" ng-model="dto.searchQualification.receptionDateEnd" datepicker="datepicker" />
+								            </div>
+								          </div>
+								          <div ng-class="'col-md-12'">
+								          	<div class="form-group">
+								          	  <a href="#" class="btn btn-primary btn-label waves-effect waves-light" ng-click="qualificationDelayDetail()">
+												<i class="mdi mdi-magnify label-icon align-middle fs-16 me-2"></i> Rechercher
+											  </a>                        
+								            </div>
+								          </div>
+									</div>
+									</form>
+								</div>
+							</div>	
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+		</div>
+		<div id="reparationDelayDetailModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Délai de réparation</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body p-lg">
+							<div class="row">
+								<div ng-class="'col-md-6'">
+									<div class="card" style="box-shadow: none;">
+		                                <div class="card-header p-0 border-0 bg-soft-light">
+		                                    <div class="row g-0 text-center">
+		                                        <div class="col-12 col-sm-12">
+		                                            <div class="p-3 border-dashed" style="border-color: #eeeeee; padding-top: 37px !important; padding-bottom: 38px !important">
+		                                                <div id="reparationDelayDetail" ng-class="{'apex-charts placeholder col-12 rounded-2':reparationDelayPlaceholderStatus}" dir="ltr"></div>
+		                                            </div>
+		                                        </div>
+		                                        <!--end col-->
+		                                    </div>
+		                                </div><!-- end card header -->
+		                            </div><!-- end card -->
+								</div>
+								<div ng-class="'col-md-6'">
+									<form id="reparationDelayDetailForm" name="reparationDelayDetailForm" method="post" action="#"
+										class="form-horizontal" ui-jp="parsley">
+										<div class="row" style="background: #edede1 !important; border: 1px solid #F7F7F2 !important; border-radius: 3px !important; padding: 10px !important; margin-bottom: 10px !important">
+										  <p class="text-muted" style="color: #000000 !important; font-weight: 600 !important">FILTRE DE RECHERCHE</p>
+										  <div ng-class="'col-md-12'">
+							            	<div class="form-group">
+							              	  <label>Ville</label>
+							              	  <select class="form-select" name="cityId" ng-model="dto.searchReparation.cityId" ng-options="c.id as c.name for c in cities" required="required" ng-disabled="disabled">
+												  <option value="">Choisir une option</option>
+											  </select>
+							                </div>
+							              </div>
+							              <div ng-class="'col-md-12'">
+							            	<div class="form-group">
+							              	  <label>Type du matériel</label>
+							              	  <select class="form-select" name="categoryId" ng-model="dto.searchReparation.categoryId" ng-options="c.id as c.name for c in categories" ng-change="loadMaterials()" required="required">
+												  <option value="">Choisir une option</option>
+											  </select>
+							                </div>
+							              </div>
+							              <div ng-class="'col-md-12'">
+								            <div class="form-group">
+								            	<label>Lieu de réparation</label>
+								                <select class="form-select" name="materialPlace" ng-model="dto.searchReparation.materialPlace">
+													<option value="">Choisir une option</option>
+													<option value="workPlace">Chez MEDAYS</option>
+													<option value="clientPlace">Chez le client</option>
+												</select>
+								            </div>
+								          </div>
+								          <div ng-class="'col-md-6'">
+								            <div class="form-group">
+								            	<label>Période de début de réception</label>
+								                <input type="text" class="form-control" name="receptionDateStart" ng-model="dto.searchReparation.receptionDateStart" datepicker="datepicker" />
+								            </div>
+								          </div>
+								          <div ng-class="'col-md-6'">
+								          	<div class="form-group">
+								          	  	<label>Période de fin de réception</label>
+								                <input type="text" class="form-control" name="receptionDateEnd" ng-model="dto.searchReparation.receptionDateEnd" datepicker="datepicker" />
+								            </div>
+								          </div>
+								          <div ng-class="'col-md-12'">
+								          	<div class="form-group">
+								          	  <a href="#" class="btn btn-primary btn-label waves-effect waves-light" ng-click="reparationDelayDetail()">
+												<i class="mdi mdi-magnify label-icon align-middle fs-16 me-2"></i> Rechercher
+											  </a>                        
+								            </div>
+								          </div>
+									</div>
+									</form>
+								</div>
+							</div>	
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+		</div>
+		<div id="closingDelayDetailModal" class="modal fade" data-backdrop="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Délai de clôture</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body p-lg">
+							<div class="row">
+								<div ng-class="'col-md-6'">
+									<div class="card" style="box-shadow: none;">
+		                                <div class="card-header p-0 border-0 bg-soft-light">
+		                                    <div class="row g-0 text-center">
+		                                        <div class="col-12 col-sm-12">
+		                                            <div class="p-3 border-dashed" style="border-color: #eeeeee; padding-top: 37px !important; padding-bottom: 38px !important">
+		                                                <div id="closingDelayDetail" ng-class="{'apex-charts placeholder col-12 rounded-2':closingDelayPlaceholderStatus}" dir="ltr"></div>
+		                                            </div>
+		                                        </div>
+		                                        <!--end col-->
+		                                    </div>
+		                                </div><!-- end card header -->
+		                            </div><!-- end card -->
+								</div>
+								<div ng-class="'col-md-6'">
+									<form id="closingDelayDetailForm" name="closingDelayDetailForm" method="post" action="#"
+										class="form-horizontal" ui-jp="parsley">
+										<div class="row" style="background: #edede1 !important; border: 1px solid #F7F7F2 !important; border-radius: 3px !important; padding: 10px !important; margin-bottom: 10px !important">
+										  <p class="text-muted" style="color: #000000 !important; font-weight: 600 !important">FILTRE DE RECHERCHE</p>
+										  <div ng-class="'col-md-12'">
+							            	<div class="form-group">
+							              	  <label>Ville</label>
+							              	  <select class="form-select" name="cityId" ng-model="dto.searchClosing.cityId" ng-options="c.id as c.name for c in cities" required="required" ng-disabled="disabled">
+												  <option value="">Choisir une option</option>
+											  </select>
+							                </div>
+							              </div>
+							              <div ng-class="'col-md-12'">
+							            	<div class="form-group">
+							              	  <label>Type du matériel</label>
+							              	  <select class="form-select" name="categoryId" ng-model="dto.searchClosing.categoryId" ng-options="c.id as c.name for c in categories" ng-change="loadMaterials()" required="required">
+												  <option value="">Choisir une option</option>
+											  </select>
+							                </div>
+							              </div>
+							              <div ng-class="'col-md-12'">
+								            <div class="form-group">
+								            	<label>Lieu de réparation</label>
+								                <select class="form-select" name="materialPlace" ng-model="dto.searchClosing.materialPlace">
+													<option value="">Choisir une option</option>
+													<option value="workPlace">Chez MEDAYS</option>
+													<option value="clientPlace">Chez le client</option>
+												</select>
+								            </div>
+								          </div>
+								          <div ng-class="'col-md-6'">
+								            <div class="form-group">
+								            	<label>Période de début de réception</label>
+								                <input type="text" class="form-control" name="receptionDateStart" ng-model="dto.searchClosing.receptionDateStart" datepicker="datepicker" />
+								            </div>
+								          </div>
+								          <div ng-class="'col-md-6'">
+								          	<div class="form-group">
+								          	  	<label>Période de fin de réception</label>
+								                <input type="text" class="form-control" name="receptionDateEnd" ng-model="dto.searchClosing.receptionDateEnd" datepicker="datepicker" />
+								            </div>
+								          </div>
+								          <div ng-class="'col-md-12'">
+								          	<div class="form-group">
+								          	  <a href="#" class="btn btn-primary btn-label waves-effect waves-light" ng-click="closingDelayDetail()">
+												<i class="mdi mdi-magnify label-icon align-middle fs-16 me-2"></i> Rechercher
+											  </a>                        
+								            </div>
+								          </div>
+									</div>
+									</form>
+								</div>
+							</div>	
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+		</div>
+		<div class="modal fade zoomIn" id="deleteSheetModal" tabindex="-1" aria-hidden="true">
+            	<div class="modal-dialog modal-dialog-centered">
+                	<div class="modal-content">
+                    	<div class="modal-header">
+                        	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="btn-close"></button>
+                        </div>
+                        <div class="modal-body">
+                        	<div class="mt-2 text-center">
+                            	<div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+                                	<h4>Suppression du ticket ouvert</h4>
+                                 	<p class="text-muted mx-4 mb-0">Voulez-vous vraiment suprimer ce ticket ?</p>
+                                 </div>
+                            </div>
+                            <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+                            	<button type="button" class="btn w-sm btn-dark" data-bs-dismiss="modal">Fermer</button>
+                               	<button type="button" class="btn w-sm btn-danger " id="delete-record" ng-click="confirmDeleteSheet()">Oui, Supprimer !</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		<div id="sheetModal" class="modal fade" data-backdrop="true">
+			<div class="modal-dialog modal-lg modal-customized">
+		      <div class="modal-content">
+		        <div class="modal-header">
+		      	  <h5 class="modal-title" ng-if="addSheetForm">Enregistrement d'un nouveau ticket</h5>
+		      	  <h5 class="modal-title" ng-if="editSheetForm">Modification du ticket</h5>
+		      	  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		        </div>
+		        <form id="sheetForm" name="sheetForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+		          <div class="modal-body p-lg">
+		            <div class="row">
+					  <input type="hidden" ng-model="dto.id" />
+					  <div ng-class="'col-md-12'">
+					  	<p class="text-muted">Renseignez les champs obligatoires</p>
+					  	<div ng-if="sheetRequiredError" class="alert alert-danger" role="alert">
+					  	  Veuillez remplir tous les champs obligatoires !
+					  	</div>
+					  	<div ng-if="sheetTechnicalError" class="alert alert-danger" role="alert">
+					  	  Un problème est survenu ! Merci de contacter votre administrateur.
+					  	</div>
+					  	<div ng-if="sheetSuccess" class="alert alert-success" role="alert">
+					  	  L'opération s'est effectuée avec succès !
+					  	</div>
+					  </div>
+					  </div>
+					  <div class="row">
+					  	<div ng-class="'col-md-8'">
+						  	<div class="row" style="background: #edede1 !important; border: 1px solid #F7F7F2 !important; border-radius: 3px !important; padding: 10px !important; margin-bottom: 10px !important">
+							  <p class="text-muted" style="color: #000000 !important; font-weight: 600 !important">INFORMATIONS DU CONTACT</p>
+							  <div ng-class="'col-md-6'">
+				            	<div class="form-group">
+				              	  <label><span class="asterik"> * </span> Ville</label>
+				              	  <select class="form-select" name="cityId" ng-model="dto.cityId" ng-options="c.id as c.name for c in cities" required="required" ng-disabled="disabled">
+									  <option value="">Choisir une option</option>
+								  </select>
+				                </div>
+				              </div>
+							  <div ng-class="'col-md-6'">
+				            	<div class="form-group">
+				              	  <label><span class="asterik"> * </span> Nom du contact</label>
+				                  <input type="text" class="form-control" name="contactName" ng-model="dto.ctName" required="required" style="background-color: {{fieldBg}}" ng-readonly="disabled" />
+				                </div>
+				              </div>
+				              <div ng-class="'col-md-6'">
+				            	<div class="form-group">
+				              	  <label><span class="asterik"> * </span> Téléphone</label>
+				                  <input type="text" class="form-control" name="contactGsm" ng-model="dto.ctGsm" required="required" style="background-color: {{fieldBg}}" ng-readonly="disabled" />                        
+				                </div>
+				              </div>
+				              <div ng-class="'col-md-6'">
+				            	<div class="form-group">
+				              	  <label><span class="asterik"> * </span> Email</label>
+				                  <input type="text" class="form-control" name="contactEmail" ng-model="dto.ctEmail" required="required" style="background-color: {{fieldBg}}" ng-readonly="disabled" />                        
+				                </div>
+				              </div>
+						</div>
+						<div class="row" style="background: #edede1 !important; border: 1px solid #F7F7F2 !important; border-radius: 3px !important; padding: 10px !important;">
+							  <p class="text-muted" style="color: #000000 !important; font-weight: 600 !important">INFORMATIONS DU MATERIEL</p>
+							  <div ng-class="'col-md-4'">
+				            	<div class="form-group">
+				              	  <label><span class="asterik"> * </span> Type du matériel</label>
+				              	  <select class="form-select" name="categoryId" ng-model="dto.categoryId" ng-options="c.id as c.name for c in categories" ng-change="loadMaterials()" required="required">
+									  <option value="">Choisir une option</option>
+								  </select>
+				                </div>
+				              </div>
+							  <div ng-class="'col-md-4'">
+				            	<div class="form-group">
+				              	  <label><span class="asterik"> * </span> P/N du matériel</label>
+				                  <select class="form-select" name="materialId" ng-model="dto.materialId" ng-options="m.id as (m.pn + ' (' + m.descriptive + ')') for m in materials" required="required">
+									  <option value="">Choisir une option</option>
+								  </select>
+				                </div>
+				              </div>
+				              <div ng-class="'col-md-4'">
+				            	<div class="form-group">
+				              	  <label><span class="asterik"> * </span> S/N du matériel</label>
+				                  <input type="text" class="form-control" name="snMachine" ng-model="dto.snMachine" required="required" />                        
+				                </div>
+				              </div>
+				              <div ng-class="'col-md-12'">
+				                <div class="form-group">
+				                  <label><span class="asterik"> * </span> Problème déclaré</label>
+				                  <input type="text" class="form-control" name="materialProblemClient" ng-model="dto.materialProblemClient" required="required" />
+				                </div>
+							  </div>
+							  <div ng-class="'col-md-12'">
+				                <div class="form-group">
+				                  <label>Commentaires</label>
+				                  <textarea class="form-control" name="comments" ng-model="dto.comments"></textarea>
+				                </div>
+							  </div>
+						</div>
+					  	</div>
+					  	<div ng-class="'col-md-4'" style="padding-left: 20px;">
+					  		<div style="height: 100%; background: #edede1 !important; border: 1px solid #F7F7F2 !important; border-radius: 3px !important; padding: 10px !important;">
+								<div class="row">  
+								  <div ng-class="'col-md-6'">
+					            	<p class="text-muted" style="color: #000000 !important; font-weight: 600 !important; margin-top: 10px">PIECES JOINTES</p>
+					              </div>
+					              <div ng-class="'col-md-6'">
+					            	<a id="btnNew" href="#" ng-click="addAttachment();" class="btn btn-dark btn-label waves-effect waves-light" style="width: 100%">
+			                        	<i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Ajouter
+			                        </a>
+					              </div>
+								  <div ng-class="'col-md-12'">
+					            	<div class="form-group" style="margin-bottom: 10px" ng-repeat="attachment in dto.attachmentsDTO">
+					              		<label>Joindre un fichier</label>
+					              		<input type="file" id="attachment" class="form-control attachment" />
+					                </div>
+					              </div>
+					            </div>
+							</div>
+					  	</div>
+					  </div>
+		          </div>
+		          <div class="modal-footer">
+		          	<a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="saveSheet()">
+			        	<i class="mdi mdi-content-save label-icon align-middle fs-16 me-2"></i> Enregistrer
+			        </a>
+		          </div>
+		        </form>
+		      </div><!-- /.modal-content -->
+		    </div>
+			</div>
+	</div>
+</div>
+</div>
+<div layout:fragment="plugins" class="page-content">
+	<script th:src='@{/resources/js/home/index.js}'></script>
+</div>
+</body>
+</html>

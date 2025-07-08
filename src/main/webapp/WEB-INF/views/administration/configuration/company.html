@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/configurationLayout">
+<head>
+</head>
+<body ng-controller="companyController" th:attr="ng-init='init();'">
+<div layout:fragment="content">
+<div class="main-content">	
+	<div class="page-content">
+		<div class="container-fluid">
+			<div class="row">
+            	<div class="col-12">
+                	<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    	<h4 class="mb-sm-0">Société</h4>
+					</div>
+                </div>
+        	</div>
+        			<div class="row">
+      
+                        <div class="col-xl-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <!-- Nav tabs -->
+                                    <ul class="nav nav-pills nav-custom nav-custom-light mb-5" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" data-bs-toggle="tab" href="#company" role="tab">
+                                                Société
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#open-hours" role="tab">
+                                                Heures d'ouverture
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#social-link" role="tab">
+                                                Réseaux sociaux
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <form id="companyForm" name="companyForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+                                   <div class="tab-content text-muted">
+                                        <div class="tab-pane active" id="company" role="tabpanel">
+	                                        <div class="mb-5">
+		                                        <h3 class="card-title mb-1 flex-grow-1">Votre entreprise</h3>
+		                                        <p class="text-muted"><span>Modifiez les informations de votre société/organisation. Cliquez sur le bouton "Sauvegarder" en bas de page pour sauvegarder.</span></p>
+		                                     </div>
+	                                        
+		                                    <div class="live-preview">
+		                                        <div class="row gy-4">
+		                                            <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="name" class="form-label">Nom/Raison sociale</label>
+		                                                    <input type="text" name="name" ng-model="dto.name" class="form-control" id="name" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                            <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="currency" class="form-label">Devise principale</label>
+		                                                    <select class="form-select" name="currency" ng-model="dto.currencyId" ng-options="c.id as c.name for c in currencies" id="currency">
+		                                                        <option>Choisir...</option>
+		                                                    </select>
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                        </div>
+		                                        <div class="row gy-4">
+		                                        	<div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="logo" class="form-label">Votre Logo</label>
+		                                                     <input class="form-control" name="logo" ng-model="dto.logo" type="file" id="logo" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                          	<div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="smallLogo" class="form-label">Logo en miniature</label>
+		                                                     <input class="form-control" name="smallLogo" ng-model="dto.smallLogo" type="file" id="smallLogo" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                        </div>
+		                                        <!--end row-->
+		                                        <div class="row gy-4">
+		                                        	<div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="phone" class="form-label">Téléphone</label>
+		                                                     <input class="form-control" type="text" name="phone" ng-model="dto.phone" id="phone" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                            <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="mail" class="form-label">Email</label>
+		                                                    <input type="text" class="form-control" name="mail" ng-model="dto.mail" id="mail" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                        </div>
+		                                        <!--end row-->
+		                                        <div class="row gy-4">
+		                                        	<div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="website" class="form-label">Site web</label>
+		                                                     <input class="form-control" type="text" name="website" ng-model="dto.website" id="website" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                        	<div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="address" class="form-label">Adresse</label>
+		                                                    <input type="text" class="form-control" name="address" ng-model="dto.address" id="address" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                        </div>
+		                                        <!-- end row-->
+		                                        <div class="row gy-4">
+		                                        	<div class="col-xxl-4 col-md-4">
+		                                                <div>
+		                                                   <label for="country" class="form-label">Pays</label>
+		                                                   <div class="input-group">
+		                                                        <label class="input-group-text" for="country">Nom</label>
+		                                                        <select class="form-select" name="country" ng-model="dto.countryId" ng-options="c.id as c.nameFr for c in countries" id="country">
+		                                                            <option>Choisir...</option>
+		                                                        </select>
+	                                                   		</div>
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                            <div class="col-xxl-4 col-md-4">
+		                                                <div>
+		                                                    <label for="city" class="form-label">Ville</label>
+		                                                     <input class="form-control" type="text" name="city" ng-model="dto.city" id="city" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                            <div class="col-xxl-4 col-md-4">
+		                                                <div>
+		                                                    <label for="zipcode" class="form-label">Code Postal</label>
+		                                                     <input class="form-control" type="number" name="zipcode" ng-model="dto.zipcode" id="zipCode" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                        </div>
+		                                        <!--end row-->
+		                                    </div>
+		                                    
+		                                    <div class="mb-5 mt-4">
+		                                        <h4 class="card-title mb-1 flex-grow-1">Identifiant de votre Entreprise</h4>
+		                                     </div>
+		                                     <div class="row gy-4">
+	                                            <div class="col-xxl-6 col-md-6">
+	                                                <div>
+	                                                    <label for="basiInput" class="form-label">Gestionnaire (PDG, directeur, président...)</label>
+															<div class="input-group">
+		                                                        <label class="input-group-text" for="country">M/Mme/Mlle</label>
+		                                                        <select
+																	class="form-select"
+																	name="manager"
+																	ng-model="dto.managerId"
+																	ng-options="u.id as (u.prenom + ' ' + u.nom + ' (' + u.fonction + ')') for u in users"></select>
+	                                                   		</div>
+	                                                </div>
+	                                            </div>
+	                                            <!--end col-->
+	                                            <div class="col-xxl-6 col-md-6">
+	                                                <div>
+	                                                    <label for="capital" class="form-label">Capital</label>
+	                                                    <input type="number" class="form-control" name="capital" ng-model="dto.capital" id="capital" />
+	                                                </div>
+	                                            </div>
+	                                            <!--end col-->
+	                                        </div>
+	                                        <!--end row-->
+	                                        <div class="row gy-4">
+	                                             <div class="col-xxl-4 col-md-4">
+	                                                <div>
+	                                                    <label for="type" class="form-label">Type d'entité</label>
+	                                                   	<div class="input-group">
+	                                                        <label class="input-group-text" for="type">Options</label>
+	                                                        <select class="form-select" name="type" ng-model="dto.typeId" ng-options="t.id as t.name for t in types" id="type">
+		                                                         <option>Choisir...</option>
+		                                                    </select>
+                                                   		</div>
+	                                                </div>
+	                                            </div>
+	                                            <!--end col-->
+	                                            <div class="col-xxl-4 col-md-4">
+	                                                <div>
+	                                                    <label for="tax" class="form-label">Assujetti à la TVA</label>
+	                                                     <select class="form-select" name="tax" ng-model="dto.tax" id="tax">
+	                                                         <option>Choisir...</option>
+	                                                         <option ng-value="true">Oui</option>
+	                                                         <option ng-value="false">Non</option>
+	                                                    </select>
+	                                                </div>
+	                                            </div>
+	                                            <!--end col-->
+	                                            <div class="col-xxl-4 col-md-4">
+	                                                <div>
+	                                                    <label for="taxNum" class="form-label">Numéro de TVA</label>
+	                                                    <input type="text" class="form-control" name="taxNum" ng-disabled="dto.tax=='false'" ng-model="dto.taxNum" id="taxNum" />
+	                                                </div>
+	                                            </div>
+	                                            <!--end col-->
+	                                        </div>
+	                                        <!--end row-->
+	                                        <div class="row gy-4">
+		                                        <div class="col-xxl-4 col-md-4">
+		                                                <div>
+		                                                    <label for="iceNum" class="form-label">ICE</label>
+		                                                    <input type="text" class="form-control" name="iceNum" ng-model="dto.iceNum" id="iceNum" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+	                                             <div class="col-xxl-4 col-md-4">
+	                                                <div>
+	                                                    <label for="rcNum" class="form-label">RC</label>
+	                                                    <input type="text" class="form-control" name="rcNum" ng-model="dto.rcNum" id="rcNum" />
+	                                                </div>
+	                                            </div>
+	                                            <!--end col-->
+	                                            <div class="col-xxl-4 col-md-4">
+	                                                <div>
+	                                                    <label for="patentNum" class="form-label">Patente</label>
+	                                                    <input type="text" class="form-control" name="patentNum" ng-model="dto.patentNum" id="patentNum" />
+	                                                </div>
+	                                            </div>
+	                                            <!--end col-->
+	                                        </div>
+	                                        <!--end row-->
+	                                        <div class="row gy-4">
+	                                             <div class="col-xxl-12 col-md-12">
+	                                                <div>
+	                                                    <label for="description" class="form-label">Description de la société</label>
+	                                                    <textarea type="text" class="form-control" name="description" ng-model="dto.description" id="description" ></textarea>
+	                                                </div>
+	                                            </div>
+	                                            <!--end col-->
+	                                        </div>
+	                                        <div class="row gy-4 mt-5">
+	                                        	<div class="mb-0 col-xxl-12 col-md-12 d-flex flex-row items-align-center justify-content-center">
+	                                        		<button type="button" class="btn btn-dark mx-3" data-bs-toggle="modal" data-bs-target="#success-Payment"><i class="ri-arrow-left-line label-icon align-middle fs-16 me-2"></i>Retour</button>
+                                                    <a class="btn btn-primary" ng-click="saveCompany()">Sauvegarder<i class="ri-check-double-fill label-icon align-middle fs-16 ms-2"></i></a>
+                                                </div>
+	                                        </div>
+	                                        <!--end row-->
+		                                   </div>
+                                        <div class="tab-pane" id="open-hours" role="tabpanel">
+                                        	<div class="mb-5">
+		                                        <h3 class="card-title mb-1 flex-grow-1">Vos horaire d'ouverture</h3>
+		                                        <p class="text-muted"><span>Modifiez les informations de votre société/organisation. Cliquez sur le bouton "Sauvegarder" en bas de page pour sauvegarder.</span></p>
+		                                     </div>
+                                            <div class="d-flex mb-1">
+                                                <div class="flex-grow-1 me-3">
+	                                             <div class="row gy-4">
+		                                            <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="openHoursMonday" class="form-label">Lundi</label>
+		                                                    <input type="text" class="form-control" name="openHoursMonday" ng-model="dto.openHoursMonday" id="openHoursMonday" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                             <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="openHoursTuesday" class="form-label">Mardi</label>
+		                                                    <input type="text" class="form-control" name="openHoursTuesday" ng-model="dto.openHoursTuesday" id="openHoursTuesday" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                        </div>
+		                                        <!-- end row -->
+		                                        <div class="row gy-4">
+		                                            <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="openHoursWednesday" class="form-label">Mercredi</label>
+		                                                    <input type="text" class="form-control" name="openHoursWednesday" ng-model="dto.openHoursWednesday" id="openHoursWednesday" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                             <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="openHoursThursday" class="form-label">Jeudi</label>
+		                                                    <input type="text" class="form-control" name="openHoursThursday" ng-model="dto.openHoursThursday" id="openHoursThursday" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                        </div>
+		                                        <!-- end row -->
+		                                        <div class="row gy-4">
+		                                            <div class="col-xxl-4 col-md-4">
+		                                                <div>
+		                                                    <label for="openHoursFriday" class="form-label">Vendredi</label>
+		                                                    <input type="text" class="form-control" name="openHoursFriday" ng-model="dto.openHoursFriday" id="openHoursFriday" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                             <div class="col-xxl-4 col-md-4">
+		                                                <div>
+		                                                    <label for="openHoursSaturday" class="form-label">Samedi</label>
+		                                                    <input type="text" class="form-control" name="openHoursSaturday" ng-model="dto.openHoursSaturday" id="openHoursSaturday" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                           	<div class="col-xxl-4 col-md-4">
+		                                                <div>
+		                                                    <label for="openHoursSunday" class="form-label">Dimanche</label>
+		                                                    <input type="text" class="form-control" name="openHoursSunday" ng-model="dto.openHoursSunday" id="openHoursSunday" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                        </div>
+		                                        <!-- end row -->
+			                                    <div class="row gy-4 mt-5">
+		                                        	<div class="mb-0 col-xxl-12 col-md-12 d-flex flex-row items-align-center justify-content-center">
+		                                        		<a type="button" class="btn btn-dark mx-3" data-bs-toggle="tab" role="tab" href="#company"><i class="ri-arrow-left-line label-icon align-middle fs-16 me-2"></i>Retour</a>
+	                                                    <a class="btn btn-primary" ng-click="saveCompany()">Sauvegarder<i class="ri-check-double-fill label-icon align-middle fs-16 ms-2"></i></a>
+	                                                </div>
+		                                        </div>
+		                                        <!--end row-->
+                                                </div>
+                                                <div class="flex-shrink-0">
+                                                    <img src="assets/images/small/img-5.jpg" alt="" width="150" class="rounded" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="social-link" role="tabpanel">
+                                           
+                                             <div class="mb-5">
+		                                        <h3 class="card-title mb-1 flex-grow-1">Vos réseaux sociaux</h3>
+		                                        <p class="text-muted"><span>Modifiez les informations de votre société/organisation. Cliquez sur le bouton "Sauvegarder" en bas de page pour sauvegarder.</span></p>
+		                                     </div>
+                                            <div class="d-flex mb-1">
+                                                <div class="flex-grow-1 me-3">
+	                                             <div class="row gy-1">
+	                                             	<span for="basiInput" class="text-md-start fw-bold">Facebook</span>
+		                                            <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="facebookId" class="form-label">ID du réseau social</label>
+		                                                    <input type="text" class="form-control" name="facebookId" ng-model="dto.facebookId" id="facebookId" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                             <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="facebookUrl" class="form-label">Url</label>
+		                                                    <input type="text" class="form-control" name="facebookUrl" ng-model="dto.facebookUrl" id="facebookUrl" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                        </div>
+		                                        <!-- end row -->
+		                                        <div class="row gy-1">
+	                                             	<span for="basiInput" class="text-md-start fw-bold">LinkedIn</span>
+		                                            <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="linkedinId" class="form-label">ID du réseau social</label>
+		                                                    <input type="text" class="form-control" name="linkedinId" ng-model="dto.linkedinId" id="linkedinId" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                             <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="linkedinUrl" class="form-label">Url</label>
+		                                                    <input type="text" class="form-control" name="linkedinUrl" ng-model="dto.linkedinUrl" id="linkedinUrl" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                        </div>
+		                                        <!-- end row -->
+		                                        <div class="row gy-1">
+	                                             	<span for="basiInput" class="text-md-start fw-bold">Instagram</span>
+		                                            <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="instagramId" class="form-label">ID du réseau social</label>
+		                                                    <input type="text" class="form-control" name="instagramId" ng-model="dto.instagramId" id="instagramId" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                             <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="instagramUrl" class="form-label">Url</label>
+		                                                    <input type="text" class="form-control" name="instagramUrl" ng-model="dto.instagramUrl" id="instagramUrl" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                        </div>
+		                                        <!-- end row -->
+		                                        <div class="row gy-1">
+	                                             	<span for="basiInput" class="text-md-start fw-bold">Skype</span>
+		                                            <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="skypeId" class="form-label">ID du réseau social</label>
+		                                                    <input type="text" class="form-control" name="skypeId" ng-model="dto.skypeId" id="skypeId" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                             <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="skypeUrl" class="form-label">Url</label>
+		                                                    <input type="text" class="form-control" name="skypeUrl" ng-model="dto.skypeUrl" id="skypeUrl" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                        </div>
+		                                        <!-- end row -->
+		                                        <div class="row gy-1">
+	                                             	<span for="basiInput" class="text-md-start fw-bold">Snapchat</span>
+		                                            <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="snapchatId" class="form-label">ID du réseau social</label>
+		                                                    <input type="text" class="form-control" name="snapchatId" ng-model="dto.snapchatId" id="snapchatId" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                             <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="snapchatUrl" class="form-label">Url</label>
+		                                                    <input type="text" class="form-control" name="snapchatUrl" ng-model="dto.snapchatUrl" id="snapchatUrl" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                        </div>
+		                                        <!-- end row -->
+		                                        <div class="row gy-1">
+	                                             	<p for="basiInput" class="text-md-start fw-bold">Twitter</p>
+		                                            <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="twitterId" class="form-label">ID du réseau social</label>
+		                                                    <input type="text" class="form-control" name="twitterId" ng-model="dto.twitterId" id="twitterId" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                             <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="twitterUrl" class="form-label">Url</label>
+		                                                    <input type="text" class="form-control" name="twitterUrl" ng-model="dto.twitterUrl" id="twitterUrl" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                        </div>
+		                                        <!-- end row -->
+		                                        <div class="row gy-1">
+	                                             	<span for="basiInput" class="text-md-start fw-bold">WhatsApp</span>
+		                                            <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="whatsappId" class="form-label">ID du réseau social</label>
+		                                                    <input type="text" class="form-control" name="whatsappId" ng-model="dto.whatsappId" id="whatsappId" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                             <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="whatsappUrl" class="form-label">Url</label>
+		                                                    <input type="text" class="form-control" name="whatsappUrl" ng-model="dto.whatsappUrl" id="whatsappUrl" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                        </div>
+		                                        <!-- end row -->
+		                                        <div class="row gy-1">
+	                                             	<span for="basiInput" class="text-md-start fw-bold">Youtube</span>
+		                                            <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="youtubeId" class="form-label">ID du réseau social</label>
+		                                                    <input type="text" class="form-control" name="youtubeId" ng-model="dto.youtubeId" id="youtubeId" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                             <div class="col-xxl-6 col-md-6">
+		                                                <div>
+		                                                    <label for="youtubeUrl" class="form-label">Url</label>
+		                                                    <input type="text" class="form-control" name="youtubeUrl" ng-model="dto.youtubeUrl" id="youtubeUrl" />
+		                                                </div>
+		                                            </div>
+		                                            <!--end col-->
+		                                        </div>
+		                                        <!-- end row -->
+			                                    <div class="row gy-4 mt-5">
+		                                        	<div class="mb-0 col-xxl-12 col-md-12 d-flex flex-row items-align-center justify-content-center">
+		                                        		<a type="button" class="btn btn-dark mx-3" data-bs-toggle="tab" role="tab" href="#company"><i class="ri-arrow-left-line label-icon align-middle fs-16 me-2"></i>Retour</a>
+	                                                    <a class="btn btn-primary" ng-click="saveCompany()">Sauvegarder<i class="ri-check-double-fill label-icon align-middle fs-16 ms-2"></i></a>
+	                                                </div>
+		                                        </div>
+		                                        <!--end row-->
+                                                </div>
+                                                <div class="flex-shrink-0">
+                                                    <img src="assets/images/small/img-5.jpg" alt="" width="150" class="rounded" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                     </form>
+                                </div><!-- end card-body -->
+                            </div>
+                           <div id="successSave" class="modal fade" tabindex="-1" aria-hidden="true" style="display: none;">
+                              <div class="modal-dialog modal-dialog-centered">
+                                  <div class="modal-content">
+                                      <div class="modal-body text-center p-5">
+                                          <div class="text-end">
+                                              <button type="button" class="btn-close text-end" data-bs-dismiss="modal" aria-label="Close"></button>
+                                          </div>
+                                          <div class="mt-2">
+                                              <lord-icon src="https://cdn.lordicon.com/hrqqslfe.json" trigger="hover" colors="primary:#16c72e,secondary:#d1fad7" style="width:150px;height:150px"></lord-icon>
+                                              <h4 class="mb-3 mt-4">Sauvegarde reussi !</h4>
+                                              <p class="text-muted fs-15 mb-4">Vos modifications ont été bien pris en compte.</p>
+                                          	  <div class="hstack gap-2 justify-content-center">
+                                                   <button class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">Fermé</button>
+                                               </div>
+                                          </div>
+                                      </div>
+                                  </div><!-- /.modal-content -->
+                              </div><!-- /.modal-dialog -->
+                          </div><!-- /.modal -->
+                        </div>
+                        
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ############ PAGE START-->
+
+<!-- ############ PAGE END-->
+</div>
+<div layout:fragment="plugins" class="page-content">
+	<script th:src='@{/resources/js/administration/company.js}'></script>
+</div>
+</body>
+</html>

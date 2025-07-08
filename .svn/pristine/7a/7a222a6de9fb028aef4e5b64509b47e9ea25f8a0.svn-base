@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<body>
+	<th:block th:fragment="menu">
+		<div id="top-menu" class="top-menu">
+			<div class="navbar-header">
+				
+			</div>
+			<!-- begin top-menu nav -->
+			<ul class="nav">
+				<li class="niveau-1">
+					<a th:href="@{/}"> <img width="20px" th:src="@{/resources/images/menu-home.png}" /></a>
+				</li>
+				<li class="niveau-1">
+					<a th:href="@{/administration/profile}">
+						<img class="nav-icon" th:src="@{/resources/images/menu-administration.png}" />
+						<span><th:block th:text="#{menu.tdb}"></th:block></span>
+					</a>
+				</li>
+				<li class="niveau-1">
+					<a th:href="@{/administration/profile}">
+						<img class="nav-icon" th:src="@{/resources/images/map.png}" />&nbsp;
+						<span><th:block th:text="#{menu.sig}"></th:block></span>
+					</a>
+				</li>
+				<li class="has-sub niveau-1">
+					<a href="javascript:;">
+						<img class="nav-icon" th:src="@{/resources/images/data.png}" />&nbsp;
+						<span><th:block th:text="#{menu.base}"></th:block></span>
+					</a>
+					<ul class="sub-menu">
+						<li class="niveau-2" >
+							<a th:href="@{/referentiel/investisseur}"><th:block th:text="#{menu.base.investisseurs}"></th:block></a>
+						</li>
+						<!-- <li class="niveau-2" >
+							<a th:href="@{/referentiel/partenaire}"><th:block th:text="#{menu.base.partenaires}"></th:block></a>
+						</li> -->
+						<li class="niveau-2" >
+							<a th:href="@{/referentiel/fournisseur}"><th:block th:text="#{menu.base.fournisseurs}"></th:block></a>
+						</li>
+						<!-- <li class="niveau-2" >
+							<a th:href="@{/administration/profile}"><th:block th:text="#{menu.base.demandes}"></th:block></a>
+						</li> -->
+					</ul>
+				</li>
+				<li class="has-sub niveau-1">
+					<a href="javascript:;">
+						<img class="nav-icon" th:src="@{/resources/images/money.png}" />&nbsp;
+						<span><th:block th:text="#{menu.investissement}"></th:block></span>
+					</a>
+					<ul class="sub-menu">
+						<li class="has-sub niveau-2">
+							<a href="javascript:;">
+								<span><th:block th:text="#{menu.investissement.contrat.location}"></th:block></span>
+							</a>
+							<ul class="sub-menu">
+								<li class="niveau-3" >
+									<a th:href="@{/investissement/demande}"><th:block th:text="#{menu.investissement.demande}"></th:block></a>
+								</li>
+								<li class="niveau-3" >
+									<a th:href="@{/investissement/contrat}"><th:block th:text="#{menu.investissement.contrat}"></th:block></a>
+								</li>
+								<li class="niveau-3" >
+									<a th:href="@{/investissement/rapprochement}"><th:block th:text="#{menu.investissement.rapprochement}"></th:block></a>
+								</li>
+								<li class="niveau-3" >
+									<a th:href="@{/investissement/dossierApprob}"><th:block th:text="#{menu.investissement.approbation}"></th:block></a>
+								</li>
+								<li class="niveau-3" >
+									<a th:href="@{/investissement/dossierSubv}"><th:block th:text="#{menu.investissement.subvention}"></th:block></a>
+								</li>
+							</ul>
+						</li>
+						<li class="has-sub niveau-2">
+							<a href="javascript:;">
+								<span><th:block th:text="#{menu.investissement.contrat.hors.location}"></th:block></span>
+							</a>
+							<ul class="sub-menu">
+								<li class="niveau-3" >
+									<a th:href="@{/investissement/parcelle}"><th:block th:text="#{menu.investissement.parcelle}"></th:block></a>
+								</li>
+								<li class="niveau-3" >
+									<a th:href="@{/investissement/dossierApprobhc}"><th:block th:text="#{menu.investissement.approbation}"></th:block></a>
+								</li>
+								<li class="niveau-3" >
+									<a th:href="@{/investissement/dossierSubvhc}"><th:block th:text="#{menu.investissement.subvention}"></th:block></a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li class="niveau-1">
+					<a th:href="@{/administration/profile}">
+						<img class="nav-icon" th:src="@{/resources/images/ref.png}" />&nbsp;
+						<span><th:block th:text="#{menu.referentiel}"></th:block></span>
+					</a>
+				</li>
+				<li th:classappend="${MODULE=='administration'} ? active : ''" class="has-sub niveau-1">
+					<a href="javascript:;">
+						<img class="nav-icon" th:src="@{/resources/images/menu-administration.png}" />
+						<span><th:block th:text="#{menu.administration}"></th:block></span>
+					</a>
+					<ul class="sub-menu">
+						<li class="niveau-2" >
+							<a th:href="@{/administration/profile}"><th:block th:text="#{menu.administration.profils}"></th:block></a>
+						</li>
+						<li class="niveau-2" >
+							<a th:href="@{/administration/user}"><th:block th:text="#{menu.administration.utilisateurs}"></th:block></a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+
+
+			<ul class="nav navbar-nav navbar-right">
+				<li><a th:href="@{/commun/notification}"> <i
+						class="fa fa-bell-o"></i> <span class="label" th:text="0"></span>
+				</a></li>
+
+				<li><a href="javascript:;" class="dropdown-toggle"
+					data-toggle="dropdown"> <img class="nav-icon"
+						th:src="@{/resources/images/menu-user.png}" />
+				</a>
+					<ul class="dropdown-menu animated fadeInLeft">
+						<li><a th:href="@{/deconnexion}" th:text="#{menu.logout}"></a></li>
+					</ul></li>
+			</ul>
+			<!-- end top-menu nav -->
+		</div>
+	</th:block>
+</body>
+</html>

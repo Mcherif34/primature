@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+	<title></title>
+</head>
+<body ng-controller="regionController" th:attr="ng-init='init();'">
+<div layout:fragment="content" class="page-content">
+<!-- ############ PAGE START-->
+<div class="p-a white lt box-shadow">
+	<div class="row">
+		<div class="col-sm-6">
+			<h4 class="mb-0 _300">Régions</h4>
+			<!-- <small class="text-muted">Bootstrap <strong>4</strong> Web App Kit with AngularJS</small> -->
+		</div>
+<!-- 		<div class="col-sm-6 text-sm-right">
+			<div class="m-y-sm">
+				<span class="m-r-sm">Start manage:</span>
+				<div class="btn-group dropdown">
+		          <button class="btn white btn-sm ">Projects</button>
+		          <button class="btn white btn-sm dropdown-toggle" data-toggle="dropdown"></button>
+		          <div class="dropdown-menu dropdown-menu-scale pull-right">
+		            <a class="dropdown-item" href="">Members</a>
+		            <a class="dropdown-item" href="">Tasks</a>
+		            <a class="dropdown-item" href="">Inbox</a>
+		            <div class="dropdown-divider"></div>
+		            <a class="dropdown-item">Profile</a>
+		          </div>
+		        </div>
+	        </div>
+		</div> -->
+	</div>
+</div>
+<!-- ############ PAGE START-->
+<div class="padding">
+  <div class="row">
+	  <div class="col-md-12">
+	 	<div class="b-b b-primary nav-active-primary">
+			<ul class="nav nav-tabs">
+				<li class="nav-item active"><a class="nav-link nav-tab"
+					href="#" data-toggle="tab" data-target="#tab1">Pays</a></li>
+				<li class="nav-item"><a class="nav-link nav-tab" href="#"
+					data-toggle="tab" data-target="#tab2">Villes</a></li>
+			</ul>
+		</div>
+	  </div>
+	  <div class="tab-content p-a m-b-md">
+		<div class="tab-pane animated fadeIn text-muted active" id="tab1">
+	   	  <div class="box">
+		    <div class="box-header">
+		      <div style="float:left; margin-top: 3px;">
+		        <h2 class="mb-0 _300">Pays</h2>
+		        <!-- <small class="text-muted">Lorem ipsum dolor si amet</small> -->
+		      </div>
+		      <ul class="button_actions">
+				<li><a href="#" ng-click="addCountry()" class="btn btn-fw success"><i class="fa fa-plus"></i> &nbsp;<span>Nouveau</span></a></li>
+			  </ul>
+		    </div>
+		    <div class="table-responsive">
+		      <table id="countryTable" ng-controller="countryTableController"
+					th:attr="ng-init='init();'" class="table table-striped b-t b-b">
+		        <thead>
+		          <tr>
+		            <th>ID</th>
+		            <th width="10%">Code</th>
+		            <th>Nom</th>
+		            <th width="10%">Indicatif</th>
+		            <th width="25%">Actions</th>
+		          </tr>
+		        </thead>
+		      </table>
+		    </div>
+		  </div>
+		</div>
+
+		<div class="tab-pane animated fadeIn text-muted" id="tab2">
+	   	  <div class="box">
+		    <div class="box-header">
+		      <div style="float:left; margin-top: 3px;">
+		        <h2 class="mb-0 _300">Villes</h2>
+		        <!-- <small class="text-muted">Lorem ipsum dolor si amet</small> -->
+		      </div>
+		      <ul class="button_actions">
+				<li><a href="#" ng-click="addCity()" class="btn btn-fw success"><i class="fa fa-plus"></i> &nbsp;<span>Nouveau</span></a></li>
+			  </ul>
+		    </div>
+		    <div class="table-responsive">
+		      <table id="cityTable" ng-controller="cityTableController"
+					th:attr="ng-init='init();'" class="table table-striped b-t b-b">
+		        <thead>
+		          <tr>
+		            <th width="10%">Code</th>
+		            <th>Nom</th>
+		            <th width="25%">Actions</th>
+		          </tr>
+		        </thead>
+		      </table>
+		    </div>
+		  </div>
+		</div>
+		</div>
+  </div>
+  <!-- .modal -->
+  <div id="countryModal" class="modal fade" data-backdrop="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+      	  <h5 class="modal-title" ng-if="addCountryForm">Enregistrement d'un pays</h5>
+      	  <h5 class="modal-title" ng-if="editCountryForm">Modification d'un pays</h5>
+        </div>
+        <form id="countryForm" name="countryForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+          <div class="modal-body p-lg">
+            <div class="row">
+			  <input type="hidden" ng-model="dto.id" />
+			  <div ng-class="'col-md-12'">
+			  	<p class="text-muted">Renseignez les champs obligatoires</p>
+			  	<div ng-if="countryRequiredError" class="alert alert-danger" role="alert">
+			  	  Veuillez remplir tous les champs obligatoires !
+			  	</div>
+			  	<div ng-if="countryTechnicalError" class="alert alert-danger" role="alert">
+			  	  Un problème est survenu ! Merci de contacter votre administrateur.
+			  	</div>
+			  	<div ng-if="countrySuccess" class="alert alert-success" role="alert">
+			  	  L'opération s'est effectuée avec succès !
+			  	</div>
+			  </div>
+			  <div ng-class="'col-md-6'">
+            	<div class="form-group">
+              	  <label><span class="asterik"> * </span> ISO (2 caractères)</label>
+                  <input type="text" class="form-control" name="iso" ng-model="dto.iso" required="required" />                        
+                </div>
+                <div class="form-group">
+                  <label>Code</label>
+                  <input type="text" class="form-control" name="numcode" ng-model="dto.numcode" />
+                </div>
+                <div class="form-group">
+                  <label><span class="asterik"> * </span> Nom</label>
+                  <input type="text" class="form-control" name="name" ng-model="dto.name" required="required" />                        
+                </div>
+			  </div>
+			  <div ng-class="'col-md-6'">
+			    <div class="form-group">
+                  <label>ISO (3 caractères)</label>
+                  <input type="text" class="form-control" name="iso3" ng-model="dto.iso3" />
+                </div>
+                <div class="form-group">
+                  <label><span class="asterik"> * </span> Indicatif</label>
+                  <input type="text" class="form-control" name="phonecode" ng-model="dto.phonecode" required="required" />                        
+                </div>
+                <div class="form-group">
+                  <label><span class="asterik"> * </span> Nom affiché</label>
+                  <input type="text" class="form-control" name="nicename" ng-model="dto.nicename" required="required" />                        
+                </div>
+			  </div>
+			</div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">Annuler</button>
+            <a href="#" ng-click="saveCountry()" class="btn success p-x-md">Valider</a>
+          </div>
+        </form>
+      </div><!-- /.modal-content -->
+    </div>
+  </div>
+  <div id="cityModal" class="modal fade" data-backdrop="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+      	  <h5 class="modal-title" ng-if="addCityForm">Enregistrement d'une ville</h5>
+      	  <h5 class="modal-title" ng-if="editCityForm">Modification d'une ville</h5>
+        </div>
+        <form id="cityForm" name="cityForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+          <div class="modal-body p-lg">
+            <div class="row">
+			  <input type="hidden" ng-model="dto.city.id" />
+			  <div ng-class="'col-md-12'">
+			  	<p class="text-muted">Renseignez les champs obligatoires</p>
+			  	<div ng-if="cityRequiredError" class="alert alert-danger" role="alert">
+			  	  Veuillez remplir tous les champs obligatoires !
+			  	</div>
+			  	<div ng-if="cityTechnicalError" class="alert alert-danger" role="alert">
+			  	  Un problème est survenu ! Merci de contacter votre administrateur.
+			  	</div>
+			  	<div ng-if="citySuccess" class="alert alert-success" role="alert">
+			  	  L'opération s'est effectuée avec succès !
+			  	</div>
+			  </div>
+			  <div ng-class="'col-md-6'">
+            	<div class="form-group">
+              	  <label><span class="asterik"> * </span> Code</label>
+                  <input type="text" class="form-control" name="iso" ng-model="dto.city.code" required="required" />                        
+                </div>
+			  </div>
+			  <div ng-class="'col-md-6'">
+			    <div class="form-group">
+                  <label><span class="asterik"> * </span> Nom</label>
+                  <input type="text" class="form-control" name="name" ng-model="dto.city.name" required="required" />                        
+                </div>
+			  </div>
+<!-- 			  <div ng-class="'col-md-4'">
+			    <div class="form-group">
+                  <label><span class="asterik"> * </span> Pays</label>
+                     <select class="form-control" id="country" name="countryId" ng-model="dto.city.countryId" ng-options="c.id as c.name for c in countries" >
+                         <option value="">Choisir une option</option>
+                     </select>                        
+                </div>
+			  </div> -->
+			</div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">Annuler</button>
+            <a href="#" ng-click="saveCity()" class="btn success p-x-md">Valider</a>
+          </div>
+        </form>
+      </div><!-- /.modal-content -->
+    </div>
+  </div>
+  <!-- / .modal -->
+  </div>
+</div>
+<div layout:fragment="plugins" class="page-content">
+	<script th:src='@{/resources/js/administration/referentiel/region.js}'></script>
+</div>
+</body>
+</html>

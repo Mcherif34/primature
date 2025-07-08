@@ -1,0 +1,337 @@
+package ma.brainit.aman.client.service.impl;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.opentext.livelink.service.docman.Node;
+
+import ma.brainit.aman.administration.actions.SearchParam;
+import ma.brainit.aman.client.dao.CourrierFactureDao;
+import ma.brainit.aman.client.dao.DTreeDao;
+import ma.brainit.aman.client.dao.WSubWorkTaskDao;
+import ma.brainit.aman.client.dto.CourrierFactureDTO;
+import ma.brainit.aman.client.dto.DocumentDTO;
+import ma.brainit.aman.client.dto.converters.CourrierFactureDTOConverter;
+import ma.brainit.aman.client.model.CourrierFacture;
+import ma.brainit.aman.client.model.WSubWorkTask;
+import ma.brainit.aman.client.service.CourrierFactureService;
+import ma.brainit.aman.webservice.GedService;
+import ma.brainit.base.BasePaginatorDao;
+import ma.brainit.base.BaseTable;
+import ma.brainit.base.utils.Util;
+
+
+@Service
+@Transactional
+public class CourrierFactureServiceImpl implements CourrierFactureService {
+
+	@Value("${opentext.url}")
+	private String opentextUrl;
+	
+	@Value("${opentext.login}")
+	private String opentextLogin;
+
+	@Value("${opentext.password}")
+	private String opentextPassword;
+	
+	private GedService ged = new GedService();
+	
+	@Autowired
+	private CourrierFactureDTOConverter CourrierFactureDTOConverter;
+
+	@Autowired
+	private BasePaginatorDao<CourrierFacture, Long> paginatorDao;
+
+	@Autowired
+	private CourrierFactureDao CourrierFactureDao;
+	
+	@Autowired
+	private DTreeDao dtreeDao;
+	
+	@Autowired
+	private WSubWorkTaskDao wSubWorkTaskDao;
+
+
+	@Override
+	public String getPage(Integer page, Integer limit, String sort, String direction, String search) {
+		StringBuilder condition = new StringBuilder("");
+		List<SearchParam> searchParams = Util.fromSearchParamsJSON(search);
+		searchParams  = CourrierFactureDTOConverter.convertSearchParamToEntity(search);
+		this.paginatorDao.setEntityClass(CourrierFacture.class);
+		List<CourrierFacture> list = paginatorDao.getPaginator(page, limit,sort,direction,searchParams, condition.toString());
+		Long totalCount = paginatorDao.count(searchParams, condition.toString());
+		List<CourrierFactureDTO> dtos = CourrierFactureDTOConverter.convertFromDataBeanList(list);
+		for(CourrierFactureDTO courrierFactureDTO : dtos) {
+			WSubWorkTask wSubWorkTask = wSubWorkTaskDao.getByWWork(courrierFactureDTO.getwSubWorkId());
+			if(wSubWorkTask != null) {
+				courrierFactureDTO.setTaskTitle(wSubWorkTask.getSubWorkTaskTitle());
+				courrierFactureDTO.setPerformer(wSubWorkTask.getPerformer().getName());
+			}
+		}
+		return Util.toJson(new BaseTable<CourrierFactureDTO>(dtos,totalCount));
+	}
+	
+	@Override
+	public String getCurrentPage(Integer page, Integer limit, String sort, String direction, String search) {
+		StringBuilder condition = new StringBuilder("WHERE e.wSubWork.subWorkDateCompleted IS NULL");
+		List<SearchParam> searchParams = Util.fromSearchParamsJSON(search);
+		searchParams  = CourrierFactureDTOConverter.convertSearchParamToEntity(search);
+		this.paginatorDao.setEntityClass(CourrierFacture.class);
+		List<CourrierFacture> list = paginatorDao.getPaginator(page, limit,sort,direction,searchParams, condition.toString());
+		Long totalCount = paginatorDao.count(searchParams, condition.toString());
+		List<CourrierFactureDTO> dtos = CourrierFactureDTOConverter.convertFromDataBeanList(list);
+		for(CourrierFactureDTO courrierFactureDTO : dtos) {
+			WSubWorkTask wSubWorkTask = wSubWorkTaskDao.getByWWork(courrierFactureDTO.getwSubWorkId());
+			if(wSubWorkTask != null) {
+				courrierFactureDTO.setTaskTitle(wSubWorkTask.getSubWorkTaskTitle());
+				courrierFactureDTO.setPerformer(wSubWorkTask.getPerformer().getName());
+			}
+		}
+		return Util.toJson(new BaseTable<CourrierFactureDTO>(dtos,totalCount));
+	}
+	
+	@Override
+	public String advancedSearch(Integer page, Integer limit, String sort, String direction, String search, String refArriveeBoc, String factureDateStart, String factureDateEnd, String numFacture, String receptionDateStart, String receptionDateEnd, String refExpediteur, String enregistrementDateStart, String enregistrementDateEnd, String expediteur, String montantFacture, String status, String attestationRegularite, String decompteDateStart, String decompteDateEnd, String numDecompte, String devise, String elementFacturation, String numBcContrat, String typeCourrier, String delaiPaiement, String formeJuridique, String validationDateStart, String validationDateEnd) {
+		StringBuilder condition = new StringBuilder("WHERE e.id IS NOT NULL");
+		if(refArriveeBoc != null && !refArriveeBoc.equals("NAN")) {
+			condition.append(" AND e.refArriveeBoc LIKE '%").append(refArriveeBoc.toUpperCase().replaceAll("-", "/")).append("%'");
+		}
+		if(factureDateStart != null && !factureDateStart.equals("NAN") && factureDateEnd != null && !factureDateEnd.equals("NAN")) {
+			condition.append(" AND e.dateFacture BETWEEN '").append(factureDateStart).append("' AND '").append(factureDateEnd).append("'");
+		}
+		if(numFacture != null && !numFacture.equals("NAN")) {
+			condition.append(" AND e.numFacture LIKE '%").append(numFacture.toUpperCase().replaceAll("@", "/")).append("%'");
+		}
+		if(receptionDateStart != null && !receptionDateStart.equals("NAN") && receptionDateEnd != null && !receptionDateEnd.equals("NAN")) {
+			condition.append(" AND e.dateReception BETWEEN '").append(receptionDateStart).append("' AND '").append(receptionDateEnd).append("'");
+		}
+		if(refExpediteur != null && !refExpediteur.equals("NAN")) {
+			condition.append(" AND e.refExpediteur LIKE '%").append(refExpediteur.toUpperCase().replaceAll("-", "/")).append("%'");
+		}
+		if(enregistrementDateStart != null && !enregistrementDateStart.equals("NAN") && enregistrementDateEnd != null && !enregistrementDateEnd.equals("NAN")) {
+			condition.append(" AND e.dateEnregistrement BETWEEN '").append(enregistrementDateStart).append("' AND '").append(enregistrementDateEnd).append("'");
+		}
+		if(expediteur != null && !expediteur.equals("NAN") && !expediteur.equals("Choisir une option")) {
+			condition.append(" AND e.expediteur LIKE '%").append(expediteur.toUpperCase()).append("%'");
+		}
+		if(montantFacture != null && !montantFacture.equals("NAN")) {
+			condition.append(" AND e.montantFacture = ").append(montantFacture);
+		}
+		if(status != null && !status.equals("NAN")) {
+			if(status.equals("current")) {
+				condition.append(" AND e.wSubWork.subWorkDateCompleted IS NULL");
+			}
+			if(status.equals("completed")) {
+				condition.append(" AND e.wSubWork.subWorkDateCompleted IS NOT NULL");
+			}
+		}
+		if(attestationRegularite != null && !attestationRegularite.equals("NAN")) {
+			condition.append(" AND e.attestationRegularite LIKE '%").append(attestationRegularite.toUpperCase()).append("%'");
+		}
+		if(decompteDateStart != null && !decompteDateStart.equals("NAN") && decompteDateEnd != null && !decompteDateEnd.equals("NAN")) {
+			condition.append(" AND e.dateDecompte BETWEEN '").append(decompteDateStart).append("' AND '").append(decompteDateEnd).append("'");
+		}
+		if(numDecompte != null && !numDecompte.equals("NAN")) {
+			condition.append(" AND e.numDecompte LIKE '%").append(numDecompte.toUpperCase().replaceAll("-", "/")).append("%'");
+		}
+		if(devise != null && !devise.equals("NAN")) {
+			condition.append(" AND e.devise LIKE '%").append(devise.toUpperCase()).append("%'");
+		}
+		if(elementFacturation != null && !elementFacturation.equals("NAN")) {
+			condition.append(" AND e.elementFacturation LIKE '%").append(elementFacturation.toUpperCase()).append("%'");
+		}
+		if(numBcContrat != null && !numBcContrat.equals("NAN")) {
+			condition.append(" AND e.numBcContrat LIKE '%").append(numBcContrat.toUpperCase().replaceAll("-", "/")).append("%'");
+		}
+		if(typeCourrier != null && !typeCourrier.equals("NAN")) {
+			condition.append(" AND e.typeCourrier LIKE '%").append(typeCourrier.toUpperCase()).append("%'");
+		}
+		if(delaiPaiement != null && !delaiPaiement.equals("NAN")) {
+			condition.append(" AND e.delaiPaiement = ").append(delaiPaiement);
+		}
+		if(formeJuridique != null && !formeJuridique.equals("NAN")) {
+			condition.append(" AND e.formeJuridique LIKE '%").append(formeJuridique.toUpperCase()).append("%'");
+		}
+		if(validationDateStart != null && !validationDateStart.equals("NAN") && validationDateEnd != null && !validationDateEnd.equals("NAN")) {
+			condition.append(" AND e.dateValidation BETWEEN '").append(validationDateStart).append("' AND '").append(validationDateEnd).append("'");
+		}
+		List<SearchParam> searchParams = Util.fromSearchParamsJSON(search);
+		searchParams  = CourrierFactureDTOConverter.convertSearchParamToEntity(search);
+		this.paginatorDao.setEntityClass(CourrierFacture.class);
+		List<CourrierFacture> list = paginatorDao.getPaginator(page, limit,sort,direction,searchParams, condition.toString());
+		Long totalCount = paginatorDao.count(searchParams, condition.toString());
+		List<CourrierFactureDTO> dtos = CourrierFactureDTOConverter.convertFromDataBeanList(list);
+		for(CourrierFactureDTO courrierFactureDTO : dtos) {
+			WSubWorkTask wSubWorkTask = wSubWorkTaskDao.getByWWork(courrierFactureDTO.getwSubWorkId());
+			if(wSubWorkTask != null) {
+				courrierFactureDTO.setTaskTitle(wSubWorkTask.getSubWorkTaskTitle());
+				courrierFactureDTO.setPerformer(wSubWorkTask.getPerformer().getName());
+			}
+		}
+		return Util.toJson(new BaseTable<CourrierFactureDTO>(dtos,totalCount));
+	}
+
+	@Override
+	@Transactional
+	public CourrierFactureDTO save(CourrierFactureDTO dto) {
+		CourrierFacture entity = CourrierFactureDTOConverter.convertFromDTO(dto);
+		entity = CourrierFactureDao.save(entity);
+
+		return CourrierFactureDTOConverter.convertFromDataBean(entity);
+	}
+
+	@Override
+	@Transactional
+	public CourrierFactureDTO load(Long id) {
+		CourrierFacture entity = CourrierFactureDao.findOne(id);
+		CourrierFactureDTO dto = CourrierFactureDTOConverter.convertFromDataBean(entity);
+		List<DocumentDTO> documents = new ArrayList<DocumentDTO>();
+		String authToken = ged.authentication(opentextUrl, opentextLogin, opentextPassword);
+		try {
+			if(entity != null && entity.getwSubWork() != null) {
+				System.out.println("SubWorkID : "+entity.getwSubWork().getId());
+				List<Node> attachments = ged.getAttachments(opentextUrl, entity.getwSubWork().getId(), authToken);
+				if(attachments != null) {
+					for(int i = 0; i < attachments.size(); i++) {
+						DocumentDTO document = new DocumentDTO();
+						document.setDataId(attachments.get(i).getID());
+						document.setName(attachments.get(i).getName());
+						documents.add(document);
+					}
+					dto.setDocuments(documents);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return dto;
+	}
+	
+//	@Override
+//	@Transactional
+//	public CourrierFactureDTO loadByReference(String reference) {
+//		CourrierFacture entity = CourrierFactureDao.getByReference(reference.replaceAll("-", "/"));
+//		CourrierFactureDTO dto = CourrierFactureDTOConverter.convertFromDataBean(entity);
+//		List<DocumentDTO> documents = new ArrayList<DocumentDTO>();
+//		String authToken = ged.authentication(opentextUrl, opentextLogin, opentextPassword);
+//		try {
+//			if(entity != null && entity.getwSubWork() != null) {
+//				List<Node> attachments = ged.getAttachments(opentextUrl, entity.getwSubWork().getId(), authToken);
+//				if(attachments != null) {
+//					for(int i = 0; i < attachments.size(); i++) {
+//						DocumentDTO document = new DocumentDTO();
+//						document.setDataId(attachments.get(i).getID());
+//						document.setName(attachments.get(i).getName());
+//						documents.add(document);
+//					}
+//					dto.setDocuments(documents);
+//				}
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return dto;
+//	}
+	
+	@Override
+	@Transactional
+	public CourrierFactureDTO loadByReference(String reference) {
+		CourrierFactureDTO dto = CourrierFactureDTOConverter.convertFromDataBean(CourrierFactureDao.getByReference(reference.replaceAll("-", "/")));
+		return dto;
+	}
+	
+	@Override
+	@Transactional
+	public List<DocumentDTO> loadDocumentsByReference(String reference) {
+		CourrierFacture entity = CourrierFactureDao.getByReference(reference.replaceAll("-", "/"));
+		List<DocumentDTO> documents = new ArrayList<DocumentDTO>();
+		String authToken = ged.authentication(opentextUrl, opentextLogin, opentextPassword);
+		try {
+			if(entity != null && entity.getwSubWork() != null) {
+				Long attachmentParentNode = dtreeDao.getAttachmentParentNode(entity.getwSubWork().getId().toString());
+				List<Node> attachments = ged.getAttachments(opentextUrl, attachmentParentNode, authToken);
+				if(attachments != null) {
+					for(int i = 0; i < attachments.size(); i++) {
+						DocumentDTO document = new DocumentDTO();
+						document.setDataId(attachments.get(i).getID());
+						document.setName(attachments.get(i).getName());
+						documents.add(document);
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return documents;
+	}
+
+	@Override
+	@Transactional
+	public void delete(Long id) {
+		CourrierFactureDao.delete(id);
+	}
+
+	@Override
+	@Transactional
+	public List<CourrierFactureDTO> getAll() {
+		List<CourrierFacture> list = CourrierFactureDao.findAll();
+		List<CourrierFactureDTO> dtos = CourrierFactureDTOConverter.convertFromDataBeanList(list);
+
+		return dtos;
+	}
+	
+	@Override
+	@Transactional
+	public int getCurrentInvoiceCount() {
+		return CourrierFactureDao.getCurrentInvoiceCount();
+	}
+	
+	@Override
+	@Transactional
+	public List<Object> getCurrentInvoiceCountByYear(int year) {
+		return CourrierFactureDao.getCurrentInvoiceCountByYear(year);
+	}
+	
+	@Override
+	@Transactional
+	public List<Object> getCompletedInvoiceCountByYear(int year) {
+		return CourrierFactureDao.getCompletedInvoiceCountByYear(year);
+	}
+	
+	@Override
+	@Transactional
+	public int getCurrentNotOverdueInvoiceCount() {
+		return CourrierFactureDao.getCurrentNotOverdueInvoiceCount();
+	}
+	
+	@Override
+	@Transactional
+	public int getCurrentOverdueInvoiceCount() {
+		return CourrierFactureDao.getCurrentOverdueInvoiceCount();
+	}
+	
+	@Override
+	@Transactional
+	public int getCompletedInvoiceCount() {
+		return CourrierFactureDao.getCompletedInvoiceCount();
+	}
+
+	@Override
+	public void downloadAttachment(long dataId, HttpServletResponse response) throws ParserConfigurationException {
+		String authToken = ged.authentication(opentextUrl, opentextLogin, opentextPassword);
+		ged.downloadFile(response, opentextUrl, dataId, authToken);
+	}
+}

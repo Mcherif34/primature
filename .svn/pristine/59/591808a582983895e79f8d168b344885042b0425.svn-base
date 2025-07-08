@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+<title></title>
+</head>
+<body>
+
+	<th:block th:fragment="mediatheque-col4(mode)">
+
+		<div class="mediatheque">
+
+			<div class="form-group">
+				<div id="filter-btns" class="dlk-radio btn-group">
+					<button class="btn filter-btn" onclick="filterSelection('all')">
+						<i class="fa fa-check glyphicon glyphicon-ok"></i> Tous
+					</button>
+					<button class="btn filter-btn" onclick="filterSelection('image')">
+						<i class="fa fa-check glyphicon glyphicon-ok"></i> Images
+					</button>
+					<button class="btn filter-btn" onclick="filterSelection('video')">
+						<i class="fa fa-check glyphicon glyphicon-ok"></i> Videos
+					</button>
+				</div>
+				<a class="btn aman-green-color btn-icon btn-circle btn-sm"
+					th:if="${mode == 'edit'}" ng-click="showMediatheque()"
+					title="Ajouter"><i class="fa fa-plus"></i></a>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12 mediatheque-scroll">
+
+					<div ng-repeat="p in mediatheques"
+						class="col-md-4 col-div item {{p.gedTypeDocumentLibelle}}">
+						<div class="mediatheque-container">
+							<img ng-if="p.gedTypeDocumentLibelle == 'image'"
+								th:src="@{ /ged/document/image/load/{{p.code}} }"
+								alt="{{p.libelle}}" /> <img
+								ng-if="p.gedTypeDocumentLibelle == 'video'"
+								th:src="@{/resources/mediatheque/video.png}" alt="{{p.libelle}}" />
+							<!-- 							<video controls="controls" ng-if="p.gedTypeDocumentLibelle == 'video'"> -->
+							<!-- 								<source th:src="@{/resources/mediatheque/video.mp4}" type="video/mp4" /> -->
+							<!-- 							</video> -->
+
+							<!-- 							<p ng-class="p.gedTypeDocumentLibelle == 'image' ? 'title' : 'title-video'">{{p.titre}}</p> -->
+							<p class="title">{{p.titre}}</p>
+							<div class="overlay"></div>
+							<div class="button-display">
+								<a
+									ng-click="displayImage(p.code,p.titre,p.gedTypeDocumentLibelle)">Afficher</a>
+							</div>
+							<div class="button-remove">
+								<a class="btn btn-success btn-icon btn-circle btn-sm"
+									ng-click="downloadMediatheque(p.id)" title="Télécharger"><i
+									class="fa fa-download"></i></a> 
+								
+								<a
+									class="btn btn-warning btn-icon btn-circle btn-sm"
+									th:if="${mode == 'edit'}" ng-click="editMediatheque(p.id)"
+									title="Modifier"><i class="fa fa-pencil"></i></a>
+								<a
+									class="btn btn-danger btn-icon btn-circle btn-sm"
+									th:if="${mode == 'edit'}" ng-click="removeMediatheque(p.id)"
+									title="Supprimer"><i class="fa fa-trash-o"></i></a>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+	</th:block>
+
+	<th:block th:fragment="mediatheque-col3(mode)">
+
+		<div class="mediatheque">
+
+			<div class="form-group">
+				<div id="filter-btns" class="dlk-radio btn-group">
+					<button class="btn filter-btn" onclick="filterSelection('all')">
+						<i class="fa fa-check glyphicon glyphicon-ok"></i> Tous
+					</button>
+					<button class="btn filter-btn" onclick="filterSelection('image')">
+						<i class="fa fa-check glyphicon glyphicon-ok"></i> Images
+					</button>
+					<button class="btn filter-btn" onclick="filterSelection('video')">
+						<i class="fa fa-check glyphicon glyphicon-ok"></i> Videos
+					</button>
+				</div>
+				<a class="btn aman-green-color btn-icon btn-circle btn-sm"
+					th:if="${mode == 'edit'}" ng-click="showMediatheque()"
+					title="Ajouter"><i class="fa fa-plus"></i></a>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12 mediatheque-scroll">
+
+					<div ng-repeat="p in mediatheques"
+						class="col-md-3 col-div item {{p.gedTypeDocumentLibelle}}">
+						<div class="mediatheque-container">
+							<img ng-if="p.gedTypeDocumentLibelle == 'image'"
+								th:src="@{ /ged/document/image/load/{{p.code}} }"
+								alt="{{p.libelle}}" /> <img
+								ng-if="p.gedTypeDocumentLibelle == 'video'"
+								th:src="@{/resources/mediatheque/video.png}" alt="{{p.libelle}}" />
+
+							<p class="title">{{p.titre}}</p>
+							<div class="overlay"></div>
+							<div class="button-display">
+								<a
+									ng-click="displayImage(p.code,p.titre,p.gedTypeDocumentLibelle)">Afficher</a>
+							</div>
+							<div class="button-remove">
+								<a class="btn btn-success btn-icon btn-circle btn-sm"
+									ng-click="downloadMediatheque(p.id)" title="Télécharger"><i
+									class="fa fa-download"></i></a> 
+								<a
+									class="btn btn-warning btn-icon btn-circle btn-sm"
+									th:if="${mode == 'edit'}" ng-click="editMediatheque(p.id)"
+									title="Modifier"><i class="fa fa-pencil"></i></a>
+								<a
+									class="btn btn-danger btn-icon btn-circle btn-sm"
+									th:if="${mode == 'edit'}" ng-click="removeMediatheque(p.id)"
+									title="Supprimer"><i class="fa fa-trash-o"></i></a>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+	</th:block>
+
+
+	<th:block th:fragment="displayModal">
+
+		<div class="modal fade" id="myDisplayModal" tabindex="-1"
+			role="dialog">
+			<div class="modal-dialog" style="width: 60%">
+				<div class="modal-content">
+					<div class="modal-body" style="padding: 0px;">
+						<div class="bootbox-body">
+							<div class="panel panel-inverse" data-sortable-id="ui-widget-10">
+								<div class="panel-body" style="padding: 0px">
+									<div class="mediatheque-container display">
+										<img ng-src="{{getDisplayURL(display.code)}}"
+											alt="{{display.libelle}}" ng-if="display.type == 'image'" />
+
+										<video id="video-player" controls="controls"
+											ng-if="display.type == 'video'">
+											<source ng-src="{{getDisplayURL(display.code)}}" />
+										</video>
+
+										<div class="button-remove display">
+											<a class="btn btn-inverse btn-icon btn-circle btn-md"
+												ng-click="closeImage()" title="Fermer"><i
+												class="fa fa-close"></i></a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</th:block>
+
+</body>
+</html>

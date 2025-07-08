@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<body>
+				
+				
+				<li class="has-sub" th:classappend="${MODULE=='SEC'} ? active : ''"><a
+					href="javascript:;"> <b class="caret pull-right"></b> <i
+						class="fa fa-wrench"></i><span><th:block
+								th:text="#{menu.administration}"></th:block></span>
+				</a>
+					<ul class="sub-menu">
+							
+						
+						<li><a
+							th:href="@{/administration/profile}"><th:block
+									th:text="#{menu.administration.profiles}"></th:block></a></li>
+						<li><a
+							th:href="@{/administration/user}"><th:block
+									th:text="#{menu.administration.utilisateurs}"></th:block></a></li>
+						<li><a
+							th:href="@{/commun/referentiel}"><th:block
+									th:text="#{menu.administration.referentiels}"></th:block></a></li>
+
+						<li class="has-sub"><a href="javascript:;"> <th:block
+									th:text="#{menu.administration.general}"></th:block> <b
+								class="caret pull-right"></b>
+						</a>
+							<ul class="sub-menu">
+								<li><a th:href="@{/administration/general/profond}"
+									th:text="#{menu.administration.general.profondeurs}"></a></li>
+								<li><a th:href="@{/administration/general/profondarr}"
+									th:text="#{menu.administration.general.profondeurgeneral}"></a></li>
+								<li><a th:href="@{/administration/general/profondtrav}"
+									th:text="#{menu.administration.general.profondueTravaux}"></a></li>
+							</ul></li>
+									
+				</ul></li>					
+									
+</body>
+</html>

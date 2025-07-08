@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none" data-preloader="disable">
+<head>
+
+    <meta charset="utf-8" />
+    <title>Authentification | Gestion des procédures administratives - Primature du Tchad</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta content="Gestion des procédures administratives de la Primature du Tchad" name="description" />
+    <meta content="BRAIN IT" name="author" />
+    <link rel="shortcut icon" th:href="@{/resources/images/favicon.png}" />
+    <script th:src="@{/resources/js/layout.js}"></script>
+    <link th:href="@{/resources/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/resources/css/icons.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/resources/css/app.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/resources/css/custom.min.css}" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="auth-page-wrapper auth-bg-cover py-5 d-flex justify-content-center align-items-center min-vh-100">
+        <div class="bg-overlay"></div>
+        <div class="auth-page-content overflow-hidden pt-lg-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card overflow-hidden">
+                            <div class="row g-0">
+                                <div class="col-lg-6">
+                                    <div class="p-lg-5 p-4 auth-one-bg h-100">
+                                        <div class="bg-overlay"></div>
+                                        <div class="position-relative h-100 d-flex flex-column">
+                                        	<!-- <div class="mb-4" style="text-align: center; margin-top: 30px;">
+                                                <h2 style="color: #FFFFFF; font-weight: 800;">Primature du Tchad</h2>
+                                                <h4 style="color: #FFFFFF; margin-top: 20px; font-weight: 400;">Gestion des procédures administratives</h4>
+                                            </div> -->
+                                        	<div class="mb-4" style="text-align: center; margin-top: 65px;">
+                                                <img th:src="@{/resources/images/edoc_logo.png}" alt="" style="width: 250px" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end col -->
+
+                                <div class="col-lg-6">
+                                    <div class="p-lg-5 p-4">
+                                        <div style="text-align: center">
+                                        	
+                                        </div>
+
+                                        <div class="mt-4">
+                                        	<form th:action="@{/login}" method="post">
+                                            	<div class="alert alert-danger" id="toggle" role="alert" th:if="${error}" th:text="#{home.login.credentials.error}"></div>
+                                            	<div class="mb-3">
+                                                    <label for="username" class="form-label">Identifiant</label>
+                                                    <input type="text" class="form-control" id="username" name="username" placeholder="Entrez votre identifiant" />
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="password-input">Mot de passe</label>
+                                                    <div class="position-relative auth-pass-inputgroup mb-3">
+                                                        <input type="password" name="password" class="form-control pe-5 password-input" placeholder="Entrez votre mot de passe" id="password-input" />
+                                                        <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" style="box-shadow: none" type="button" id="password-addon"><i class="ri-eye-fill align-middle"></i></button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="" id="auth-remember-check" />
+                                                    <label class="form-check-label" for="auth-remember-check">Se souvenir de moi</label>
+                                                </div>
+
+                                                <div class="mt-4">
+                                                    <button class="btn btn-success w-100" type="submit">Connexion</button>
+                                                </div>
+
+                                                <div class="mt-4 text-center">
+                                                    <div class="signin-other-title">
+                                                        <h5 class="fs-13 mb-4 title">Informations de votre compte</h5>
+                                                    </div>
+
+                                                    <div>
+                                                        <p class="mb-0">En cas d'oubli de mot de passe ou d'échec de connexion, veuillez contacter votre administrateur.</p>
+                                                    </div>
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end col -->
+                            </div>
+                            <!-- end row -->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col -->
+
+                </div>
+                <!-- end row -->
+            </div>
+            <!-- end container -->
+        </div>
+        <!-- end auth page content -->
+
+        <!-- footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-center">
+                            <p class="mb-0">&copy;
+                                <script>document.write(new Date().getFullYear())</script> <a href="https://primature.gouv.td/" target="_blank" style="color: #FFFFFF">PRIMATURE DU TCHAD</a>. Tous droits réservés | Développé par <a href="https://brainit.ma/" target="_blank" style="color: #FFFFFF">BRAIN IT</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- end Footer -->
+    </div>
+    <!-- end auth-page-wrapper -->
+
+    <!-- JAVASCRIPT -->
+    <script th:src="@{/resources/libs/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/resources/libs/simplebar/simplebar.min.js}"></script>
+    <script th:src="@{/resources/libs/node-waves/waves.min.js}"></script>
+    <script th:src="@{/resources/libs/feather-icons/feather.min.js}"></script>
+    <script th:src="@{/resources/js/pages/plugins/lord-icon-2.1.0.js}"></script>
+
+    <!-- password-addon init -->
+    <script th:src="@{/resources/js/pages/password-addon.init.js}"></script>
+</body>
+</html>

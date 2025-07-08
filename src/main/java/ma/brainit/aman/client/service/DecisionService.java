@@ -1,0 +1,68 @@
+package ma.brainit.aman.client.service;
+
+import ma.brainit.aman.client.dto.DecisionDTO;
+import ma.brainit.aman.client.dto.DocumentDTO;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Response;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.springframework.http.ResponseEntity;
+
+public interface DecisionService {
+	
+	String getPage(Integer page, Integer limit, String sort, String direction, String search);
+	
+	String getCurrentPageDashboard(Integer page, Integer limit, String sort, String direction, String search);
+	
+	String getCurrentPage(Integer page, Integer limit, String sort, String direction, String search);
+	
+	String getDonePage(Integer page, Integer limit, String sort, String direction, String search);
+	
+	String getClosePage(Integer page, Integer limit, String sort, String direction, String search);
+	
+	String advancedSearch(Integer page, Integer limit, String sort, String direction, String search, String referenceCourrier, String referenceDecision, String enregistrementDateStart, String enregistrementDateEnd, String objet, String status);
+	
+	String save(DecisionDTO dto);
+
+	DecisionDTO load(Long id);
+	
+	DecisionDTO loadByVolumeId(Long volumeId);
+	
+	DecisionDTO loadByReference(String reference);
+	
+	List<DocumentDTO> loadDocumentsByReference(String reference);
+	
+	String delete(Long id);
+	
+	String send(DecisionDTO dto);
+	
+	List<DecisionDTO> getAll();
+	
+	int getCurrentCountByEntity(String term);
+	
+	int getCurrentCount();
+	
+	int getCompletedCount();
+	
+	int getRejectedCount();
+	
+	int getCurrentCountByProfile();
+	
+	List<Object> getCurrentCountByYear(int year);
+	
+	List<Object> getCompletedCountByYear(int year);
+	
+	int getCurrentNotOverdueClassiqueCount();
+	
+	int getCurrentOverdueClassiqueCount();
+	
+	int getCompletedClassiqueCount();
+	
+	void downloadAttachment(long dataId, HttpServletResponse response) throws ParserConfigurationException;
+	
+	ResponseEntity<byte[]> streamDocument(long dataId);
+
+}

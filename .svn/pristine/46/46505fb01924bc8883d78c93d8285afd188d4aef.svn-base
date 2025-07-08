@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+	<title></title>
+</head>
+<body ng-controller="scenarioController" th:attr="ng-init='init();'">
+	<div layout:fragment="search">
+		<form class="form-inline" role="search">
+			<input type="text"
+				class="form-control b-a rounded px-3 form-control-sm"
+				style="min-width: 350px;" ng-model="dto.search.key"
+				placeholder="Rechercher client par code ou raison sociale" /> <a
+				href="#" ng-click="searchClient()" class="btn success p-x-md"
+				style="border-radius: 20px; padding-top: 3px; padding-bottom: 5px; margin-left: 10px; margin-right: 20px;"><i
+				class="fa fa-search"></i></a>
+		</form>
+	</div>
+	<div layout:fragment="content">
+		<div class="main-content">	
+			<div class="page-content">
+				<div class="container-fluid">
+					<div class="row">
+		            	<div class="col-12">
+		                	<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+		                    	<h4 class="mb-sm-0">Scénarios</h4>
+		                    	
+		                    	<div class="page-title-right">
+		                        	<ol class="breadcrumb m-0">
+		                            	<li class="breadcrumb-item font-weight-bold"><a th:href="@{/}">Tableau de bord</a></li>
+		                                <li class="breadcrumb-item active">Scénarios</li>
+		                            </ol>
+		                        </div>
+							</div>
+		                </div>
+		        	</div>
+		        	<div class="col-xxl-12">
+		                            <div class="card">
+		                                <div class="card-body">
+		                                    <ul class="nav nav-tabs nav-justified mb-3" role="tablist">
+		                                        <li class="nav-item">
+		                                            <a class="nav-link active" data-bs-toggle="tab" href="#scenarioTab" role="tab" aria-selected="false" style="font-weight: 600;">
+		                                                <i class="mdi mdi-script-text-play"></i> Scénarios
+		                                            </a>
+		                                        </li>
+		                                        <li class="nav-item">
+		                                            <a class="nav-link" data-bs-toggle="tab" href="#scenarioStageTab" role="tab" aria-selected="false" style="font-weight: 600;">
+		                                                <i class="mdi mdi-step-forward-2"></i> Etapes du scénario
+		                                            </a>
+		                                        </li>
+		                                        <li class="nav-item">
+		                                            <a class="nav-link" data-bs-toggle="tab" href="#portofolioTab" role="tab" aria-selected="false" style="font-weight: 600;">
+		                                                <i class="mdi mdi-view-grid-outline"></i> Périmètre du scénario
+		                                            </a>
+		                                        </li>
+		                                    </ul>
+		                                    <!-- Tab panes -->
+		                                    <div class="tab-content text-muted">
+		                                        <div class="tab-pane active" id="scenarioTab" role="tabpanel">
+		                                        	<div style="text-align: right; margin-bottom: 10px;">
+		                                        		<div style="float: left;" class="btn-group btn-group-sm mt-2 shadow" role="group" aria-label="Basic example">
+		                                                    <button type="button" ng-click="checkAll('scenarioId');" class="btn btn-primary waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-marked-circle label-icon align-middle fs-12"></i> Tout cocher</button>
+		                                                    <button type="button" ng-click="uncheckAll('scenarioId');" class="btn btn-primary waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-blank-circle-outline label-icon align-middle fs-12"></i> Tout décocher</button>
+		                                                </div>
+			                                        	<a href="#" ng-show="checked" ng-click="deleteScenarios()" class="btn btn-danger btn-label waves-effect waves-light"><i class="mdi mdi-trash-can label-icon align-middle fs-16 me-2"></i> Supprimer</a>
+			                                        	<a href="#" ng-click="addScenario()" class="btn btn-primary btn-label waves-effect waves-light"><i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Nouveau</a>
+			                                        	<a href="#" ng-click="" class="btn btn-primary" style="padding-top: 6px; padding-bottom: 6px;"><i class="mdi mdi-tune label-icon align-middle fs-16"></i></a>
+			                                        </div>
+		                                        	<div class="live-preview">
+			                                            <div class="table-responsive">
+			                                            	<table id="scenarioTable" ng-controller="scenarioTableController"
+																	th:attr="ng-init='init();'" class="table dt-responsive nowrap table-striped align-middle">
+														        <thead>
+														          <tr>
+														            <th></th>
+														            <th style="width: 5px"></th>
+														            <th>Status</th>
+														            <th>Nom</th>
+														            <th>Description</th>
+														            <th>Nombre d'étapes</th>
+														            <th>Par défaut</th>
+														            <th>Actions</th>
+														          </tr>
+														        </thead>
+														      </table>
+														</div>
+													</div>
+		                                        </div>
+		                                        <div class="tab-pane" id="scenarioStageTab" role="tabpanel">
+		                                        	<div style="text-align: right; margin-bottom: 10px;">
+		                                        		<div style="float: left;" class="btn-group btn-group-sm mt-2 shadow" role="group" aria-label="Basic example">
+		                                                    <button type="button" ng-click="checkAll('scenarioStageId');" class="btn btn-primary waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-marked-circle label-icon align-middle fs-12"></i> Tout cocher</button>
+		                                                    <button type="button" ng-click="uncheckAll('scenarioStageId');" class="btn btn-primary waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-blank-circle-outline label-icon align-middle fs-12"></i> Tout décocher</button>
+		                                                </div>
+		                                        		<a href="#" ng-click="deleteScenarioStages('scenarioStageId')" class="btn btn-danger btn-label waves-effect waves-light"><i class="mdi mdi-trash-can label-icon align-middle fs-16 me-2"></i> Supprimer</a>
+			                                        	<a href="#" ng-click="addScenarioStage()" class="btn btn-primary btn-label waves-effect waves-light"><i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Nouveau</a>
+			                                        	<a href="#" ng-click="" class="btn btn-primary" style="padding-top: 6px; padding-bottom: 6px;"><i class="mdi mdi-tune label-icon align-middle fs-16"></i></a>
+			                                        </div>
+			                                        <div class="live-preview">
+			                                            <div class="table-responsive">
+			                                            	<table id="scenarioStageTable" ng-controller="scenarioStageTableController"
+																	th:attr="ng-init='init();'" class="table dt-responsive nowrap table-striped align-middle">
+														        <thead>
+														          <tr>
+														            <th></th>
+														            <th style="width: 5px"></th>
+														            <th>Nom de l'étape</th>
+														            <th>Nombre de jours</th>
+														            <th>Action</th>
+														            <th>Modèle</th>
+														            <th>Traitement</th>
+														            <th>Relevé de compte</th>
+														            <th>Relevé IPR</th>
+														            <th>Actions</th>
+														          </tr>
+														        </thead>
+														      </table>
+														</div>
+													</div>  
+		                                        </div>
+		                                        <div class="tab-pane" id="portofolioTab" role="tabpanel">
+		                                        	<div style="text-align: right; margin-bottom: 10px;">
+		                                        		<div style="float: left;" class="btn-group btn-group-sm mt-2 shadow" role="group" aria-label="Basic example">
+		                                                    <button type="button" ng-click="checkAll('scenarioReminderPortofolioId');" class="btn btn-primary waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-marked-circle label-icon align-middle fs-12"></i> Tout cocher</button>
+		                                                    <button type="button" ng-click="uncheckAll('scenarioReminderPortofolioId');" class="btn btn-primary waves-effect waves-light shadow-none"><i class="mdi mdi-checkbox-blank-circle-outline label-icon align-middle fs-12"></i> Tout décocher</button>
+		                                                </div>
+		                                        		<a href="#" ng-click="deleteScenarioReminderPortofolios('scenarioReminderPortofolioId')" class="btn btn-danger btn-label waves-effect waves-light"><i class="mdi mdi-trash-can label-icon align-middle fs-16 me-2"></i> Supprimer</a>
+			                                        	<a href="#" ng-click="addScenarioReminderPortofolio()" class="btn btn-primary btn-label waves-effect waves-light"><i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Nouveau</a>
+			                                        	<a href="#" ng-click="" class="btn btn-primary" style="padding-top: 6px; padding-bottom: 6px;"><i class="mdi mdi-tune label-icon align-middle fs-16"></i></a>
+			                                       	</div>
+			                                        <div class="live-preview">
+			                                            <div class="table-responsive">
+			                                            	<table id="scenarioReminderPortofolioTable" ng-controller="scenarioReminderPortofolioTableController"
+																	th:attr="ng-init='init();'" class="table dt-responsive nowrap table-striped align-middle">
+														        <thead>
+														          <tr>
+														            <th></th>
+														            <th style="width: 5px"></th>
+														            <th>Nom du portefeuille</th>
+														            <th>Actions</th>
+														          </tr>
+														        </thead>
+														    </table>
+														</div>
+													</div>  
+		                                        </div>
+		                                    </div>
+		                                </div><!-- end card-body -->
+		                            </div><!-- end card -->
+		                        </div>
+		        </div>
+		    </div>
+		</div>
+		<div id="scenarioModal" class="modal fade" data-backdrop="true">
+	    <div class="modal-dialog">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	      	  <h5 class="modal-title" ng-if="addScenarioForm">Enregistrement d'un scénario</h5>
+	      	  <h5 class="modal-title" ng-if="editScenarioForm">Modification d'un scénario</h5>
+	      	  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	        </div>
+	        <form id="scenarioForm" name="scenarioForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+	          <div class="modal-body p-lg">
+	            <div class="row">
+				  <input type="hidden" ng-model="dto.id" />
+				  <div ng-class="'col-md-12'">
+				  	<p class="text-muted">Renseignez les champs obligatoires</p>
+				  	<div ng-if="scenarioRequiredError" class="alert alert-danger" role="alert">
+				  	  Veuillez remplir tous les champs obligatoires !
+				  	</div>
+				  	<div ng-if="scenarioTechnicalError" class="alert alert-danger" role="alert">
+				  	  Un problème est survenu ! Merci de contacter votre administrateur.
+				  	</div>
+				  	<div ng-if="scenarioSuccess" class="alert alert-success" role="alert">
+				  	  L'opération s'est effectuée avec succès !
+				  	</div>
+				  </div>
+				  <div ng-class="'col-md-12'">
+	            	<div class="form-group">
+	              	  <label><span class="asterik"> * </span> Nom</label>
+	                  <input type="text" class="form-control" name="name" ng-model="dto.name" required="required" />                        
+	                </div>
+	              </div>
+	              <div ng-class="'col-md-12'">
+	                <div class="form-group">
+	                  <label>Description</label>
+	                  <textarea class="form-control" name="description" ng-model="dto.description"></textarea>
+	                </div>
+				  </div>
+				  <div ng-class="'col-md-6'">
+	            	<div class="form-group">
+		            	<div class="form-check form-switch form-switch-md mb-3">
+		            	  <input class="form-check-input" id="flexSwitchEnabled" type="checkbox" role="switch" name="enabled" ng-model="dto.enabled" />
+	                      <label class="form-check-label" for="flexSwitchEnabled" style="position: relative; top: 1px">Scénario actif</label>
+		                </div>
+	                </div>
+				  </div>
+				  <div ng-class="'col-md-6'">
+				  	<div class="form-group">
+		            	<div class="form-check form-switch form-switch-md mb-3">
+		            	  <input class="form-check-input" id="flexSwitchDefault" type="checkbox" role="switch" name="def" ng-model="dto.def" />
+	                      <label class="form-check-label" for="flexSwitchDefault" style="position: relative; top: 1px">Scénario par défaut</label>
+		                </div>
+	                </div>
+				  </div>
+				</div>
+	          </div>
+	          <div class="modal-footer">
+		      	<a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="saveScenario()">
+			  		<i class="mdi mdi-content-save label-icon align-middle fs-16 me-2"></i> Enregistrer
+			    </a>
+		      </div>
+	        </form>
+	      </div><!-- /.modal-content -->
+	    </div>
+  	</div>
+ 	<div id="scenarioStageModal" class="modal fade" data-backdrop="true">
+	    <div class="modal-dialog">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	      	  <h5 class="modal-title" ng-if="addScenarioStageForm">Enregistrement d'une étape scénario</h5>
+	      	  <h5 class="modal-title" ng-if="editScenarioStageForm">Modification d'une étape scénario</h5>
+	      	  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	        </div>
+	        <form id="scenarioStageForm" name="scenarioStageForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+	          <div class="modal-body p-lg">
+	            <div class="row">
+				  <input type="hidden" ng-model="dto.id" />
+				  <div ng-class="'col-md-12'">
+				  	<p class="text-muted">Renseignez les champs obligatoires</p>
+				  	<div ng-if="scenarioStageRequiredError" class="alert alert-danger" role="alert">
+				  	  Veuillez remplir tous les champs obligatoires !
+				  	</div>
+				  	<div ng-if="scenarioStageTechnicalError" class="alert alert-danger" role="alert">
+				  	  Un problème est survenu ! Merci de contacter votre administrateur.
+				  	</div>
+				  	<div ng-if="scenarioStageSuccess" class="alert alert-success" role="alert">
+				  	  L'opération s'est effectuée avec succès !
+				  	</div>
+				  </div>
+				  <div ng-class="'col-md-6'">
+	            	<div class="form-group">
+	              	  <label><span class="asterik"> * </span> Nom</label>
+	                  <input type="text" class="form-control" name="name" ng-model="dto.scenarioStage.name" required="required" />                        
+	                </div>
+	              </div>
+	              <div ng-class="'col-md-6'">
+					<div class="form-group">
+					  <label>Action</label>
+					  <select class="form-select" name="action" ng-model="dto.scenarioStage.actionId"
+							ng-options="a.id as a.name for a in actions">
+					  </select>
+					</div>
+				  </div>
+				  <div ng-class="'col-md-6'">
+					<div class="form-group">
+					  <label>Nombre de jours</label>
+					  <input type="text" class="form-control" name="name" ng-model="dto.scenarioStage.daysNum" ng-disabled="buttonDisabled" />
+					</div>
+				  </div>
+				  <div ng-class="'col-md-6'">
+					<div class="form-group">
+					  <label>Echéance</label>
+					  <select class="form-select" id="deadline" name="deadline" ng-model="dto.scenarioStage.deadline"
+							ng-options="i.id as i.name for i in items" ng-change="enableDaysNum(dto.scenarioStage.deadline)">
+					  </select>
+					</div>
+				  </div>
+				  <div ng-class="'col-md-6'">
+					<div class="form-group">
+					  <label>Modèle</label>
+					  <select class="form-select" name="letterTemplate" ng-model="dto.scenarioStage.letterTemplateId"
+							ng-options="l.id as l.name for l in letterTemplates">
+					  </select>
+					</div>
+				  </div>
+				  <div ng-class="'col-md-6'">
+					<div class="form-group">
+					  <label>Type</label>
+					  <select class="form-select" name="actionType" ng-model="dto.scenarioStage.actionTypeId"
+							ng-options="a.id as a.name for a in actionTypes">
+					  </select>
+					</div>
+				  </div>
+				  <div ng-class="'col-md-6'">
+	            	<div class="form-group">
+		            	<div class="form-check form-switch form-switch-md mb-3">
+		            	  <input class="form-check-input" id="flexSwitchAccountStatement" type="checkbox" role="switch" name="accountStatement" ng-model="dto.scenarioStage.accountStatement" />
+	                      <label class="form-check-label" for="flexSwitchAccountStatement" style="position: relative; top: 1px">Associer Relevé de compte</label>
+		                </div>
+	                </div>
+				  </div>
+				  <div ng-class="'col-md-6'">
+				  	<div class="form-group">
+		            	<div class="form-check form-switch form-switch-md mb-3">
+		            	  <input class="form-check-input" id="flexSwitchLatePenaltyStatement" type="checkbox" role="switch" name="latePenaltyStatement" ng-model="dto.scenarioStage.latePenaltyStatement" />
+	                      <label class="form-check-label" for="flexSwitchLatePenaltyStatement" style="position: relative; top: 1px">Associer Relevé IPR</label>
+		                </div>
+	                </div>
+				  </div>
+				  <div ng-class="'col-md-12'">
+	                <div class="form-group">
+	                  <label>Description</label>
+	                  <textarea class="form-control" name="description" ng-model="dto.scenarioStage.description"></textarea>
+	                </div>
+				  </div>
+				</div>
+	          </div>
+	          <div class="modal-footer">
+		      	<a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="saveScenarioStage()">
+			  		<i class="mdi mdi-content-save label-icon align-middle fs-16 me-2"></i> Enregistrer
+			    </a>
+		      </div>
+	        </form>
+	      </div><!-- /.modal-content -->
+	    </div>
+  	</div>
+  	<div id="scenarioReminderPortofolioModal" class="modal fade" data-backdrop="true">
+	    <div class="modal-dialog">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	      	  <h5 class="modal-title" ng-if="addScenarioReminderPortofolioForm">Ajout d'un portefeuille</h5>
+	      	  <h5 class="modal-title" ng-if="editScenarioReminderPortofolioForm">Modification d'un portefeuille</h5>
+	      	  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	        </div>
+	        <form id="scenarioReminderPortofolioForm" name="scenarioReminderPortofolioForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+	          <div class="modal-body p-lg">
+	            <div class="row">
+				  <input type="hidden" ng-model="dto.id" />
+				  <div ng-class="'col-md-12'">
+				  	<p class="text-muted">Renseignez les champs obligatoires</p>
+				  	<div ng-if="scenarioReminderPortofolioRequiredError" class="alert alert-danger" role="alert">
+				  	  Veuillez remplir tous les champs obligatoires !
+				  	</div>
+				  	<div ng-if="scenarioReminderPortofolioTechnicalError" class="alert alert-danger" role="alert">
+				  	  Un problème est survenu ! Merci de contacter votre administrateur.
+				  	</div>
+				  	<div ng-if="scenarioReminderPortofolioSuccess" class="alert alert-success" role="alert">
+				  	  L'opération s'est effectuée avec succès !
+				  	</div>
+				  </div>
+				  <div ng-class="'col-md-12'">
+					<div class="form-group">
+					  <label>Portefeuille</label>
+					  <select class="form-select mb-3" name="reminderPortofolio" ng-model="dto.reminderPortofolio.id" ng-change="loadReminderPortofolio(dto.reminderPortofolio.id)"
+							ng-options="r.id as r.name for r in reminderPortofolios">
+					  </select>
+					</div>
+				  </div>
+				</div>
+	          </div>
+	          <div class="modal-footer">
+		      	<a href="#" class="btn btn-success btn-label waves-effect waves-light" ng-click="saveScenarioReminderPortofolio()">
+			  		<i class="mdi mdi-content-save label-icon align-middle fs-16 me-2"></i> Enregistrer
+			    </a>
+		      </div>
+	        </form>
+	      </div><!-- /.modal-content -->
+	    </div>
+  	</div>
+</div>
+<div layout:fragment="plugins" class="page-content">
+	<script th:src='@{/resources/js/reminder/scenario.js}'></script>
+</div>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+	<title>Demandes d'inscription externes</title>
+</head>
+<body ng-controller="externalRegistrationController" th:attr="ng-init='init();'"> 
+<div layout:fragment="content">
+		<div class="main-content">	
+			<div class="page-content">
+				<div class="container-fluid">
+					<div class="row">
+		            	<div class="col-12">
+		                	<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+		                    	<h4 class="mb-sm-0">Demandes d'inscription externes</h4>
+		                    	
+		                    	<div class="page-title-right">
+		                        	<ol class="breadcrumb m-0">
+		                            	<li class="breadcrumb-item font-weight-bold"><a th:href="@{/}">Tableau de bord</a></li>
+		                                <li class="breadcrumb-item active">Demandes d'inscription externes</li>
+		                            </ol>
+		                        </div>
+							</div>
+		                </div>
+		        	</div>
+		        	<div class="col-xxl-12">
+		                            <div class="card">
+		                                <div class="card-body">
+		                                    <div class="row mb-3">
+		                                        <div class="col-md-6">
+		                                            <h5 class="card-title mb-0">Liste des demandes d'inscription</h5>
+		                                            <p class="text-muted">Gérez les demandes d'inscription des utilisateurs externes</p>
+		                                        </div>
+		                                        <div class="col-md-6 text-end">
+		                                            <div class="btn-group btn-group-sm mt-2 shadow" role="group" aria-label="Actions">
+		                                                <button type="button" ng-click="refreshData()" class="btn btn-info waves-effect waves-light shadow-none">
+		                                                    <i class="mdi mdi-refresh label-icon align-middle fs-12"></i> Actualiser
+		                                                </button>
+		                                            </div>
+		                                        </div>
+		                                    </div>
+		                                    
+		                                    <!-- Statistiques -->
+		                                    <div class="row mb-4">
+		                                        <div class="col-xl-3 col-md-6">
+		                                            <div class="card mini-stats-wid">
+		                                                <div class="card-body">
+		                                                    <div class="d-flex">
+		                                                        <div class="flex-grow-1">
+		                                                            <p class="text-muted fw-medium">Total demandes</p>
+		                                                            <h4 class="mb-0">{{totalDemandes}}</h4>
+		                                                        </div>
+		                                                        <div class="flex-shrink-0 align-self-center">
+		                                                            <div class="mini-stat-icon avatar-sm rounded-circle bg-primary align-self-center overflow-hidden">
+		                                                                <span class="avatar-title">
+		                                                                    <i class="mdi mdi-account-multiple mdi-36px"></i>
+		                                                                </span>
+		                                                            </div>
+		                                                        </div>
+		                                                    </div>
+		                                                </div>
+		                                            </div>
+		                                        </div>
+		                                        <div class="col-xl-3 col-md-6">
+		                                            <div class="card mini-stats-wid">
+		                                                <div class="card-body">
+		                                                    <div class="d-flex">
+		                                                        <div class="flex-grow-1">
+		                                                            <p class="text-muted fw-medium">En attente</p>
+		                                                            <h4 class="mb-0">{{demandesEnAttente}}</h4>
+		                                                        </div>
+		                                                        <div class="flex-shrink-0 align-self-center">
+		                                                            <div class="mini-stat-icon avatar-sm rounded-circle bg-warning align-self-center overflow-hidden">
+		                                                                <span class="avatar-title">
+		                                                                    <i class="mdi mdi-clock mdi-36px"></i>
+		                                                                </span>
+		                                                            </div>
+		                                                        </div>
+		                                                    </div>
+		                                                </div>
+		                                            </div>
+		                                        </div>
+		                                        <div class="col-xl-3 col-md-6">
+		                                            <div class="card mini-stats-wid">
+		                                                <div class="card-body">
+		                                                    <div class="d-flex">
+		                                                        <div class="flex-grow-1">
+		                                                            <p class="text-muted fw-medium">Approuvées</p>
+		                                                            <h4 class="mb-0">{{demandesApprouvees}}</h4>
+		                                                        </div>
+		                                                        <div class="flex-shrink-0 align-self-center">
+		                                                            <div class="mini-stat-icon avatar-sm rounded-circle bg-success align-self-center overflow-hidden">
+		                                                                <span class="avatar-title">
+		                                                                    <i class="mdi mdi-check-circle mdi-36px"></i>
+		                                                                </span>
+		                                                            </div>
+		                                                        </div>
+		                                                    </div>
+		                                                </div>
+		                                            </div>
+		                                        </div>
+		                                        <div class="col-xl-3 col-md-6">
+		                                            <div class="card mini-stats-wid">
+		                                                <div class="card-body">
+		                                                    <div class="d-flex">
+		                                                        <div class="flex-grow-1">
+		                                                            <p class="text-muted fw-medium">Rejetées</p>
+		                                                            <h4 class="mb-0">{{demandesRejetees}}</h4>
+		                                                        </div>
+		                                                        <div class="flex-shrink-0 align-self-center">
+		                                                            <div class="mini-stat-icon avatar-sm rounded-circle bg-danger align-self-center overflow-hidden">
+		                                                                <span class="avatar-title">
+		                                                                    <i class="mdi mdi-close-circle mdi-36px"></i>
+		                                                                </span>
+		                                                            </div>
+		                                                        </div>
+		                                                    </div>
+		                                                </div>
+		                                            </div>
+		                                        </div>
+		                                    </div>
+		                                    
+		                                    <!-- Tableau des demandes -->
+		                                    <div class="live-preview">
+		                                        <div class="table-responsive">
+		                                            <table id="externalRegistrationTable" 
+		                                                   ng-controller="externalRegistrationTableController"
+		                                                   th:attr="ng-init='init();'" 
+		                                                   class="table dt-responsive nowrap table-striped align-middle">
+		                                                <thead>
+		                                                    <tr>
+		                                                        <th>ID</th>
+		                                                        <th>Prénom</th>
+		                                                        <th>Nom</th>
+		                                                        <th>Email</th>
+		                                                        <th>Institution</th>
+		                                                        <th>Statut</th>
+		                                                        <th>Date de demande</th>
+		                                                        <th>Actions</th>
+		                                                    </tr>
+		                                                </thead>
+		                                            </table>
+		                                        </div>
+		                                    </div>
+		                                </div><!-- end card-body -->
+		                            </div><!-- end card -->
+		                        </div>
+		        </div>
+		    </div>
+		</div>
+		
+		<!-- Modal de détails -->
+		<div id="detailsModal" class="modal fade" data-backdrop="true">
+		    <div class="modal-dialog modal-lg">
+		        <div class="modal-content" style="border: none">
+		            <div class="modal-header" style="background-color: #009DCA;">
+		                <h5 class="modal-title" style="color: #FFFFFF">Détails de la demande</h5>
+		                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		            </div>
+		            <div class="modal-body p-lg">
+		                <div class="row">
+		                    <div class="col-md-12">
+		                        <div ng-if="errorMessage" class="alert alert-danger" role="alert">
+		                            <strong>{{errorMessage}}</strong>
+		                        </div>
+		                        <div ng-if="successMessage" class="alert alert-success" role="alert">
+		                            <strong>{{successMessage}}</strong>
+		                        </div>
+		                    </div>
+		                </div>
+		                <div class="row">
+		                    <div class="col-md-6">
+		                        <div class="form-group mb-3">
+		                            <label class="form-label fw-semibold">Institution</label>
+		                            <p class="form-control-plaintext">{{dto.institution}}</p>
+		                        </div>
+		                    </div>
+		                    <div class="col-md-6">
+		                        <div class="form-group mb-3">
+		                            <label class="form-label fw-semibold">Type d'institution</label>
+		                            <p class="form-control-plaintext">{{dto.typeInstitution}}</p>
+		                        </div>
+		                    </div>
+		                    <div class="col-md-6">
+		                        <div class="form-group mb-3">
+		                            <label class="form-label fw-semibold">Nom complet</label>
+		                            <p class="form-control-plaintext">{{dto.prenom}} {{dto.nom}}</p>
+		                        </div>
+		                    </div>
+		                    <div class="col-md-6">
+		                        <div class="form-group mb-3">
+		                            <label class="form-label fw-semibold">Fonction</label>
+		                            <p class="form-control-plaintext">{{dto.fonction}}</p>
+		                        </div>
+		                    </div>
+		                    <div class="col-md-6">
+		                        <div class="form-group mb-3">
+		                            <label class="form-label fw-semibold">Email</label>
+		                            <p class="form-control-plaintext">{{dto.email}}</p>
+		                        </div>
+		                    </div>
+		                    <div class="col-md-6">
+		                        <div class="form-group mb-3">
+		                            <label class="form-label fw-semibold">Téléphone</label>
+		                            <p class="form-control-plaintext">{{dto.telephone}}</p>
+		                        </div>
+		                    </div>
+		                    <div class="col-md-6">
+		                        <div class="form-group mb-3">
+		                            <label class="form-label fw-semibold">Date de demande</label>
+		                            <p class="form-control-plaintext">{{dto.dateDemande | date:'dd/MM/yyyy HH:mm'}}</p>
+		                        </div>
+		                    </div>
+		                    <div class="col-md-6">
+		                        <div class="form-group mb-3">
+		                            <label class="form-label fw-semibold">Ville</label>
+		                            <p class="form-control-plaintext">{{dto.ville}}</p>
+		                        </div>
+		                    </div>
+		                    <div class="col-md-12">
+		                        <div class="form-group mb-3">
+		                            <label class="form-label fw-semibold">Adresse</label>
+		                            <p class="form-control-plaintext">{{dto.adresse}}</p>
+		                        </div>
+		                    </div>
+		                    <div class="col-md-12">
+		                        <div class="form-group mb-3">
+		                            <label class="form-label fw-semibold">Motif de la demande</label>
+		                            <p class="form-control-plaintext">{{dto.motifDemande}}</p>
+		                        </div>
+		                    </div>
+		                    <div class="col-md-12" ng-if="dto.statut === 'EN_ATTENTE'">
+		                        <div class="form-group mb-3">
+		                            <label class="form-label fw-semibold">Commentaire (optionnel)</label>
+		                            <textarea class="form-control" ng-model="commentaire" rows="3" placeholder="Ajoutez un commentaire pour l'approbation ou le rejet..."></textarea>
+		                        </div>
+		                    </div>
+		                </div>
+		            </div>
+		            <div class="modal-footer" ng-if="dto.statut === 'EN_ATTENTE'">
+		                <button type="button" class="btn btn-success btn-label waves-effect waves-light" ng-click="approveRegistration(dto.id)">
+		                    <i class="mdi mdi-check label-icon align-middle fs-16 me-2"></i> Approuver
+		                </button>
+		                <button type="button" class="btn btn-danger btn-label waves-effect waves-light" ng-click="rejectRegistration(dto.id)">
+		                    <i class="mdi mdi-close label-icon align-middle fs-16 me-2"></i> Rejeter
+		                </button>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+		
+		<!-- Modal de confirmation d'approbation -->
+		<div class="modal fade zoomIn" id="approveModal" tabindex="-1" aria-hidden="true">
+		    <div class="modal-dialog modal-dialog-centered">
+		        <div class="modal-content">
+		            <div class="modal-body">
+		                <div class="mt-2 text-center">
+		                    <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#25a244,secondary:#25a244" style="width:100px;height:100px"></lord-icon>
+		                    <div class="pt-2 fs-15 mx-4 mx-sm-1">
+		                        <h5><strong>Confirmer l'approbation</strong></h5>
+		                        <p class="text-muted mx-4 mb-0">Êtes-vous sûr de vouloir approuver cette demande d'inscription ? Un email de confirmation sera envoyé à l'utilisateur.</p>
+		                    </div>
+		                </div>
+		                <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+		                    <button type="button" class="btn btn-light btn-label waves-effect waves-light" data-bs-dismiss="modal">
+		                        <i class="mdi mdi-cancel label-icon align-middle fs-16"></i> Annuler
+		                    </button>
+		                    <button type="button" class="btn btn-success btn-label waves-effect waves-light" ng-click="confirmApprove()">
+		                        <i class="mdi mdi-check label-icon align-middle fs-16"></i> Confirmer
+		                    </button>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+		
+		<!-- Modal de confirmation de rejet -->
+		<div class="modal fade zoomIn" id="rejectModal" tabindex="-1" aria-hidden="true">
+		    <div class="modal-dialog modal-dialog-centered">
+		        <div class="modal-content">
+		            <div class="modal-body">
+		                <div class="mt-2 text-center">
+		                    <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#f06548,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
+		                    <div class="pt-2 fs-15 mx-4 mx-sm-1">
+		                        <h5><strong>Confirmer le rejet</strong></h5>
+		                        <p class="text-muted mx-4 mb-0">Êtes-vous sûr de vouloir rejeter cette demande d'inscription ? Un email de notification sera envoyé à l'utilisateur.</p>
+		                    </div>
+		                </div>
+		                <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+		                    <button type="button" class="btn btn-light btn-label waves-effect waves-light" data-bs-dismiss="modal">
+		                        <i class="mdi mdi-cancel label-icon align-middle fs-16"></i> Annuler
+		                    </button>
+		                    <button type="button" class="btn btn-danger btn-label waves-effect waves-light" ng-click="confirmReject()">
+		                        <i class="mdi mdi-close label-icon align-middle fs-16"></i> Confirmer
+		                    </button>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+	</div>
+	
+	<div layout:fragment="plugins" class="page-content">
+		<script th:src='@{/resources/js/administration/externalRegistration/externalRegistration.js}'></script>
+	</div>
+</body>
+</html> 

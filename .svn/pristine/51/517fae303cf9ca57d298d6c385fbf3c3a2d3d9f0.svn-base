@@ -1,0 +1,44 @@
+package ma.brainit.aman.client.dto.converters;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import ma.brainit.aman.client.dto.CourrierClassiqueDTO;
+import ma.brainit.aman.client.model.CourrierClassique;
+import ma.brainit.base.BaseConverter;
+
+@Service("courrierClassiqueDTOConverter")
+public class CourrierClassiqueDTOConverter extends BaseConverter<CourrierClassique,CourrierClassiqueDTO>{
+
+	@Override
+	@Transactional
+	public List<CourrierClassiqueDTO> convertFromDataBeanList(List<CourrierClassique> list) {
+		List<CourrierClassiqueDTO> dtoList = new ArrayList<CourrierClassiqueDTO>();
+		for(CourrierClassique e:list){
+			CourrierClassiqueDTO dto = this.convertFromDataBean(e);
+			dtoList.add(dto);
+		}
+		return dtoList;
+	}
+
+	@Override
+	public CourrierClassique convertFromDTO(CourrierClassiqueDTO dto) {
+		CourrierClassique entity = new CourrierClassique();
+		entity = super.convertDTOToEntity(dto, entity);
+		return entity;
+	}
+
+	public CourrierClassique convertFromDTO(CourrierClassique entity,CourrierClassiqueDTO dto) {
+		return super.convertDTOToEntity(dto, entity);
+	}
+
+	@Override
+	public CourrierClassiqueDTO convertFromDataBean(CourrierClassique entity) {
+		CourrierClassiqueDTO dto =  super.convertEntityToDTO(entity);
+		return dto;
+	}
+
+}

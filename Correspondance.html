@@ -1,0 +1,1162 @@
+
+<!DOCTYPE html>
+<HTML LANG="en-US">
+
+<HEAD>
+
+
+
+<META http-equiv="content-type" content="text/html; charset=UTF-8">
+<script>var csThemeSupportPath = "/img/style/images/";</script>
+<LINK REL="stylesheet" TYPE="text/css" HREF="/img/style/screen.css?v=2347.0" id="primaryCSS">
+<LINK REL="stylesheet" TYPE="text/css" HREF="/img/style/csform.css?v=2347.0">
+<link rel="shortcut icon" href="http://localhost/img/favicon.ico" type="image/x-icon">
+<STYLE id="userStyles">
+ .browseRow1 { background-color: #FFFFFF;  } 
+ .browseRow2 { background-color: #FFFFFF;  } 
+</STYLE>
+[LL_HEAD_RESOURCES /]
+<TITLE>Form</TITLE>
+</HEAD>
+
+<SCRIPT SRC="[LL_SUPPORTPATH /]core/ajax_dhtml_util.js"></SCRIPT>
+<SCRIPT SRC="[LL_SUPPORTPATH /]webform/formssupport.js"></SCRIPT>
+<BODY Class="pageBody">
+<FORM NAME="myForm" ACTION="[LL_CGIPATH /]" ENCTYPE="multipart/form-data" METHOD="POST">
+
+<INPUT TYPE="hidden" NAME="func" VALUE="[LL_FUNC /]">
+<INPUT TYPE="hidden" NAME="LL_FUNC_VALUES" VALUE="[LL_FUNC_VALUES /]">
+<INPUT TYPE="hidden" NAME="LL_AttrFieldName" VALUE="">
+<INPUT TYPE="hidden" NAME="LL_AttrFieldIndex" VALUE="">
+<INPUT TYPE="hidden" NAME="LL_WFATTURL" VALUE="[LL_WFATTURL /]">
+
+<TABLE CLASS="tightTable cs-pattern" STYLE="background-color: #FFFFFF;">
+<TR>
+<TD STYLE="height: 100%;" CLASS="pageBody cs-valign-top">
+
+<table ALIGN="CENTER" class="tightTable">
+<TR>
+<TD CLASS="cs-valign-top" style="padding:15px;">
+
+<TABLE CLASS="tightTable">
+<TR>
+<TD CLASS="tblBackground">
+
+<table class="tightTable" style="border-collapse:separate;border-spacing:1px;">
+
+<TR>
+<TD STYLE="width: 100%;" CLASS="tblBackground">
+<TABLE CLASS="tightTable">
+
+<TR>
+<TD CLASS="tblForeground">
+<TABLE CLASS="tightTable">
+<TR>
+<TD CLASS="label cs-valign-middle">
+&nbsp;Référence courrier:
+&nbsp;
+</TD>
+<TD CLASS="nowrap">
+<INPUT CLASS="valueEditable" TYPE="text" NAME="_1_1_2_1"	TITLE="Référence courrier" ID="_1_1_2_1" VALUE="[LL_FormTag_1_1_2_1 /]" SIZE="32" MAXLENGTH="32" ONCHANGE="markDirty();">
+
+</TD>
+</TR>
+<TR CLASS="horizontalCellDivider" >
+<TD CLASS="labelHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/spacer.gif" WIDTH="1" BORDER="0"></TD>
+<TD CLASS="valueHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/tbl-divider-hor.gif" WIDTH="3" BORDER="0"></TD>
+</TR>
+<TR>
+<TD CLASS="label cs-valign-middle">
+&nbsp;Référence expéditeur:
+&nbsp;
+</TD>
+<TD CLASS="nowrap">
+<INPUT CLASS="valueEditable" TYPE="text" NAME="_1_1_3_1"	TITLE="Référence expéditeur" ID="_1_1_3_1" VALUE="[LL_FormTag_1_1_3_1 /]" SIZE="32" MAXLENGTH="32" ONCHANGE="markDirty();">
+
+</TD>
+</TR>
+<TR CLASS="horizontalCellDivider" >
+<TD CLASS="labelHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/spacer.gif" WIDTH="1" BORDER="0"></TD>
+<TD CLASS="valueHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/tbl-divider-hor.gif" WIDTH="3" BORDER="0"></TD>
+</TR>
+<TR>
+<TD CLASS="label cs-valign-middle">
+&nbsp;Expéditeur:
+&nbsp;
+</TD>
+<TD CLASS="nowrap">
+<SCRIPT>
+
+function stringSelect_1_1_4_1()
+{
+
+var		w;
+var		url;
+
+url = "/otcs/cs.exe?func=attrtable.StringSelectDialog"
+url = url + "&formname=myForm";
+url = url + "&Field=_1_1_4_1";
+url = url + "&AttrID=4";
+url = url + "&IsForm=true";
+url = url + "&mapID=0";
+url = url + "&workID=0";
+url = url + "&subworkID=0";
+url = url + "&objID=43313";
+url = url + "&VerNum=0";
+url = url + "&CacheID=0";
+url = url + "&AttrValues=";
+url = url + "&attrHandler=form";
+
+w = window.open( url ,"attrTableLookup" , "height=340,width=800,scrollbars=yes,resizable=yes,menubar=no,toolbar=no,status=yes" );
+if ( w.focus ) {w.focus()}
+}
+
+</SCRIPT>
+
+<INPUT CLASS="valueEditable" TYPE="text" NAME="_1_1_4_1"
+VALUE="[LL_FormTag_1_1_4_1 /]" SIZE="50" TABINDEX="-1" ONFOCUS="this.blur()">
+
+<A HREF="javascript:void(0);" onClick="stringSelect_1_1_4_1()">
+<IMG SRC="/img/webattribute/stringselect.gif"
+ALT="Select Expéditeur"
+TITLE="Select Expéditeur"
+BORDER="0">
+</A>
+</TD>
+</TR>
+<TR CLASS="horizontalCellDivider" >
+<TD CLASS="labelHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/spacer.gif" WIDTH="1" BORDER="0"></TD>
+<TD CLASS="valueHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/tbl-divider-hor.gif" WIDTH="3" BORDER="0"></TD>
+</TR>
+<TR>
+<TD CLASS="label cs-valign-middle">
+&nbsp;Date de réception:
+&nbsp;
+</TD>
+<TD CLASS="nowrap">
+<!-- File: datefield.html (Begin - _1_1_5_1) -->
+
+<input type="hidden" id="_1_1_5_1" name="_1_1_5_1" value="[LL_FormTag_1_1_5_1 /]" />
+<input type="hidden" name="_1_1_5_1_dirtyFlag" value="0" />
+
+<script>
+
+$(window ).on("load", function(){ $( "input:reset" ).on("click", function(){
+_1_1_5_1_resetDate( this.form );
+});
+});
+
+
+
+
+function _1_1_5_1_getDate( form )
+{
+
+
+var		retDate = null;
+var		oscriptDateString = form._1_1_5_1.value;
+
+if ( oscriptDateString != '?' )
+{
+var		temp = oscriptDateString.split( "/" );
+var		temp2 = temp[ 3 ].split( ":" );
+
+var		yearX = parseInt( temp[ 1 ] );
+var		monthX = parseInt( temp[ 2 ] ) - 1;
+var		dayX = parseInt( temp2[ 0 ] );
+var		hourX = parseInt( temp2[ 1 ] );
+var		minuteX = parseInt( temp2[ 2 ] );
+var		secondX = parseInt( temp2[ 3 ] );
+
+retDate = new Date( yearX, monthX, dayX, hourX, minuteX, secondX );
+}
+
+return retDate;
+}
+
+
+
+
+function __1_1_5_1_updateMinuteHour( form, newDate )
+{
+form._1_1_5_1_hour.value = newDate.getHours();
+form._1_1_5_1_minute.value = newDate.getMinutes();
+form._1_1_5_1_second.value = newDate.getSeconds();
+}
+
+</script>
+
+<script>
+
+
+
+
+
+var __1_1_5_1_jsDate = new Date( "01/13/2025" );
+var doClear = false; // global used by _clearDate to indicate to _update() a clear is needed.
+
+function __1_1_5_1_update( changedField, form, newDate )
+{
+var		t;
+var 	fieldType;
+var		regExp;
+
+form._1_1_5_1_dirtyFlag.value = '1';
+
+if ( null == changedField )
+{
+t = form;
+}
+else
+{
+t = changedField.form;
+}
+
+
+
+if ( ( null != changedField ) && ( changedField.selectedIndex == 0 ) )
+{
+__1_1_5_1_noSelection( t )
+}
+else
+{
+var		year;
+var		theDate = newDate;
+
+
+if ( newDate == null )
+{
+theDate = new Date( 2025, 0, 13, 0, 0, 0  );
+}
+
+
+
+
+if ( form._datepicker__1_1_5_1.value == "" )
+{
+__1_1_5_1_jsDate = new Date( "01/13/2025" );
+form._datepicker__1_1_5_1.value = "01/13/2025";
+__1_1_5_1_scriptDate( form, theDate.getFullYear(), theDate.getMonth() + 1, theDate.getDate() );
+form._1_1_5_1.value += '0:0:0';
+}
+
+__1_1_5_1_updateMinuteHour( t, theDate );
+__1_1_5_1__constructOScriptDate( t );
+}
+
+if ( typeof( window.markDirty ) != "undefined" )
+{
+markDirty();
+}
+
+doClear = false;
+}
+
+function __1_1_5_1__constructOScriptDate( form )
+{
+var jsDate = __1_1_5_1_jsDate;
+
+__1_1_5_1_constructDate( form, jsDate )
+}
+
+function __1_1_5_1_constructTime( form )
+{
+var timeArray = new Array("0","0","0");
+
+return timeArray;
+
+}
+
+function __1_1_5_1_constructDate( form, jsDate )
+{
+var		timeSegment;
+
+__1_1_5_1_scriptDate( form, jsDate.getFullYear(), jsDate.getMonth() + 1, jsDate.getDate() );
+
+timeArray = __1_1_5_1_constructTime( form );
+
+
+form._1_1_5_1.value = form._1_1_5_1.value + timeArray[0] + ':' + timeArray[1] + ':' + timeArray[2];
+
+
+if ( timeArray[0] > -1 )
+{
+__1_1_5_1_jsDate = new Date( jsDate.getFullYear(), jsDate.getMonth(), jsDate.getDate(), timeArray[0], timeArray[1], timeArray[2], 0);
+}
+else
+{
+__1_1_5_1_jsDate = jsDate
+}
+
+form._1_1_5_1_dirtyFlag.value = '1';
+
+}
+
+function __1_1_5_1_scriptDate( form, year, month, day )
+{
+var 	val;
+
+form._1_1_5_1.value = 'D/' + year + '/';
+form._1_1_5_1.value = form._1_1_5_1.value + month + '/';
+form._1_1_5_1.value = form._1_1_5_1.value + day + ':';
+}
+
+function _1_1_5_1_clearDate( form )
+{
+doClear = true;
+
+$( "#_datepicker__1_1_5_1" ).datepicker( "setDate", "" );
+form._datepicker__1_1_5_1.value = "";
+document.getElementsByName("_1_1_5_1")[0].value = "";
+
+document.getElementsByName("_1_1_5_1_dirtyFlag")[0].value = "1";
+
+if ( typeof( window.markDirty ) != "undefined" )
+{
+markDirty();
+}
+
+form._1_1_5_1.value = "?";
+}
+
+function __1_1_5_1_noSelection( form )
+{
+_1_1_5_1_clearDate( form );
+
+if ( typeof( form._1_1_5_1_hour ) != "undefined" )
+{
+form._1_1_5_1_hour.selectedIndex = 0;
+}
+
+if ( typeof( form._1_1_5_1_minute ) != "undefined" )
+{
+form._1_1_5_1_minute.selectedIndex = 0;
+}
+
+if ( typeof( form._1_1_5_1_second ) != "undefined" )
+{
+form._1_1_5_1_second.selectedIndex = 0;
+}
+
+if ( typeof( form._1_1_5_1_ampm ) != "undefined" )
+{
+form._1_1_5_1_ampm.selectedIndex = 0;
+}
+form._1_1_5_1.value = "?";
+}
+
+
+
+
+function _1_1_5_1_changeTo( newDate, form )
+{
+$( "#_datepicker__1_1_5_1" ).datepicker( "setDate", newDate );
+
+if ( newDate != null )
+{
+__1_1_5_1_update( null , form, newDate );
+}
+}
+
+$(function() {
+
+monthNamesShortArray = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+monthNamesArray = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+$( "#_datepicker__1_1_5_1" ).datepicker({
+numberOfMonths: 2,
+showButtonPanel: false,
+showAnim: "show",
+dateFormat: "mm/dd/yy",
+showOn: "button",
+changeMonth:true,
+changeYear:true,
+buttonImage: "/img/datepicker.gif",
+buttonImageOnly: true,
+buttonText: "Select a date",
+autoSize: true,
+minDate: new Date(0, 0, 1),
+maxDate: new Date(9999, 11, 31),
+monthNamesShort: monthNamesShortArray,
+monthNames: monthNamesArray,
+dayNamesMin: ["Su","Mo","Tu","We","Th","Fr","Sa"],
+dayNamesShort: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
+dayNames: ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+prevText: 'Previous',
+nextText: 'Next',
+beforeShow: function() {
+setTimeout(function(){
+$('.ui-datepicker').css('z-index', 1000);
+$('.ui-datepicker-year').css('padding', '3px 6px');
+$('.ui-datepicker-month').css('padding', '3px 6px');
+}, 0);
+},
+onChangeMonthYear: function() {
+setTimeout(function() {
+$('.ui-datepicker-year').css('padding', '3px 6px');
+$('.ui-datepicker-month').css('padding', '3px 6px');
+}, 0);
+},
+});
+
+var datePicker = new aria.DatePicker( '_datepicker__1_1_5_1', monthNamesArray, monthNamesShortArray );
+});
+
+function _1_1_5_1_resetDate( form )
+{
+$('#_1_1_5_1').val('[LL_FormTag_1_1_5_1 /]');
+}
+</script>
+
+<div id="_datepicker__1_1_5_1_labelledBy" style="display:none;">Date Field</div>
+<input readonly class="valueEditable" type="text" name="_datepicker__1_1_5_1" id="_datepicker__1_1_5_1" value ="" onChange='__1_1_5_1_constructDate( this.form, $( "#_datepicker__1_1_5_1" ).datepicker( "getDate") );__1_1_5_1_update(this, this.form, null);' style="position: relative; z-index: 4;" aria-labelledby="_datepicker__1_1_5_1_labelledBy">&nbsp;
+
+<input type="hidden" name="_1_1_5_1_hour" value="13" />
+<input type="hidden" name="_1_1_5_1_minute" value="47" />
+<input type="hidden" name="_1_1_5_1_second" value="0" />
+<input type="hidden" name="_1_1_5_1_ampm" value="0" />
+<input class="button" type="BUTTON" value="Clear"  name="_clearDate__1_1_5_1" id="_clearDate__1_1_5_1" title="Clear Date" onclick='_1_1_5_1_clearDate( this.form );' />
+<!-- End File: datefield.html (End - _1_1_5_1) -->
+</TD>
+</TR>
+<TR CLASS="horizontalCellDivider" >
+<TD CLASS="labelHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/spacer.gif" WIDTH="1" BORDER="0"></TD>
+<TD CLASS="valueHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/tbl-divider-hor.gif" WIDTH="3" BORDER="0"></TD>
+</TR>
+<TR>
+<TD CLASS="label cs-valign-middle">
+&nbsp;Date d'enregistrement:
+&nbsp;
+</TD>
+<TD CLASS="nowrap">
+<!-- File: datefield.html (Begin - _1_1_6_1) -->
+
+<input type="hidden" id="_1_1_6_1" name="_1_1_6_1" value="[LL_FormTag_1_1_6_1 /]" />
+<input type="hidden" name="_1_1_6_1_dirtyFlag" value="0" />
+
+<script>
+
+$(window ).on("load", function(){ $( "input:reset" ).on("click", function(){
+_1_1_6_1_resetDate( this.form );
+});
+});
+
+
+
+
+function _1_1_6_1_getDate( form )
+{
+
+
+var		retDate = null;
+var		oscriptDateString = form._1_1_6_1.value;
+
+if ( oscriptDateString != '?' )
+{
+var		temp = oscriptDateString.split( "/" );
+var		temp2 = temp[ 3 ].split( ":" );
+
+var		yearX = parseInt( temp[ 1 ] );
+var		monthX = parseInt( temp[ 2 ] ) - 1;
+var		dayX = parseInt( temp2[ 0 ] );
+var		hourX = parseInt( temp2[ 1 ] );
+var		minuteX = parseInt( temp2[ 2 ] );
+var		secondX = parseInt( temp2[ 3 ] );
+
+retDate = new Date( yearX, monthX, dayX, hourX, minuteX, secondX );
+}
+
+return retDate;
+}
+
+
+
+
+function __1_1_6_1_updateMinuteHour( form, newDate )
+{
+form._1_1_6_1_hour.value = newDate.getHours();
+form._1_1_6_1_minute.value = newDate.getMinutes();
+form._1_1_6_1_second.value = newDate.getSeconds();
+}
+
+</script>
+
+<script>
+
+
+
+
+
+var __1_1_6_1_jsDate = new Date( "01/13/2025" );
+var doClear = false; // global used by _clearDate to indicate to _update() a clear is needed.
+
+function __1_1_6_1_update( changedField, form, newDate )
+{
+var		t;
+var 	fieldType;
+var		regExp;
+
+form._1_1_6_1_dirtyFlag.value = '1';
+
+if ( null == changedField )
+{
+t = form;
+}
+else
+{
+t = changedField.form;
+}
+
+
+
+if ( ( null != changedField ) && ( changedField.selectedIndex == 0 ) )
+{
+__1_1_6_1_noSelection( t )
+}
+else
+{
+var		year;
+var		theDate = newDate;
+
+
+if ( newDate == null )
+{
+theDate = new Date( 2025, 0, 13, 0, 0, 0  );
+}
+
+
+
+
+if ( form._datepicker__1_1_6_1.value == "" )
+{
+__1_1_6_1_jsDate = new Date( "01/13/2025" );
+form._datepicker__1_1_6_1.value = "01/13/2025";
+__1_1_6_1_scriptDate( form, theDate.getFullYear(), theDate.getMonth() + 1, theDate.getDate() );
+form._1_1_6_1.value += '0:0:0';
+}
+
+__1_1_6_1_updateMinuteHour( t, theDate );
+__1_1_6_1__constructOScriptDate( t );
+}
+
+if ( typeof( window.markDirty ) != "undefined" )
+{
+markDirty();
+}
+
+doClear = false;
+}
+
+function __1_1_6_1__constructOScriptDate( form )
+{
+var jsDate = __1_1_6_1_jsDate;
+
+__1_1_6_1_constructDate( form, jsDate )
+}
+
+function __1_1_6_1_constructTime( form )
+{
+var timeArray = new Array("0","0","0");
+
+return timeArray;
+
+}
+
+function __1_1_6_1_constructDate( form, jsDate )
+{
+var		timeSegment;
+
+__1_1_6_1_scriptDate( form, jsDate.getFullYear(), jsDate.getMonth() + 1, jsDate.getDate() );
+
+timeArray = __1_1_6_1_constructTime( form );
+
+
+form._1_1_6_1.value = form._1_1_6_1.value + timeArray[0] + ':' + timeArray[1] + ':' + timeArray[2];
+
+
+if ( timeArray[0] > -1 )
+{
+__1_1_6_1_jsDate = new Date( jsDate.getFullYear(), jsDate.getMonth(), jsDate.getDate(), timeArray[0], timeArray[1], timeArray[2], 0);
+}
+else
+{
+__1_1_6_1_jsDate = jsDate
+}
+
+form._1_1_6_1_dirtyFlag.value = '1';
+
+}
+
+function __1_1_6_1_scriptDate( form, year, month, day )
+{
+var 	val;
+
+form._1_1_6_1.value = 'D/' + year + '/';
+form._1_1_6_1.value = form._1_1_6_1.value + month + '/';
+form._1_1_6_1.value = form._1_1_6_1.value + day + ':';
+}
+
+function _1_1_6_1_clearDate( form )
+{
+doClear = true;
+
+$( "#_datepicker__1_1_6_1" ).datepicker( "setDate", "" );
+form._datepicker__1_1_6_1.value = "";
+document.getElementsByName("_1_1_6_1")[0].value = "";
+
+document.getElementsByName("_1_1_6_1_dirtyFlag")[0].value = "1";
+
+if ( typeof( window.markDirty ) != "undefined" )
+{
+markDirty();
+}
+
+form._1_1_6_1.value = "?";
+}
+
+function __1_1_6_1_noSelection( form )
+{
+_1_1_6_1_clearDate( form );
+
+if ( typeof( form._1_1_6_1_hour ) != "undefined" )
+{
+form._1_1_6_1_hour.selectedIndex = 0;
+}
+
+if ( typeof( form._1_1_6_1_minute ) != "undefined" )
+{
+form._1_1_6_1_minute.selectedIndex = 0;
+}
+
+if ( typeof( form._1_1_6_1_second ) != "undefined" )
+{
+form._1_1_6_1_second.selectedIndex = 0;
+}
+
+if ( typeof( form._1_1_6_1_ampm ) != "undefined" )
+{
+form._1_1_6_1_ampm.selectedIndex = 0;
+}
+form._1_1_6_1.value = "?";
+}
+
+
+
+
+function _1_1_6_1_changeTo( newDate, form )
+{
+$( "#_datepicker__1_1_6_1" ).datepicker( "setDate", newDate );
+
+if ( newDate != null )
+{
+__1_1_6_1_update( null , form, newDate );
+}
+}
+
+$(function() {
+
+monthNamesShortArray = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+monthNamesArray = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+$( "#_datepicker__1_1_6_1" ).datepicker({
+numberOfMonths: 2,
+showButtonPanel: false,
+showAnim: "show",
+dateFormat: "mm/dd/yy",
+showOn: "button",
+changeMonth:true,
+changeYear:true,
+buttonImage: "/img/datepicker.gif",
+buttonImageOnly: true,
+buttonText: "Select a date",
+autoSize: true,
+minDate: new Date(0, 0, 1),
+maxDate: new Date(9999, 11, 31),
+monthNamesShort: monthNamesShortArray,
+monthNames: monthNamesArray,
+dayNamesMin: ["Su","Mo","Tu","We","Th","Fr","Sa"],
+dayNamesShort: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
+dayNames: ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+prevText: 'Previous',
+nextText: 'Next',
+beforeShow: function() {
+setTimeout(function(){
+$('.ui-datepicker').css('z-index', 1000);
+$('.ui-datepicker-year').css('padding', '3px 6px');
+$('.ui-datepicker-month').css('padding', '3px 6px');
+}, 0);
+},
+onChangeMonthYear: function() {
+setTimeout(function() {
+$('.ui-datepicker-year').css('padding', '3px 6px');
+$('.ui-datepicker-month').css('padding', '3px 6px');
+}, 0);
+},
+});
+
+var datePicker = new aria.DatePicker( '_datepicker__1_1_6_1', monthNamesArray, monthNamesShortArray );
+});
+
+function _1_1_6_1_resetDate( form )
+{
+$('#_1_1_6_1').val('[LL_FormTag_1_1_6_1 /]');
+}
+</script>
+
+<div id="_datepicker__1_1_6_1_labelledBy" style="display:none;">Date Field</div>
+<input readonly class="valueEditable" type="text" name="_datepicker__1_1_6_1" id="_datepicker__1_1_6_1" value ="" onChange='__1_1_6_1_constructDate( this.form, $( "#_datepicker__1_1_6_1" ).datepicker( "getDate") );__1_1_6_1_update(this, this.form, null);' style="position: relative; z-index: 4;" aria-labelledby="_datepicker__1_1_6_1_labelledBy">&nbsp;
+
+<input type="hidden" name="_1_1_6_1_hour" value="13" />
+<input type="hidden" name="_1_1_6_1_minute" value="47" />
+<input type="hidden" name="_1_1_6_1_second" value="0" />
+<input type="hidden" name="_1_1_6_1_ampm" value="0" />
+<input class="button" type="BUTTON" value="Clear"  name="_clearDate__1_1_6_1" id="_clearDate__1_1_6_1" title="Clear Date" onclick='_1_1_6_1_clearDate( this.form );' />
+<!-- End File: datefield.html (End - _1_1_6_1) -->
+</TD>
+</TR>
+<TR CLASS="horizontalCellDivider" >
+<TD CLASS="labelHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/spacer.gif" WIDTH="1" BORDER="0"></TD>
+<TD CLASS="valueHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/tbl-divider-hor.gif" WIDTH="3" BORDER="0"></TD>
+</TR>
+<TR>
+<TD CLASS="label cs-valign-top">
+&nbsp;Objet:
+&nbsp;
+</TD>
+<TD CLASS="nowrap">
+<TEXTAREA CLASS="valueEditable multiline" ID="_1_1_7_1" NAME="_1_1_7_1" TITLE="Objet" WRAP="soft" ROWS="3" COLS="32"  ONCHANGE="markDirty();">[LL_FormTag_1_1_7_1 /]</TEXTAREA>
+
+</TD>
+</TR>
+<TR CLASS="horizontalCellDivider" >
+<TD CLASS="labelHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/spacer.gif" WIDTH="1" BORDER="0"></TD>
+<TD CLASS="valueHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/tbl-divider-hor.gif" WIDTH="3" BORDER="0"></TD>
+</TR>
+<TR>
+<TD CLASS="label cs-valign-middle">
+&nbsp;Enregistrement:
+&nbsp;
+</TD>
+<TD CLASS="nowrap">
+<SCRIPT>
+
+function stringSelect_1_1_15_1()
+{
+
+var		w;
+var		url;
+
+url = "/otcs/cs.exe?func=attrtable.StringSelectDialog"
+url = url + "&formname=myForm";
+url = url + "&Field=_1_1_15_1";
+url = url + "&AttrID=15";
+url = url + "&IsForm=true";
+url = url + "&mapID=0";
+url = url + "&workID=0";
+url = url + "&subworkID=0";
+url = url + "&objID=43313";
+url = url + "&VerNum=0";
+url = url + "&CacheID=0";
+url = url + "&AttrValues=";
+url = url + "&attrHandler=form";
+
+w = window.open( url ,"attrTableLookup" , "height=340,width=800,scrollbars=yes,resizable=yes,menubar=no,toolbar=no,status=yes" );
+if ( w.focus ) {w.focus()}
+}
+
+</SCRIPT>
+
+<INPUT CLASS="valueEditable" TYPE="text" NAME="_1_1_15_1"
+VALUE="[LL_FormTag_1_1_15_1 /]" SIZE="32" TABINDEX="-1" ONFOCUS="this.blur()">
+
+<A HREF="javascript:void(0);" onClick="stringSelect_1_1_15_1()">
+<IMG SRC="/img/webattribute/stringselect.gif"
+ALT="Select Enregistrement"
+TITLE="Select Enregistrement"
+BORDER="0">
+</A>
+</TD>
+</TR>
+<TR CLASS="horizontalCellDivider" >
+<TD CLASS="labelHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/spacer.gif" WIDTH="1" BORDER="0"></TD>
+<TD CLASS="valueHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/tbl-divider-hor.gif" WIDTH="3" BORDER="0"></TD>
+</TR>
+<TR>
+<TD CLASS="label cs-valign-middle">
+&nbsp;Traitement SP:
+&nbsp;
+</TD>
+<TD CLASS="nowrap">
+<SCRIPT>
+
+function stringSelect_1_1_8_1()
+{
+
+var		w;
+var		url;
+
+url = "/otcs/cs.exe?func=attrtable.StringSelectDialog"
+url = url + "&formname=myForm";
+url = url + "&Field=_1_1_8_1";
+url = url + "&AttrID=8";
+url = url + "&IsForm=true";
+url = url + "&mapID=0";
+url = url + "&workID=0";
+url = url + "&subworkID=0";
+url = url + "&objID=43313";
+url = url + "&VerNum=0";
+url = url + "&CacheID=0";
+url = url + "&AttrValues=";
+url = url + "&attrHandler=form";
+
+w = window.open( url ,"attrTableLookup" , "height=340,width=800,scrollbars=yes,resizable=yes,menubar=no,toolbar=no,status=yes" );
+if ( w.focus ) {w.focus()}
+}
+
+</SCRIPT>
+
+<INPUT CLASS="valueEditable" TYPE="text" NAME="_1_1_8_1"
+VALUE="[LL_FormTag_1_1_8_1 /]" SIZE="32" TABINDEX="-1" ONFOCUS="this.blur()">
+
+<A HREF="javascript:void(0);" onClick="stringSelect_1_1_8_1()">
+<IMG SRC="/img/webattribute/stringselect.gif"
+ALT="Select Traitement SP"
+TITLE="Select Traitement SP"
+BORDER="0">
+</A>
+</TD>
+</TR>
+<TR CLASS="horizontalCellDivider" >
+<TD CLASS="labelHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/spacer.gif" WIDTH="1" BORDER="0"></TD>
+<TD CLASS="valueHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/tbl-divider-hor.gif" WIDTH="3" BORDER="0"></TD>
+</TR>
+<TR>
+<TD CLASS="label cs-valign-middle">
+&nbsp;Annotation PM:
+&nbsp;
+</TD>
+<TD CLASS="nowrap">
+<SCRIPT>
+
+function stringSelect_1_1_9_1()
+{
+
+var		w;
+var		url;
+
+url = "/otcs/cs.exe?func=attrtable.StringSelectDialog"
+url = url + "&formname=myForm";
+url = url + "&Field=_1_1_9_1";
+url = url + "&AttrID=9";
+url = url + "&IsForm=true";
+url = url + "&mapID=0";
+url = url + "&workID=0";
+url = url + "&subworkID=0";
+url = url + "&objID=43313";
+url = url + "&VerNum=0";
+url = url + "&CacheID=0";
+url = url + "&AttrValues=";
+url = url + "&attrHandler=form";
+
+w = window.open( url ,"attrTableLookup" , "height=340,width=800,scrollbars=yes,resizable=yes,menubar=no,toolbar=no,status=yes" );
+if ( w.focus ) {w.focus()}
+}
+
+</SCRIPT>
+
+<INPUT CLASS="valueEditable" TYPE="text" NAME="_1_1_9_1"
+VALUE="[LL_FormTag_1_1_9_1 /]" SIZE="32" TABINDEX="-1" ONFOCUS="this.blur()">
+
+<A HREF="javascript:void(0);" onClick="stringSelect_1_1_9_1()">
+<IMG SRC="/img/webattribute/stringselect.gif"
+ALT="Select Annotation PM"
+TITLE="Select Annotation PM"
+BORDER="0">
+</A>
+</TD>
+</TR>
+<TR CLASS="horizontalCellDivider" >
+<TD CLASS="labelHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/spacer.gif" WIDTH="1" BORDER="0"></TD>
+<TD CLASS="valueHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/tbl-divider-hor.gif" WIDTH="3" BORDER="0"></TD>
+</TR>
+<TR>
+<TD CLASS="label cs-valign-middle">
+&nbsp;Annotation SG:
+&nbsp;
+</TD>
+<TD CLASS="nowrap">
+<SCRIPT>
+
+function stringSelect_1_1_10_1()
+{
+
+var		w;
+var		url;
+
+url = "/otcs/cs.exe?func=attrtable.StringSelectDialog"
+url = url + "&formname=myForm";
+url = url + "&Field=_1_1_10_1";
+url = url + "&AttrID=10";
+url = url + "&IsForm=true";
+url = url + "&mapID=0";
+url = url + "&workID=0";
+url = url + "&subworkID=0";
+url = url + "&objID=43313";
+url = url + "&VerNum=0";
+url = url + "&CacheID=0";
+url = url + "&AttrValues=";
+url = url + "&attrHandler=form";
+
+w = window.open( url ,"attrTableLookup" , "height=340,width=800,scrollbars=yes,resizable=yes,menubar=no,toolbar=no,status=yes" );
+if ( w.focus ) {w.focus()}
+}
+
+</SCRIPT>
+
+<INPUT CLASS="valueEditable" TYPE="text" NAME="_1_1_10_1"
+VALUE="[LL_FormTag_1_1_10_1 /]" SIZE="32" TABINDEX="-1" ONFOCUS="this.blur()">
+
+<A HREF="javascript:void(0);" onClick="stringSelect_1_1_10_1()">
+<IMG SRC="/img/webattribute/stringselect.gif"
+ALT="Select Annotation SG"
+TITLE="Select Annotation SG"
+BORDER="0">
+</A>
+</TD>
+</TR>
+<TR CLASS="horizontalCellDivider" >
+<TD CLASS="labelHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/spacer.gif" WIDTH="1" BORDER="0"></TD>
+<TD CLASS="valueHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/tbl-divider-hor.gif" WIDTH="3" BORDER="0"></TD>
+</TR>
+<TR>
+<TD CLASS="label cs-valign-middle">
+&nbsp;Vérification Coordonnateur:
+&nbsp;
+</TD>
+<TD CLASS="nowrap">
+<SCRIPT>
+
+function stringSelect_1_1_11_1()
+{
+
+var		w;
+var		url;
+
+url = "/otcs/cs.exe?func=attrtable.StringSelectDialog"
+url = url + "&formname=myForm";
+url = url + "&Field=_1_1_11_1";
+url = url + "&AttrID=11";
+url = url + "&IsForm=true";
+url = url + "&mapID=0";
+url = url + "&workID=0";
+url = url + "&subworkID=0";
+url = url + "&objID=43313";
+url = url + "&VerNum=0";
+url = url + "&CacheID=0";
+url = url + "&AttrValues=";
+url = url + "&attrHandler=form";
+
+w = window.open( url ,"attrTableLookup" , "height=340,width=800,scrollbars=yes,resizable=yes,menubar=no,toolbar=no,status=yes" );
+if ( w.focus ) {w.focus()}
+}
+
+</SCRIPT>
+
+<INPUT CLASS="valueEditable" TYPE="text" NAME="_1_1_11_1"
+VALUE="[LL_FormTag_1_1_11_1 /]" SIZE="32" TABINDEX="-1" ONFOCUS="this.blur()">
+
+<A HREF="javascript:void(0);" onClick="stringSelect_1_1_11_1()">
+<IMG SRC="/img/webattribute/stringselect.gif"
+ALT="Select Vérification Coordonnateur"
+TITLE="Select Vérification Coordonnateur"
+BORDER="0">
+</A>
+</TD>
+</TR>
+<TR CLASS="horizontalCellDivider" >
+<TD CLASS="labelHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/spacer.gif" WIDTH="1" BORDER="0"></TD>
+<TD CLASS="valueHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/tbl-divider-hor.gif" WIDTH="3" BORDER="0"></TD>
+</TR>
+<TR>
+<TD CLASS="label cs-valign-middle">
+&nbsp;Visa SG:
+&nbsp;
+</TD>
+<TD CLASS="nowrap">
+<SCRIPT>
+
+function stringSelect_1_1_12_1()
+{
+
+var		w;
+var		url;
+
+url = "/otcs/cs.exe?func=attrtable.StringSelectDialog"
+url = url + "&formname=myForm";
+url = url + "&Field=_1_1_12_1";
+url = url + "&AttrID=12";
+url = url + "&IsForm=true";
+url = url + "&mapID=0";
+url = url + "&workID=0";
+url = url + "&subworkID=0";
+url = url + "&objID=43313";
+url = url + "&VerNum=0";
+url = url + "&CacheID=0";
+url = url + "&AttrValues=";
+url = url + "&attrHandler=form";
+
+w = window.open( url ,"attrTableLookup" , "height=340,width=800,scrollbars=yes,resizable=yes,menubar=no,toolbar=no,status=yes" );
+if ( w.focus ) {w.focus()}
+}
+
+</SCRIPT>
+
+<INPUT CLASS="valueEditable" TYPE="text" NAME="_1_1_12_1"
+VALUE="[LL_FormTag_1_1_12_1 /]" SIZE="32" TABINDEX="-1" ONFOCUS="this.blur()">
+
+<A HREF="javascript:void(0);" onClick="stringSelect_1_1_12_1()">
+<IMG SRC="/img/webattribute/stringselect.gif"
+ALT="Select Visa SG"
+TITLE="Select Visa SG"
+BORDER="0">
+</A>
+</TD>
+</TR>
+<TR CLASS="horizontalCellDivider" >
+<TD CLASS="labelHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/spacer.gif" WIDTH="1" BORDER="0"></TD>
+<TD CLASS="valueHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/tbl-divider-hor.gif" WIDTH="3" BORDER="0"></TD>
+</TR>
+<TR>
+<TD CLASS="label cs-valign-middle">
+&nbsp;Traitement Conseiller:
+&nbsp;
+</TD>
+<TD CLASS="nowrap">
+<SCRIPT>
+
+function stringSelect_1_1_13_1()
+{
+
+var		w;
+var		url;
+
+url = "/otcs/cs.exe?func=attrtable.StringSelectDialog"
+url = url + "&formname=myForm";
+url = url + "&Field=_1_1_13_1";
+url = url + "&AttrID=13";
+url = url + "&IsForm=true";
+url = url + "&mapID=0";
+url = url + "&workID=0";
+url = url + "&subworkID=0";
+url = url + "&objID=43313";
+url = url + "&VerNum=0";
+url = url + "&CacheID=0";
+url = url + "&AttrValues=";
+url = url + "&attrHandler=form";
+
+w = window.open( url ,"attrTableLookup" , "height=340,width=800,scrollbars=yes,resizable=yes,menubar=no,toolbar=no,status=yes" );
+if ( w.focus ) {w.focus()}
+}
+
+</SCRIPT>
+
+<INPUT CLASS="valueEditable" TYPE="text" NAME="_1_1_13_1"
+VALUE="[LL_FormTag_1_1_13_1 /]" SIZE="32" TABINDEX="-1" ONFOCUS="this.blur()">
+
+<A HREF="javascript:void(0);" onClick="stringSelect_1_1_13_1()">
+<IMG SRC="/img/webattribute/stringselect.gif"
+ALT="Select Traitement Conseiller"
+TITLE="Select Traitement Conseiller"
+BORDER="0">
+</A>
+</TD>
+</TR>
+<TR CLASS="horizontalCellDivider" >
+<TD CLASS="labelHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/spacer.gif" WIDTH="1" BORDER="0"></TD>
+<TD CLASS="valueHorizontalDivider" COLSPAN="1"><IMG HEIGHT="1" ALT="" SRC="/img/tbl-divider-hor.gif" WIDTH="3" BORDER="0"></TD>
+</TR>
+<TR>
+<TD CLASS="label cs-valign-middle">
+&nbsp;Signature SP:
+&nbsp;
+</TD>
+<TD CLASS="nowrap">
+<SCRIPT>
+
+function stringSelect_1_1_14_1()
+{
+
+var		w;
+var		url;
+
+url = "/otcs/cs.exe?func=attrtable.StringSelectDialog"
+url = url + "&formname=myForm";
+url = url + "&Field=_1_1_14_1";
+url = url + "&AttrID=14";
+url = url + "&IsForm=true";
+url = url + "&mapID=0";
+url = url + "&workID=0";
+url = url + "&subworkID=0";
+url = url + "&objID=43313";
+url = url + "&VerNum=0";
+url = url + "&CacheID=0";
+url = url + "&AttrValues=";
+url = url + "&attrHandler=form";
+
+w = window.open( url ,"attrTableLookup" , "height=340,width=800,scrollbars=yes,resizable=yes,menubar=no,toolbar=no,status=yes" );
+if ( w.focus ) {w.focus()}
+}
+
+</SCRIPT>
+
+<INPUT CLASS="valueEditable" TYPE="text" NAME="_1_1_14_1"
+VALUE="[LL_FormTag_1_1_14_1 /]" SIZE="32" TABINDEX="-1" ONFOCUS="this.blur()">
+
+<A HREF="javascript:void(0);" onClick="stringSelect_1_1_14_1()">
+<IMG SRC="/img/webattribute/stringselect.gif"
+ALT="Select Signature SP"
+TITLE="Select Signature SP"
+BORDER="0">
+</A>
+</TD>
+</TR>
+</TABLE>
+</TD>
+</TR>
+</TABLE>
+</TD>
+</TR>
+
+<TR>
+<TD>
+<TABLE CLASS="tightTable cs-fon-table-header-divider">
+<TR>
+<TD><IMG SRC="[LL_SUPPORTPATH /]spacer.gif" alt="" HEIGHT="28" WIDTH="1"></TD>
+<TD ALIGN="LEFT">
+<INPUT CLASS="applyButton" TYPE="BUTTON" VALUE="Apply" NAME="IgnoreMe" ONCLICK="doFormSubmit( document.myForm );">
+<INPUT CLASS="resetButton" TYPE="RESET" VALUE="Reset">
+</TD>
+</TR>
+</TABLE>
+</TD>
+</TR>
+
+</TABLE>
+
+</TD>
+</TR>
+</TABLE>
+
+</TD>
+</TR>
+</TABLE>
+
+</TD>
+</TR>
+</TABLE>
+
+</FORM>
+
+</BODY>
+
+</HTML>

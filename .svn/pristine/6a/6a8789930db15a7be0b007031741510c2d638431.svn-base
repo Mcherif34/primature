@@ -1,0 +1,72 @@
+package ma.brainit.aman.commun.service.impl;
+
+import java.io.File;
+import java.util.Map;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
+import org.apache.velocity.app.VelocityEngine;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.velocity.VelocityEngineUtils;
+
+import ma.brainit.aman.commun.service.EmailService;
+
+
+@Service
+@Transactional
+public class EmailServiceImpl implements EmailService {
+	
+	@Autowired
+	private VelocityEngine velocityEngine;
+
+	@Autowired
+	private JavaMailSender mailSender;
+	
+	@Value("${mail.username}")
+	private String mailUsername;
+	
+	@Value("${mail.login}")
+	private String mailLogin;
+	
+	@Value("${mail.hotline}")
+	private String mailHotline;
+	
+	@Value("${mail.central01}")
+	private String mailCentral01;
+	
+	@Value("${mail.central02}")
+	private String mailCentral02;
+	
+	@Value("${mail.central03}")
+	private String mailCentral03;
+
+	@Override
+	public void sendMail(String to, final String subject, String text) {
+		MimeMessage message = this.mailSender.createMimeMessage();
+		String[] cc = new String[4];
+		cc[0] = mailHotline;
+		cc[1] = mailCentral01;
+		cc[2] = mailCentral02;
+		cc[3] = mailCentral03;
+		  try {
+		    MimeMessageHelper helper = new MimeMessageHelper(message, true);
+		    helper.setFrom(mailLogin);
+		    helper.setTo(to);
+		    helper.setCc(cc);
+		    helper.setSubject(subject);
+		    helper.setText(text, true);
+		    this.mailSender.send(message);
+		  } catch (MessagingException e) {
+			  System.out.println(e);
+		  }
+	}
+	
+}

@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/configurationLayout">
+<head>
+</head>
+<body ng-controller="referentielController" th:attr="ng-init='init();'">
+<div layout:fragment="content">
+<div class="main-content">	
+	<div class="page-content">
+		<div class="container-fluid">
+			<div class="row">
+            	<div class="col-12">
+                	<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    	<h4 class="mb-sm-0">Gestion du référentiel</h4>
+					</div>
+                </div>
+        	</div>
+        			<div class="row">
+      
+                        <div class="col-xl-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <!-- Nav tabs -->
+                                    <ul class="nav nav-pills nav-custom nav-custom-light mb-3 d-flex align-items-center justify-content-between" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" data-bs-toggle="tab" href="#insurance" role="tab">
+                                                Assurances
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#legalForm" role="tab">
+                                                Formes juridiques
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#attachment" role="tab">
+                                                Pièes jointes
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#region" role="tab">
+                                                Régions
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#companyStatus" role="tab">
+                                                Status
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#nav-light-messages" role="tab">
+                                                Types
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#nav-light-messages" role="tab">
+                                                Tribunal de commerce
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#nav-light-messages" role="tab">
+                                                Etapes de contentieux
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#nav-light-messages" role="tab">
+                                                Statuts du crédit
+                                            </a>
+                                        </li>
+<!--                                    <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#nav-light-messages" role="tab">
+                                                Devises
+                                            </a>
+                                        </li> -->
+                                        <li class="nav-item">
+                                           <div class="btn-group" role="group">
+                                               <a href="#" type="button" class="bg-primary px-2 rounded d-flex align-items-center justify-content-center m-2" data-bs-toggle="dropdown" aria-expanded="false">
+                                                   <i class="ri ri-more-fill label-icon align-middle fs-20 text-white"></i>
+                                               </a>
+                                               <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                                   <li><a class="dropdown-item" href="#">Statut des litiges</a></li>
+                                                   <li><a class="dropdown-item" href="#">Type de contact</a></li>
+                                                   <li><a class="dropdown-item" href="#">Methodes de paiements</a></li>
+                                               </ul>
+                                           </div>
+                                        </li>
+                                    </ul>
+                                </div><!-- end card-body -->
+                            </div>
+                            <div class="card">
+                              <div class="card-body">
+                              	     <div class="tab-content text-muted">
+                                        <div class="tab-pane active" id="insurance" role="tabpanel">
+                                        <div class="d-flex flex-row align-items-center justify-content-between mb-3">
+                                        
+	                                        	<h5 class="mb-sm-0">Liste des assurances</h5>
+	                                   
+                                         <div>
+	                                        	<a id="btnNew" href="#" ng-click="addInsurance()" class="btn btn-primary btn-label waves-effect waves-light">
+	                                            	<i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Nouveau
+	                                            </a>
+	                                        </div>
+	                                        </div>
+	                                        <div class="live-preview">
+	                                            <div class="table-responsive">
+													<table id="insuranceTable" ng-controller="insuranceTableController"
+														th:attr="ng-init='init();'"
+														class="table table-hover align-middle table-nowrap mb-0">
+														<thead>
+															<tr>
+													            <th>ID</th>
+													            <th>Nom</th>
+													            <th>Description</th>
+													            <th>Actions</th>
+													          </tr>
+														</thead>
+													</table>
+												</div>
+											</div>
+                                        </div>
+                                        <div class="tab-pane" id="legalForm" role="tabpanel">
+                                        	<div class="d-flex flex-row align-items-center justify-content-between mb-3">
+	                                        	<h5 class="mb-sm-0">Liste des formes juridiques</h5>
+                                         	<div>
+	                                        	<a id="btnNew" href="#" ng-click="addLegalForm()" class="btn btn-primary btn-label waves-effect waves-light">
+	                                            	<i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Nouveau
+	                                            </a>
+	                                        </div>
+	                                        </div>
+	                                        <div class="live-preview">
+	                                            <div class="table-responsive">
+													<table id="legalFormTable" ng-controller="legalFormTableController"
+														th:attr="ng-init='init();'"
+														class="table table-hover align-middle table-nowrap mb-0">
+														<thead>
+															<tr>
+													            <th>ID</th>
+													            <th>Nom</th>
+													            <th>Description</th>
+													            <th>Actions</th>
+													          </tr>
+														</thead>
+													</table>
+												</div>
+											</div>
+                                        </div>
+                                        <div class="tab-pane" id="attachment" role="tabpanel">
+                                            <div class="d-flex flex-row align-items-center justify-content-between mb-3">
+	                                        	<h5 class="mb-sm-0">Liste des pièces jointes</h5>
+                                         	<div>
+	                                        	<a id="btnNew" href="#" ng-click="addAttachment()" class="btn btn-primary btn-label waves-effect waves-light">
+	                                            	<i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Nouveau
+	                                            </a>
+	                                        </div>
+	                                        </div>
+	                                        <div class="table-responsive">
+										      <table id="attachmentTable" ng-controller="attachmentTableController"
+													th:attr="ng-init='init();'" class="table table-striped b-t b-b">
+										        <thead>
+										          <tr>
+										            <th>ID</th>
+										            <th>Nom</th>
+										            <th>Description</th>
+										            <th>Actions</th>
+										          </tr>
+										        </thead>
+										      </table>
+										    </div>
+                                        </div>
+                                        <div class="tab-pane" id="region" role="tabpanel">
+                                           <div class="col-md-12">
+										 	<div class="b-b b-primary nav-active-primary">
+												<ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3">
+													<li class="nav-item"><a class="nav-link active"
+														href="#country" data-bs-toggle="tab" role="tab">Pays</a></li>
+													<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#city"
+														role="tab">Villes</a></li>
+												</ul>
+											</div>
+											<div class="tab-content p-a m-b-md">
+												<div class="tab-pane animated active fadeIn" id="country" role="tabpanel">
+											   	  <div class="d-flex flex-row align-items-center justify-content-between mb-3">
+			                                        	<h5 class="mb-sm-0">Liste des pays</h5>
+		                                         	<div>
+			                                        	<a id="btnNew" href="#" ng-click="addCountry()" class="btn btn-primary btn-label waves-effect waves-light">
+			                                            	<i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Nouveau
+			                                            </a>
+			                                        </div>
+			                                      </div>
+			                                      <div class="live-preview">
+		                                            <div class="table-responsive">
+														<table id="countryTable" ng-controller="countryTableController"
+															th:attr="ng-init='init();'" class="table table-striped b-t b-b">
+												        <thead>
+												          <tr>
+												            <th>ID</th>
+												            <th width="10%">Code</th>
+												            <th>Nom EN</th>
+												            <th>Nom FR</th>
+												            <th width="10%">Indicatif</th>
+												            <th width="25%">Actions</th>
+												          </tr>
+												        </thead>
+												      </table>
+													</div>
+												  </div>
+												</div>
+												
+												<div class="tab-pane animated fadeIn" id="city" role="tabpanel">
+											   	  <div class="d-flex flex-row align-items-center justify-content-between mb-3">
+			                                        	<h5 class="mb-sm-0">Liste des villes</h5>
+		                                         	<div>
+			                                        	<a id="btnNew" href="#" ng-click="addCity()" class="btn btn-primary btn-label waves-effect waves-light">
+			                                            	<i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Nouveau
+			                                            </a>
+			                                        </div>
+			                                      </div>
+			                                      <div class="live-preview">
+		                                            <div class="table-responsive">
+														<table id="cityTable" ng-controller="cityTableController"
+															th:attr="ng-init='init();'" class="table table-striped b-t b-b">
+												        <thead>
+												          <tr>
+												            <th width="10%">Code</th>
+												            <th>Nom</th>
+												            <th width="25%">Actions</th>
+												          </tr>
+												        </thead>
+												      </table>
+													</div>
+												  </div>
+												</div>
+											</div>
+										  </div>
+                                        </div>
+                                        <div class="tab-pane" id="companyStatus" role="tabpanel">
+                                            <div class="d-flex flex-row align-items-center justify-content-between mb-3">
+                                        
+	                                        	<h5 class="mb-sm-0">Liste des status</h5>
+	                                   
+                                         <div>
+	                                        	<a id="btnNew" href="#" ng-click="addStatus()" class="btn btn-primary btn-label waves-effect waves-light">
+	                                            	<i class="mdi mdi-plus label-icon align-middle fs-16 me-2"></i> Nouveau
+	                                            </a>
+	                                        </div>
+	                                        </div>
+	                                        <div class="live-preview">
+	                                            <div class="table-responsive">
+											      <table id="statusTable" ng-controller="statusTableController"
+														th:attr="ng-init='init();'" class="table table-striped b-t b-b">
+											        <thead>
+											          <tr>
+											            <th>ID</th>
+											            <th>Nom</th>
+											            <th>Description</th>
+											            <th>Actions</th>
+											          </tr>
+											        </thead>
+											      </table>
+												</div>
+											</div>
+                                        </div>
+                                        <div class="tab-pane" id="nav-light-messages" role="tabpanel">
+                                            <div class="d-flex mb-1">
+                                                <div class="flex-grow-1 me-3">
+                                                    Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin On the note of consistency, color consistency is a MUST. If you’re not trying to create crazy contrast in your design.
+                                                </div>
+                                                <div class="flex-shrink-0">
+                                                    <img src="assets/images/small/img-5.jpg" alt="" width="150" class="rounded" />
+                                                </div>
+                                            </div>
+                                            <p class="mb-0">Big July earthquakes confound zany experimental vow. My girl wove six dozen plaid jackets before she quit. Six big devils from Japan quickly forgot how to waltz. try again until it looks right, and each assumenda labore aes Homo nostrud organic, assumenda labore aesthetic magna elements, buttons, everything.</p>
+                                        </div>
+                                    </div>
+                              </div>
+                            </div>
+                      <div id="insuranceModal" class="modal fade" data-backdrop="true">
+					    <div class="modal-dialog">
+					      <div class="modal-content">
+					        <div class="modal-header">
+					      	  <h5 class="modal-title" ng-if="addInsuranceForm">Enregistrement d'une assurance</h5>
+					      	  <h5 class="modal-title" ng-if="editInsuranceForm">Modification d'une assurance</h5>
+					        </div>
+					        <form id="insuranceForm" name="insuranceForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+					          <div class="modal-body p-lg">
+					            <div class="row">
+								  <input type="hidden" ng-model="dto.insurance.id" />
+								  <div ng-class="'col-md-12'">
+								  	<p class="text-muted">Renseignez les champs obligatoires</p>
+								  	<div ng-if="insuranceRequiredError" class="alert alert-danger" role="alert">
+								  	  Veuillez remplir tous les champs obligatoires !
+								  	</div>
+								  	<div ng-if="insuranceTechnicalError" class="alert alert-danger" role="alert">
+								  	  Un problème est survenu ! Merci de contacter votre administrateur.
+								  	</div>
+								  	<div ng-if="insuranceSuccess" class="alert alert-success" role="alert">
+								  	  L'opération s'est effectuée avec succès !
+								  	</div>
+								  </div>
+								  <div ng-class="'col-md-12'">
+					            	<div class="form-group">
+					              	  <label><span class="asterik"> * </span> Nom</label>
+					                  <input type="text" class="form-control" name="name" ng-model="dto.insurance.name" required="required" />                        
+					                </div>
+					                <div class="form-group">
+					                  <label>Description</label>
+					                  <textarea class="form-control" name="description" ng-model="dto.insurance.description"></textarea>
+					                </div>
+								  </div>
+								</div>
+					          </div>
+					          <div class="modal-footer">
+					            <button type="button" class="btn btn-dark p-x-md" data-dismiss="modal">Annuler</button>
+					            <a href="#" ng-click="saveInsurance()" class="btn btn-success p-x-md">Valider</a>
+					          </div>
+					        </form>
+					      </div><!-- /.modal-content -->
+					    </div>
+				  </div>
+				  <!-- / .modal -->
+			    <div id="legalFormModal" class="modal fade" data-backdrop="true">
+				    <div class="modal-dialog">
+				      <div class="modal-content">
+				        <div class="modal-header">
+				      	  <h5 class="modal-title" ng-if="addLegalFormForm">Enregistrement d'une forme juridique</h5>
+				      	  <h5 class="modal-title" ng-if="editLegalFormForm">Modification d'une forme juridique</h5>
+				        </div>
+				        <form id="legalFormForm" name="legalFormForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+				          <div class="modal-body p-lg">
+				            <div class="row">
+							  <input type="hidden" ng-model="dto.legalForm.id" />
+							  <div ng-class="'col-md-12'">
+							  	<p class="text-muted">Renseignez les champs obligatoires</p>
+							  	<div ng-if="legalFormRequiredError" class="alert alert-danger" role="alert">
+							  	  Veuillez remplir tous les champs obligatoires !
+							  	</div>
+							  	<div ng-if="legalFormTechnicalError" class="alert alert-danger" role="alert">
+							  	  Un problème est survenu ! Merci de contacter votre administrateur.
+							  	</div>
+							  	<div ng-if="legalFormSuccess" class="alert alert-success" role="alert">
+							  	  L'opération s'est effectuée avec succès !
+							  	</div>
+							  </div>
+							  <div ng-class="'col-md-12'">
+				            	<div class="form-group">
+				              	  <label><span class="asterik"> * </span> Nom</label>
+				                  <input type="text" class="form-control" name="name" ng-model="dto.legalForm.name" required="required" />                        
+				                </div>
+				                <div class="form-group">
+				                  <label>Description</label>
+				                  <textarea class="form-control" name="description" ng-model="dto.legalForm.description"></textarea>
+				                </div>
+							  </div>
+							</div>
+				          </div>
+				          <div class="modal-footer">
+				            <button type="button" class="btn btn-dark p-x-md" data-dismiss="modal">Annuler</button>
+				            <a href="#" ng-click="saveLegalForm()" class="btn btn-success p-x-md">Valider</a>
+				          </div>
+				        </form>
+				      </div><!-- /.modal-content -->
+				    </div>
+				  </div>
+				  <!-- / .modal -->
+				  <div id="attachmentModal" class="modal fade" data-backdrop="true">
+				    <div class="modal-dialog">
+				      <div class="modal-content">
+				        <div class="modal-header">
+				      	  <h5 class="modal-title" ng-if="addAttachmentForm">Enregistrement d'une pièce jointe</h5>
+				      	  <h5 class="modal-title" ng-if="editAttachmentForm">Modification d'une pièce jointe</h5>
+				        </div>
+				        <form id="attachmentForm" name="attachmentForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+				          <div class="modal-body p-lg">
+				            <div class="row">
+							  <input type="hidden" ng-model="dto.attachment.id" />
+							  <div ng-class="'col-md-12'">
+							  	<p class="text-muted">Renseignez les champs obligatoires</p>
+							  	<div ng-if="attachmentRequiredError" class="alert alert-danger" role="alert">
+							  	  Veuillez remplir tous les champs obligatoires !
+							  	</div>
+							  	<div ng-if="attachmentTechnicalError" class="alert alert-danger" role="alert">
+							  	  Un problème est survenu ! Merci de contacter votre administrateur.
+							  	</div>
+							  	<div ng-if="attachmentSuccess" class="alert alert-success" role="alert">
+							  	  L'opération s'est effectuée avec succès !
+							  	</div>
+							  </div>
+							  <div ng-class="'col-md-12'">
+				            	<div class="form-group">
+				              	  <label><span class="asterik"> * </span> Nom</label>
+				                  <input type="text" class="form-control" name="name" ng-model="dto.attachment.name" required="required" />                        
+				                </div>
+				                <div class="form-group">
+				                  <label>Description</label>
+				                  <textarea class="form-control" name="description" ng-model="dto.attachment.description"></textarea>
+				                </div>
+							  </div>
+							</div>
+				          </div>
+				          <div class="modal-footer">
+				            <button type="button" class="btn btn-dark p-x-md" data-dismiss="modal">Annuler</button>
+				            <a href="#" ng-click="saveAttachment()" class="btn btn-success p-x-md">Valider</a>
+				          </div>
+				        </form>
+				      </div><!-- /.modal-content -->
+				    </div>
+				  </div>
+				  <!-- .modal -->
+				  <div id="countryModal" class="modal fade" data-backdrop="true">
+				    <div class="modal-dialog">
+				      <div class="modal-content">
+				        <div class="modal-header">
+				      	  <h5 class="modal-title" ng-if="addCountryForm">Enregistrement d'un pays</h5>
+				      	  <h5 class="modal-title" ng-if="editCountryForm">Modification d'un pays</h5>
+				        </div>
+				        <form id="countryForm" name="countryForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+				          <div class="modal-body p-lg">
+				            <div class="row">
+							  <input type="hidden" ng-model="dto.country.id" />
+							  <div ng-class="'col-md-12'">
+							  	<p class="text-muted">Renseignez les champs obligatoires</p>
+							  	<div ng-if="countryRequiredError" class="alert alert-danger" role="alert">
+							  	  Veuillez remplir tous les champs obligatoires !
+							  	</div>
+							  	<div ng-if="countryTechnicalError" class="alert alert-danger" role="alert">
+							  	  Un problème est survenu ! Merci de contacter votre administrateur.
+							  	</div>
+							  	<div ng-if="countrySuccess" class="alert alert-success" role="alert">
+							  	  L'opération s'est effectuée avec succès !
+							  	</div>
+							  </div>
+							  <div ng-class="'col-md-6'">
+				            	<div class="form-group">
+				              	  <label><span class="asterik"> * </span> ISO (2 caractères)</label>
+				                  <input type="text" class="form-control" name="iso" ng-model="dto.country.iso" required="required" />                        
+				                </div>
+				                <div class="form-group">
+				                  <label>Code</label>
+				                  <input type="text" class="form-control" name="numcode" ng-model="dto.country.numcode" />
+				                </div>
+				                <div class="form-group">
+				                  <label><span class="asterik"> * </span> Nom</label>
+				                  <input type="text" class="form-control" name="name" ng-model="dto.country.name" required="required" />                        
+				                </div>
+							  </div>
+							  <div ng-class="'col-md-6'">
+							    <div class="form-group">
+				                  <label>ISO (3 caractères)</label>
+				                  <input type="text" class="form-control" name="iso3" ng-model="dto.country.iso3" />
+				                </div>
+				                <div class="form-group">
+				                  <label><span class="asterik"> * </span> Indicatif</label>
+				                  <input type="text" class="form-control" name="phonecode" ng-model="dto.country.phonecode" required="required" />                        
+				                </div>
+				                <div class="form-group">
+				                  <label><span class="asterik"> * </span> Nom affiché</label>
+				                  <input type="text" class="form-control" name="nicename" ng-model="dto.country.nicename" required="required" />                        
+				                </div>
+							  </div>
+							</div>
+				          </div>
+				          <div class="modal-footer">
+				            <button type="button" class="btn btn-dark p-x-md" data-dismiss="modal">Annuler</button>
+				            <a href="#" ng-click="saveCountry()" class="btn btn-success p-x-md">Valider</a>
+				          </div>
+				        </form>
+				      </div><!-- /.modal-content -->
+				    </div>
+				  </div>
+				  <div id="cityModal" class="modal fade" data-backdrop="true">
+				    <div class="modal-dialog">
+				      <div class="modal-content">
+				        <div class="modal-header">
+				      	  <h5 class="modal-title" ng-if="addCityForm">Enregistrement d'une ville</h5>
+				      	  <h5 class="modal-title" ng-if="editCityForm">Modification d'une ville</h5>
+				        </div>
+				        <form id="cityForm" name="cityForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+				          <div class="modal-body p-lg">
+				            <div class="row">
+							  <input type="hidden" ng-model="dto.city.id" />
+							  <div ng-class="'col-md-12'">
+							  	<p class="text-muted">Renseignez les champs obligatoires</p>
+							  	<div ng-if="cityRequiredError" class="alert alert-danger" role="alert">
+							  	  Veuillez remplir tous les champs obligatoires !
+							  	</div>
+							  	<div ng-if="cityTechnicalError" class="alert alert-danger" role="alert">
+							  	  Un problème est survenu ! Merci de contacter votre administrateur.
+							  	</div>
+							  	<div ng-if="citySuccess" class="alert alert-success" role="alert">
+							  	  L'opération s'est effectuée avec succès !
+							  	</div>
+							  </div>
+							  <div ng-class="'col-md-6'">
+				            	<div class="form-group">
+				              	  <label><span class="asterik"> * </span> Code</label>
+				                  <input type="text" class="form-control" name="iso" ng-model="dto.city.code" required="required" />                        
+				                </div>
+							  </div>
+							  <div ng-class="'col-md-6'">
+							    <div class="form-group">
+				                  <label><span class="asterik"> * </span> Nom</label>
+				                  <input type="text" class="form-control" name="name" ng-model="dto.city.name" required="required" />                        
+				                </div>
+							  </div>
+				<!-- 			  <div ng-class="'col-md-4'">
+							    <div class="form-group">
+				                  <label><span class="asterik"> * </span> Pays</label>
+				                     <select class="form-control" id="country" name="countryId" ng-model="dto.city.countryId" ng-options="c.id as c.name for c in countries" >
+				                         <option value="">Choisir une option</option>
+				                     </select>                        
+				                </div>
+							  </div> -->
+							</div>
+				          </div>
+				          <div class="modal-footer">
+				            <button type="button" class="btn btn-dark p-x-md" data-dismiss="modal">Annuler</button>
+				            <a href="#" ng-click="saveCity()" class="btn btn-success p-x-md">Valider</a>
+				          </div>
+				        </form>
+				      </div><!-- /.modal-content -->
+				    </div>
+				  </div>
+				  <!-- / .modal -->
+				  <div id="statusModal" class="modal fade" data-backdrop="true">
+					    <div class="modal-dialog">
+					      <div class="modal-content">
+					        <div class="modal-header">
+					      	  <h5 class="modal-title" ng-if="addStatusForm">Enregistrement d'une assurance</h5>
+					      	  <h5 class="modal-title" ng-if="editStatusForm">Modification d'une assurance</h5>
+					        </div>
+					        <form id="statusForm" name="statusForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+					          <div class="modal-body p-lg">
+					            <div class="row">
+								  <input type="hidden" ng-model="dto.status.id" />
+								  <div ng-class="'col-md-12'">
+								  	<p class="text-muted">Renseignez les champs obligatoires</p>
+								  	<div ng-if="statusRequiredError" class="alert alert-danger" role="alert">
+								  	  Veuillez remplir tous les champs obligatoires !
+								  	</div>
+								  	<div ng-if="statusTechnicalError" class="alert alert-danger" role="alert">
+								  	  Un problème est survenu ! Merci de contacter votre administrateur.
+								  	</div>
+								  	<div ng-if="statusSuccess" class="alert alert-success" role="alert">
+								  	  L'opération s'est effectuée avec succès !
+								  	</div>
+								  </div>
+								  <div ng-class="'col-md-12'">
+					            	<div class="form-group">
+					              	  <label><span class="asterik"> * </span> Nom</label>
+					                  <input type="text" class="form-control" name="name" ng-model="dto.status.name" required="required" />                        
+					                </div>
+					                <div class="form-group">
+					                  <label>Description</label>
+					                  <textarea class="form-control" name="description" ng-model="dto.status.description"></textarea>
+					                </div>
+								  </div>
+								</div>
+					          </div>
+					          <div class="modal-footer">
+					            <button type="button" class="btn btn-dark p-x-md" data-dismiss="modal">Annuler</button>
+					            <a href="#" ng-click="saveStatus()" class="btn btn-success p-x-md">Valider</a>
+					          </div>
+					        </form>
+					      </div><!-- /.modal-content -->
+					    </div>
+				  </div>
+				  <!-- / .modal -->
+				  
+               </div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ############ PAGE START-->
+
+<!-- ############ PAGE END-->
+</div>
+<div layout:fragment="plugins" class="page-content">
+	<script th:src='@{/resources/js/home/index.js}'></script>
+	<script th:src='@{/resources/js/administration/referentiel/referentiel.js}'></script>
+</div>
+</body>
+</html>

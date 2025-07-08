@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/layout">
+<head>
+	<title></title>
+</head>
+<body ng-controller="deadlineController" th:attr="ng-init='init();'">
+<div layout:fragment="content" class="page-content">
+<!-- ############ PAGE START-->
+<div class="p-a white lt box-shadow">
+	<div class="row">
+		<div class="col-sm-6">
+			<h4 class="mb-0 _300">Deadlines</h4>
+			<!-- <small class="text-muted">Bootstrap <strong>4</strong> Web App Kit with AngularJS</small> -->
+		</div>
+<!-- 		<div class="col-sm-6 text-sm-right">
+			<div class="m-y-sm">
+				<span class="m-r-sm">Start manage:</span>
+				<div class="btn-group dropdown">
+		          <button class="btn white btn-sm ">Projects</button>
+		          <button class="btn white btn-sm dropdown-toggle" data-toggle="dropdown"></button>
+		          <div class="dropdown-menu dropdown-menu-scale pull-right">
+		            <a class="dropdown-item" href="">Members</a>
+		            <a class="dropdown-item" href="">Tasks</a>
+		            <a class="dropdown-item" href="">Inbox</a>
+		            <div class="dropdown-divider"></div>
+		            <a class="dropdown-item">Profile</a>
+		          </div>
+		        </div>
+	        </div>
+		</div> -->
+	</div>
+</div>
+<!-- ############ PAGE START-->
+<div class="padding">
+  <div class="row">
+    <div class="col-md-12">
+   	  <div class="box">
+	    <div class="box-header">
+	      <div style="float:left; margin-top: 3px;">
+	        <h2 class="mb-0 _300">Liste des deadlines</h2>
+	        <!-- <small class="text-muted">Lorem ipsum dolor si amet</small> -->
+	      </div>
+	      <ul class="button_actions">
+			<li><a href="#" ng-click="addDeadline()" class="btn btn-fw success"><i class="fa fa-plus"></i> &nbsp;<span>Nouveau</span></a></li>
+		  </ul>
+	    </div>
+	    <div class="table-responsive">
+	      <table id="deadlineTable" ng-controller="deadlineTableController"
+				th:attr="ng-init='init();'" class="table table-striped b-t b-b">
+	        <thead>
+	          <tr>
+	            <th>ID</th>
+	            <th>Code</th>
+	            <th>Désignation</th>
+	            <th>Actions</th>
+	          </tr>
+	        </thead>
+	      </table>
+	    </div>
+	  </div>
+    </div>
+  </div>
+  <!-- .modal -->
+  <div id="deadlineModal" class="modal fade" data-backdrop="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+      	  <h5 class="modal-title" ng-if="addDeadlineForm">Enregistrement d'une deadline</h5>
+      	  <h5 class="modal-title" ng-if="editDeadlineForm">Modification d'une deadline</h5>
+        </div>
+        <form id="deadlineForm" name="deadlineForm" method="post" action="#" class="form-horizontal" ui-jp="parsley">
+          <div class="modal-body p-lg">
+            <div class="row">
+			  <input type="hidden" ng-model="dto.id" />
+			  <div ng-class="'col-md-12'">
+			  	<p class="text-muted">Renseignez les champs obligatoires</p>
+			  	<div ng-if="deadlineRequiredError" class="alert alert-danger" role="alert">
+			  	  Veuillez remplir tous les champs obligatoires !
+			  	</div>
+			  	<div ng-if="deadlineTechnicalError" class="alert alert-danger" role="alert">
+			  	  Un problème est survenu ! Merci de contacter votre administrateur.
+			  	</div>
+			  	<div ng-if="deadlineSuccess" class="alert alert-success" role="alert">
+			  	  L'opération s'est effectuée avec succès !
+			  	</div>
+			  </div>
+			  <div ng-class="'col-md-12'">
+            	<div class="form-group">
+              	  <label><span class="asterik"> * </span> Code</label>
+                  <input type="text" class="form-control" name="code" ng-model="dto.code" required="required" />                        
+                </div>
+                <div class="form-group">
+                  <label><span class="asterik"> * </span>Désignation</label>
+                  <input class="form-control" name="designation" ng-model="dto.designation" required="required" />
+                </div>
+			  </div>
+			</div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">Annuler</button>
+            <a href="#" ng-click="saveDeadline()" class="btn success p-x-md">Valider</a>
+          </div>
+        </form>
+      </div><!-- /.modal-content -->
+    </div>
+  </div>
+  <!-- / .modal -->
+  </div>
+</div>
+<div layout:fragment="plugins" class="page-content">
+	<script th:src='@{/resources/js/administration/referentiel/deadline.js}'></script>
+</div>
+</body>
+</html>
