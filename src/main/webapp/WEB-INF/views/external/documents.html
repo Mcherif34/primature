@@ -1,0 +1,73 @@
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Rechercher un document..." ng-model="searchText">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <select class="form-control" ng-model="selectedCategory">
+                <option value="">Toutes les catégories</option>
+                <option value="administratif">Administratif</option>
+                <option value="technique">Technique</option>
+                <option value="financier">Financier</option>
+                <option value="juridique">Juridique</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-bottom-0 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Documents disponibles</h5>
+                    <span class="badge badge-primary">{{documents.length}} document(s)</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Nom du document</th>
+                                    <th>Catégorie</th>
+                                    <th>Date de création</th>
+                                    <th>Taille</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="doc in documents | filter:searchText | filter:selectedCategory">
+                                    <td>
+                                        <i class="fa fa-file-pdf-o text-danger mr-2" ng-if="doc.type === 'pdf'"></i>
+                                        <i class="fa fa-file-word-o text-primary mr-2" ng-if="doc.type === 'doc'"></i>
+                                        <i class="fa fa-file-excel-o text-success mr-2" ng-if="doc.type === 'xls'"></i>
+                                        {{doc.nom}}
+                                    </td>
+                                    <td><span class="badge badge-secondary">{{doc.categorie}}</span></td>
+                                    <td>{{doc.dateCreation | date:'dd/MM/yyyy'}}</td>
+                                    <td>{{doc.taille}}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" ng-click="downloadDocument(doc.id)">
+                                            <i class="fa fa-download"></i> Télécharger
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-info" ng-click="viewDocument(doc.id)">
+                                            <i class="fa fa-eye"></i> Voir
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr ng-if="!documents || documents.length === 0">
+                                    <td colspan="5" class="text-center text-muted">Aucun document disponible</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

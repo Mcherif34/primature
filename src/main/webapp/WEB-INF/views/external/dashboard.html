@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template/external-layout">
+<head>
+<title>Tableau de bord | Espace Utilisateur Externe - Primature du Tchad</title>
+<meta charset="UTF-8" />
+<style>
+.notification {list-style-type: none; padding-left: 0}
+.notification li {padding-top: 7px; padding-bottom: 7px; border-bottom: 1px dotted #CCCCCC;}
+
+/* Styles pour les nouveaux widgets */
+.welcome-header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.welcome-header h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.welcome-header p {
+    margin: 0.5rem 0 1.5rem 0;
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.quick-action-btn {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.quick-action-btn:hover {
+    background: rgba(255,255,255,0.3);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.stats-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.stats-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.stats-card .card-body {
+    padding: 1.5rem;
+}
+
+.stats-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.quick-action-card {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.quick-action-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    border-color: #667eea;
+}
+
+.quick-action-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.25rem;
+    color: white;
+}
+
+.calendar-event {
+    padding: 0.75rem;
+    border-left: 4px solid #667eea;
+    background: #f8f9fa;
+    margin-bottom: 0.5rem;
+    border-radius: 0 8px 8px 0;
+}
+
+.calendar-event:hover {
+    background: #e9ecef;
+}
+
+.document-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    border-bottom: 1px solid #f1f3f4;
+    transition: background 0.2s ease;
+}
+
+.document-item:hover {
+    background: #f8f9fa;
+}
+
+.document-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    font-size: 1rem;
+    color: white;
+}
+
+.activity-table th {
+    background: #f8f9fa;
+    border: none;
+    font-weight: 600;
+    color: #495057;
+}
+
+.activity-table td {
+    vertical-align: middle;
+    border-top: 1px solid #f1f3f4;
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.urgent-alert {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    border: none;
+}
+
+.contacts-list {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.contact-item:last-child {
+    border-bottom: none;
+}
+
+.contact-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #667eea;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .welcome-header {
+        padding: 1.5rem;
+        text-align: center;
+    }
+    
+    .quick-actions-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-card .card-body {
+        padding: 1rem;
+    }
+}
+</style>
+</head>
+<body ng-controller="externalDashboardController" th:attr="ng-init='init();'">
+<div layout:fragment="content">
+<div class="main-content">	
+	<div class="page-content">
+		<div class="container-fluid">
+			
+			<!-- En-tête Principal -->
+			<div class="welcome-header">
+				<div class="row align-items-center">
+					<div class="col-md-8">
+						<h2>Bienvenue, <span ng-bind="userInstitution || 'Institution'"></span></h2>
+						<p>Vous avez <strong ng-bind="demandesEnAttente"></strong> demandes en attente de traitement</p>
+					</div>
+					<div class="col-md-4 text-end">
+						<div class="dropdown">
+							<button class="quick-action-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+								<i class="mdi mdi-plus"></i> Nouvelle demande
+							</button>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="#" ng-click="nouvelleDemande('audience')">
+									<i class="mdi mdi-calendar-clock"></i> Demande d'audience
+								</a></li>
+								<li><a class="dropdown-item" href="#" ng-click="nouvelleDemande('document')">
+									<i class="mdi mdi-file-document"></i> Soumission de document
+								</a></li>
+								<li><a class="dropdown-item" href="#" ng-click="nouvelleDemande('requete')">
+									<i class="mdi mdi-help-circle"></i> Requête administrative
+								</a></li>
+								<li><a class="dropdown-item" href="#" ng-click="nouvelleDemande('autre')">
+									<i class="mdi mdi-plus-circle"></i> Autre demande
+								</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Alertes Urgentes -->
+			<div ng-show="alertesUrgentes.length > 0" class="urgent-alert alert-dismissible fade show" role="alert">
+				<i class="mdi mdi-alert-circle me-2"></i>
+				<span ng-repeat="alerte in alertesUrgentes">
+					{{alerte.message}}
+					<span ng-if="!$last"> • </span>
+				</span>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+			</div>
+
+			<!-- Widgets Principaux -->
+			<div class="row">
+				<!-- A. Résumé des Demandes -->
+				<div class="col-xl-8">
+					<div class="row">
+						<div class="col-xl-3 col-md-6">
+							<div class="card stats-card">
+								<div class="card-body">
+									<div class="d-flex align-items-center">
+										<div class="flex-grow-1">
+											<h4 class="mb-0" ng-bind="stats.enAttente"></h4>
+											<p class="text-muted mb-0">En attente</p>
+										</div>
+										<div class="flex-shrink-0">
+											<div class="stats-icon bg-warning">
+												<i class="mdi mdi-clock-outline"></i>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-3 col-md-6">
+							<div class="card stats-card">
+								<div class="card-body">
+									<div class="d-flex align-items-center">
+										<div class="flex-grow-1">
+											<h4 class="mb-0" ng-bind="stats.validees"></h4>
+											<p class="text-muted mb-0">
+												Validées 
+												<span class="text-success" ng-if="stats.evolutionValidees > 0">
+													<i class="mdi mdi-trending-up"></i> +{{stats.evolutionValidees}}%
+												</span>
+											</p>
+										</div>
+										<div class="flex-shrink-0">
+											<div class="stats-icon bg-success">
+												<i class="mdi mdi-check-circle"></i>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-3 col-md-6">
+							<div class="card stats-card">
+								<div class="card-body">
+									<div class="d-flex align-items-center">
+										<div class="flex-grow-1">
+											<h4 class="mb-0" ng-bind="stats.rejetees"></h4>
+											<p class="text-muted mb-0">Rejetées</p>
+										</div>
+										<div class="flex-shrink-0">
+											<div class="stats-icon bg-danger">
+												<i class="mdi mdi-close-circle"></i>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-3 col-md-6">
+							<div class="card stats-card">
+								<div class="card-body">
+									<div class="d-flex align-items-center">
+										<div class="flex-grow-1">
+											<h4 class="mb-0" ng-bind="stats.enTraitement"></h4>
+											<p class="text-muted mb-0">
+												En traitement
+												<small class="d-block">{{stats.dureeMoyenne}} jours</small>
+											</p>
+										</div>
+										<div class="flex-shrink-0">
+											<div class="stats-icon bg-info">
+												<i class="mdi mdi-sync"></i>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- B. Actions Rapides -->
+					<div class="card">
+						<div class="card-header">
+							<h5 class="card-title mb-0">Actions Rapides</h5>
+						</div>
+						<div class="card-body">
+							<div class="quick-actions-grid">
+								<div class="quick-action-card" ng-click="actionRapide('audience')">
+									<div class="quick-action-icon bg-primary">
+										<i class="mdi mdi-calendar-clock"></i>
+									</div>
+									<h6>Demander une audience</h6>
+									<p class="text-muted small">Soumettre une demande d'audience</p>
+								</div>
+								<div class="quick-action-card" ng-click="actionRapide('document')">
+									<div class="quick-action-icon bg-success">
+										<i class="mdi mdi-file-document"></i>
+									</div>
+									<h6>Soumettre un document</h6>
+									<p class="text-muted small">Envoyer un document officiel</p>
+								</div>
+								<div class="quick-action-card" ng-click="actionRapide('support')">
+									<div class="quick-action-icon bg-warning">
+										<i class="mdi mdi-headset"></i>
+									</div>
+									<h6>Contacter le support</h6>
+									<p class="text-muted small">Obtenir de l'aide technique</p>
+								</div>
+								<div class="quick-action-card" ng-click="actionRapide('guide')">
+									<div class="quick-action-icon bg-info">
+										<i class="mdi mdi-book-open-variant"></i>
+									</div>
+									<h6>Guide des procédures</h6>
+									<p class="text-muted small">Consulter la documentation</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Section Activité Récente -->
+					<div class="card">
+						<div class="card-header d-flex justify-content-between align-items-center">
+							<h5 class="card-title mb-0">Activité Récente</h5>
+							<a href="#" class="btn btn-sm btn-outline-primary" ng-click="voirToutesDemandes()">
+								Voir toutes les demandes
+							</a>
+						</div>
+						<div class="card-body p-0">
+							<div class="table-responsive">
+								<table class="table table-hover activity-table mb-0">
+									<thead>
+										<tr>
+											<th>Date</th>
+											<th>Type de demande</th>
+											<th>Institution</th>
+											<th>Statut</th>
+											<th>Actions</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="activite in activitesRecentes">
+											<td>{{activite.date | date:'dd/MM'}}</td>
+											<td>
+												<i class="mdi" ng-class="activite.icon"></i>
+												{{activite.type}}
+											</td>
+											<td>{{activite.institution}}</td>
+											<td>
+												<span class="status-badge" ng-class="activite.statusClass">
+													{{activite.statut}}
+												</span>
+											</td>
+											<td>
+												<div class="btn-group btn-group-sm">
+													<button class="btn btn-outline-primary" ng-click="telechargerDocument(activite.id)" title="Télécharger">
+														<i class="mdi mdi-download"></i>
+													</button>
+													<button class="btn btn-outline-info" ng-click="suivreDemande(activite.id)" title="Suivi">
+														<i class="mdi mdi-eye"></i>
+													</button>
+													<button class="btn btn-outline-danger" ng-click="annulerDemande(activite.id)" title="Annuler" ng-if="activite.annulable">
+														<i class="mdi mdi-close"></i>
+													</button>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Colonne de droite -->
+				<div class="col-xl-4">
+					<!-- C. Calendrier des Événements -->
+					<div class="card">
+						<div class="card-header d-flex justify-content-between align-items-center">
+							<h5 class="card-title mb-0">Calendrier des Événements</h5>
+							<a href="#" class="btn btn-sm btn-outline-primary" ng-click="voirAgenda()">
+								Voir tout
+							</a>
+						</div>
+						<div class="card-body">
+							<div ng-repeat="evenement in evenementsCalendrier" class="calendar-event">
+								<div class="d-flex justify-content-between align-items-start">
+									<div class="flex-grow-1">
+										<h6 class="mb-1">{{evenement.objet}}</h6>
+										<p class="text-muted mb-0 small">
+											<i class="mdi mdi-calendar"></i> {{evenement.date | date:'dd/MM/yyyy'}}
+											<i class="mdi mdi-clock ms-2"></i> {{evenement.heure}}
+										</p>
+									</div>
+									<span class="badge" ng-class="evenement.typeClass">{{evenement.type}}</span>
+								</div>
+							</div>
+							<div ng-if="evenementsCalendrier.length === 0" class="text-center text-muted py-3">
+								<i class="mdi mdi-calendar-blank" style="font-size: 3rem;"></i>
+								<p class="mt-2">Aucun événement à venir</p>
+							</div>
+						</div>
+					</div>
+
+					<!-- D. Documents Récents -->
+					<div class="card">
+						<div class="card-header">
+							<h5 class="card-title mb-0">Documents Récents</h5>
+						</div>
+						<div class="card-body">
+							<div class="mb-3">
+								<div class="input-group input-group-sm">
+									<input type="text" class="form-control" placeholder="Rechercher un document..." ng-model="rechercheDocument"/>
+									<button class="btn btn-outline-secondary" type="button">
+										<i class="mdi mdi-magnify"></i>
+									</button>
+								</div>
+							</div>
+							<div ng-repeat="document in documentsRecents | filter:rechercheDocument" class="document-item">
+								<div class="document-icon" ng-class="document.typeClass">
+									<i class="mdi" ng-class="document.icon"></i>
+								</div>
+								<div class="flex-grow-1">
+									<h6 class="mb-1">{{document.titre}}</h6>
+									<p class="text-muted mb-0 small">
+										{{document.type}} • {{document.date | date:'dd/MM/yyyy'}}
+									</p>
+								</div>
+								<div class="flex-shrink-0">
+									<span class="badge" ng-class="document.statutClass">{{document.statut}}</span>
+								</div>
+							</div>
+							<div ng-if="documentsRecents.length === 0" class="text-center text-muted py-3">
+								<i class="mdi mdi-file-document-outline" style="font-size: 3rem;"></i>
+								<p class="mt-2">Aucun document récent</p>
+							</div>
+						</div>
+					</div>
+
+					<!-- Contacts Fréquents -->
+					<div class="contacts-list">
+						<h6 class="mb-3">Contacts Fréquents</h6>
+						<div ng-repeat="contact in contactsFrequents" class="contact-item">
+							<div class="contact-avatar">
+								{{contact.nom.charAt(0)}}
+							</div>
+							<div class="flex-grow-1">
+								<h6 class="mb-1">{{contact.nom}}</h6>
+								<p class="text-muted mb-0 small">{{contact.service}}</p>
+							</div>
+							<div class="flex-shrink-0">
+								<a href="tel:{{contact.telephone}}" class="btn btn-sm btn-outline-primary">
+									<i class="mdi mdi-phone"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+
+					<!-- Indicateurs de Performance -->
+					<div class="card">
+						<div class="card-header">
+							<h5 class="card-title mb-0">Indicateurs de Performance</h5>
+						</div>
+						<div class="card-body">
+							<div class="row text-center">
+								<div class="col-6">
+									<h4 class="text-primary mb-1">{{indicateurs.delaiMoyen}}</h4>
+									<p class="text-muted small mb-0">Jours de traitement</p>
+								</div>
+								<div class="col-6">
+									<h4 class="text-success mb-1">{{indicateurs.tauxCompletude}}%</h4>
+									<p class="text-muted small mb-0">Taux de complétude</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modales -->
+<div id="notificationModal" class="modal fade" data-backdrop="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" style="background-color: #009DCA;">
+				<h5 class="modal-title" style="color: #FFFFFF">Notifications</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body p-lg">
+				<div class="row">
+					<div ng-class="'col-md-12'">
+						<ul class="notification" ng-show="taskByProfile != 0">
+							<li ng-show="currentDemandesCountByProfile != 0">
+								<i class="mdi mdi-text-box-outline" style="float: left; font-size: 25px; margin-top: -5px; color: #444444"></i> 
+								<div style="margin-left: 35px">Vous avez <strong><span ng-bind="currentDemandesCountByProfile"></span> demande(s)</strong> en attente de traitement. 
+								<a th:href="@{/external/demandes/}">Cliquez ici pour les consulter.</a></div>
+							</li>
+						</ul>
+						<div ng-show="taskByProfile == 0" style="text-align: center">
+							<img th:src="@{/resources/images/notification.svg}" alt="" height="150" />
+							<h4 style="margin-top: 20px">Vous n'avez aucune notification</h4>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="contactModal" class="modal fade" data-backdrop="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Besoin d'assistance ?</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body p-lg">
+				<div class="row">
+					<div ng-class="'col-md-12'">
+						Vous rencontrez des difficultés et besoin d'assistance, merci de nous écrire sur 
+						<a href="mailto:support@primature.td">support@primature.td</a> ou de consulter notre 
+						<a th:href="@{/external/help/}">guide d'aide</a>.
+					</div>
+				</div>	
+			</div>
+		</div>
+	</div>
+</div>
+
+</div>
+<div layout:fragment="plugins" class="page-content">
+	<script th:src='@{/resources/js/pages/external-dashboard.js}'></script>
+</div>
+</body>
+</html> 

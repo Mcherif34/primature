@@ -1,0 +1,55 @@
+:root {
+  --primary-color: #097bc1;
+  --secondary-color: #3577f1;
+  --success-color: #00BA59;
+  --info-color: #299cdb;
+  --warning-color: #ffbe0b;
+  --danger-color: #f06548;
+  --light-color: #f6f7fb;
+  --dark-color: #212529;
+  --border-color: #e9ebec;
+  --text-muted: #878a99;
+}
+body, .page-content {
+  background: var(--light-color) !important;
+  font-family: 'Inter', 'Roboto', Arial, sans-serif;
+}
+.dashboard-center-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-top: 32px;
+}
+.card {
+  border: none;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: white;
+  border: none;
+  padding: 1.25rem 1.5rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+.card-body {
+  padding: 2rem;
+}
+.fw-bold {
+  font-weight: 700 !important;
+}
+.text-primary { color: var(--primary-color) !important; }
+.text-success { color: var(--success-color) !important; }
+.text-warning { color: var(--warning-color) !important; }
+.text-muted { color: var(--text-muted) !important; }
+@media (max-width: 1200px) {
+  .dashboard-center-container {
+    max-width: 98vw;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .card-body {
+    padding: 1rem;
+  }
+} 

@@ -78,12 +78,20 @@ public class HomeController{
 		ModelAndView modelAndView = new ModelAndView();
 		if (!(auth instanceof AnonymousAuthenticationToken)) {	
 			SecUtilisateurDTO user = secUtilisateurService.getCurrentUser();
+			
+			// Vérifier si c'est un utilisateur externe
+			if (user != null && "EXTERNE".equals(user.getModule())) {
+				// Rediriger vers l'espace utilisateur externe
+				modelAndView.setViewName("redirect:/external/dashboard");
+			} else {
+				// Utilisateur admin - rediriger vers l'espace admin
 			SecProfileDTO profile = secProfileService.load(user.getSecProfileId());
 			modelAndView.addObject("name", user.getNom());
 			modelAndView.addObject("profileId", profile.getPerformerId());
 			modelAndView.addObject("profileName", profile.getPerformerName());
 			
 			modelAndView.setViewName("index");
+			}
 			
 		} else {
 			response.addHeader("REQUIRES_AUTH", "1");

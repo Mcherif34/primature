@@ -262,7 +262,7 @@ public class ExternalUserRegistrationServiceImpl implements ExternalUserRegistra
             String mailLetter = "<div style=\"font-family: 'Open sans'; background-color: #DDE7F4; padding-top: 40px; padding-bottom: 40px; padding-left: 100px; padding-right: 100px;\">" +
                     "<div style=\"background-color: #FFFFFF; padding-left: 40px; padding-right: 40px; \">" +
                     "<div style=\"padding-bottom: 30px; border-bottom: 1px solid #DDDDDD; \">" +
-                    "<img src=\"https://res.cloudinary.com/dhsbffdjn/image/upload/v1673343107/medasys/logo_uszpgv.png\" style=\"width: 270px; margin-top: 40px;\" />" +
+                    "<img src=\"https://res.cloudinary.com/ddew5qnts/image/upload/v1752174680/primature_header_ugcwjw.png\" style=\"width: 270px; margin-top: 40px;\" />" +
                     "</div>" + letter + "</div>" +
                     "<div style=\"margin-top: 5px; text-align: center;\">2025 &copy; GED PRIMATURE. Tous droits réservés.</div></div>";
 
@@ -288,7 +288,7 @@ public class ExternalUserRegistrationServiceImpl implements ExternalUserRegistra
             String mailLetter = "<div style=\"font-family: 'Open sans'; background-color: #DDE7F4; padding-top: 40px; padding-bottom: 40px; padding-left: 100px; padding-right: 100px;\">" +
                     "<div style=\"background-color: #FFFFFF; padding-left: 40px; padding-right: 40px; \">" +
                     "<div style=\"padding-bottom: 30px; border-bottom: 1px solid #DDDDDD; \">" +
-                    "<img src=\"https://res.cloudinary.com/dhsbffdjn/image/upload/v1673343107/medasys/logo_uszpgv.png\" style=\"width: 270px; margin-top: 40px;\" />" +
+                    "<img src=\"https://res.cloudinary.com/ddew5qnts/image/upload/v1752174680/primature_header_ugcwjw.png\" style=\"width: 270px; margin-top: 40px;\" />" +
                     "</div>" + letter + "</div>" +
                     "<div style=\"margin-top: 5px; text-align: center;\">2025 &copy; GED PRIMATURE. Tous droits réservés.</div></div>";
 

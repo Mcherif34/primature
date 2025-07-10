@@ -1,0 +1,99 @@
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Rechercher une tâche..." ng-model="searchText">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <select class="form-control" ng-model="selectedStatus">
+                <option value="">Tous les statuts</option>
+                <option value="en_attente">En attente</option>
+                <option value="en_cours">En cours</option>
+                <option value="terminee">Terminée</option>
+                <option value="annulee">Annulée</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="form-control" ng-model="selectedPriority">
+                <option value="">Toutes les priorités</option>
+                <option value="basse">Basse</option>
+                <option value="normale">Normale</option>
+                <option value="haute">Haute</option>
+                <option value="urgente">Urgente</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-bottom-0 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Mes tâches</h5>
+                    <span class="badge badge-warning">{{tasks.length}} tâche(s)</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Tâche</th>
+                                    <th>Priorité</th>
+                                    <th>Statut</th>
+                                    <th>Date limite</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="task in tasks | filter:searchText | filter:selectedStatus | filter:selectedPriority">
+                                    <td>
+                                        <div>
+                                            <strong>{{task.titre}}</strong>
+                                            <br><small class="text-muted">{{task.description}}</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge" ng-class="{
+                                            'badge-secondary': task.priorite === 'basse',
+                                            'badge-info': task.priorite === 'normale',
+                                            'badge-warning': task.priorite === 'haute',
+                                            'badge-danger': task.priorite === 'urgente'
+                                        }">{{task.priorite}}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge" ng-class="{
+                                            'badge-warning': task.statut === 'en_attente',
+                                            'badge-info': task.statut === 'en_cours',
+                                            'badge-success': task.statut === 'terminee',
+                                            'badge-secondary': task.statut === 'annulee'
+                                        }">{{task.statut}}</span>
+                                    </td>
+                                    <td>{{task.dateLimite | date:'dd/MM/yyyy'}}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" ng-click="startTask(task.id)" ng-if="task.statut === 'en_attente'">
+                                            <i class="fa fa-play"></i> Démarrer
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success" ng-click="completeTask(task.id)" ng-if="task.statut === 'en_cours'">
+                                            <i class="fa fa-check"></i> Terminer
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-info" ng-click="viewTask(task.id)">
+                                            <i class="fa fa-eye"></i> Détails
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr ng-if="!tasks || tasks.length === 0">
+                                    <td colspan="5" class="text-center text-muted">Aucune tâche disponible</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
